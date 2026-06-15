@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: zantrix-backend
+  datasource:
+    url: jdbc:postgresql://${ZANTRIX_DB_HOST:127.0.0.1}:${ZANTRIX_DB_PORT:5433}/${ZANTRIX_DB_NAME:zantrix_db}
+    username: ${ZANTRIX_DB_USERNAME:zantrix}
+    password: ${ZANTRIX_DB_PASSWORD:zantrix_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate # Use Flyway for migrations as per guidelines
+    show-sql: false
+  flyway:
+    baseline-on-migrate: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/zantrix
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.web: INFO
+    com.zantrix: DEBUG

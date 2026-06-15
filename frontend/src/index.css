@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply h-screen w-screen overflow-hidden select-none bg-zantrix-background text-zantrix-text font-sans antialiased;
+    -webkit-user-drag: none;
+  }
+  
+  /* Tabular figures for numbers as per guidelines */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
