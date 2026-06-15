@@ -41,7 +41,7 @@ public class PatientService {
         if (!patient.isEmergency()) {
             validateBsn(patient.getBsn());
             if (patientRepository.findByBsn(patient.getBsn()).isPresent()) {
-                throw new RuntimeException("Patient with this BSN already exists");
+                throw new IllegalArgumentException("Patient with this BSN already exists");
             }
         }
         return patientRepository.save(patient);
@@ -52,7 +52,7 @@ public class PatientService {
     public Patient updatePatient(UUID id, Patient updatedDetails) {
         Patient existing = getPatientById(id);
         if (existing.getStatus() == PatientStatus.MERGED) {
-            throw new RuntimeException("Cannot update a merged patient");
+            throw new IllegalArgumentException("Cannot update a merged patient");
         }
         
         existing.setFirstName(updatedDetails.getFirstName());
@@ -77,7 +77,7 @@ public class PatientService {
         Patient target = getPatientById(targetId);
 
         if (source.getStatus() == PatientStatus.MERGED || target.getStatus() == PatientStatus.MERGED) {
-            throw new RuntimeException("One of the patients is already merged");
+            throw new IllegalArgumentException("One of the patients is already merged");
         }
 
         source.setStatus(PatientStatus.MERGED);
@@ -89,7 +89,7 @@ public class PatientService {
 
     public void validateBsn(String bsn) {
         if (bsn == null || bsn.trim().isEmpty()) {
-            throw new RuntimeException("BSN cannot be null or empty for non-emergency patients");
+            throw new IllegalArgumentException("BSN cannot be null or empty for non-emergency patients");
         }
         
         String cleanBsn = bsn.replaceAll("[^0-9]", "");
@@ -97,7 +97,7 @@ public class PatientService {
             cleanBsn = "0" + cleanBsn; // Pad with 0 for 8-digit BSN
         }
         if (cleanBsn.length() != 9) {
-            throw new RuntimeException("Invalid BSN length");
+            throw new IllegalArgumentException("Invalid BSN length");
         }
 
         int sum = 0;
@@ -107,7 +107,7 @@ public class PatientService {
         sum += Character.getNumericValue(cleanBsn.charAt(8)) * -1;
 
         if (sum % 11 != 0) {
-            throw new RuntimeException("Invalid BSN according to 11-proef");
+            throw new IllegalArgumentException("Invalid BSN according to 11-proef");
         }
     }
 }

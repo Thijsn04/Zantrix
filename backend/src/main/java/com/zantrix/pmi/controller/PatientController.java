@@ -25,7 +25,7 @@ public class PatientController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('PMI_READ', 'PMI_WRITE')")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public List<PatientDto> getAllPatients() {
         return patientService.getAllPatients().stream()
                 .map(this::mapToDto)
@@ -33,7 +33,7 @@ public class PatientController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAnyRole('PMI_READ', 'PMI_WRITE')")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public List<PatientDto> searchPatients(@RequestParam String q) {
         return patientService.searchPatients(q).stream()
                 .map(this::mapToDto)
@@ -41,13 +41,13 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('PMI_READ', 'PMI_WRITE')")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public PatientDto getPatientById(@PathVariable UUID id) {
         return mapToDto(patientService.getPatientById(id));
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('PMI_WRITE')")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public PatientDto createPatient(@RequestBody PatientCreateDto dto) {
         Patient patient = new Patient();
         patient.setBsn(dto.bsn());
@@ -68,7 +68,7 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('PMI_WRITE')")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public PatientDto updatePatient(@PathVariable UUID id, @RequestBody PatientCreateDto dto) {
         Patient patient = new Patient();
         patient.setBsn(dto.bsn());
@@ -89,7 +89,7 @@ public class PatientController {
     }
 
     @PostMapping("/{id}/merge")
-    @PreAuthorize("hasRole('PMI_WRITE')")
+    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<PatientDto> mergePatients(@PathVariable UUID id, @RequestParam UUID targetId) {
         Patient merged = patientService.mergePatients(id, targetId);
         return ResponseEntity.ok(mapToDto(merged));

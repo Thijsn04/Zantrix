@@ -30,9 +30,10 @@ De frontend levert de taak-gedreven interface voor het zorgpersoneel, gebouwd in
   - Houd componenten klein en gefocust op één taak (Single Responsibility).
 - **Meertaligheid (i18n):**
   - Alle voor de gebruiker zichtbare teksten moeten via `react-i18next` vertaald worden. Hardcoded Nederlandse of Engelse zinnen in de DOM zijn niet toegestaan.
-- **Styling (Vanilla CSS):**
-  - We gebruiken pure, scoped Vanilla CSS of CSS Modules. Frameworks zoals Tailwind of Bootstrap zijn VERBODEN.
-  - Gebruik centraal gedefinieerde CSS variabelen (`--primary-blue`, `--bg-color`) uit `index.css` om uniformiteit te waarborgen.
+- **Styling (Tailwind CSS):**
+  - We gebruiken Tailwind CSS voor efficiënte en consistente utility-based styling.
+  - Maak maximaal gebruik van de dark mode classes (`dark:`) voor het naadloos ondersteunen van lichte en donkere thema's.
+  - Definieer centrale branding kleuren (zoals `zantrix-blue`) in `tailwind.config.js`.
 
 ## 4. Database & API (PostgreSQL & REST)
 - **Database Migraties:**

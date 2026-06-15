@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: validate # Use Flyway for migrations as per guidelines
+      ddl-auto: update # Allow Hibernate to generate HAPI FHIR Schema
     show-sql: false
   flyway:
     baseline-on-migrate: true
@@ -25,3 +25,14 @@ logging:
   level:
     org.springframework.web: INFO
     com.zantrix: DEBUG
+    ca.uhn.fhir: INFO
+
+hapi:
+  fhir:
+    version: R4
+    server:
+      path: /fhir/*
+    jpa:
+      enabled: true
+    tester:
+      enabled: false

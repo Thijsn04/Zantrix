@@ -38,6 +38,7 @@ public class Patient {
 
     @Convert(converter = FhirPatientConverter.class)
     @Column(columnDefinition = "jsonb")
+    @org.hibernate.annotations.ColumnTransformer(write = "?::jsonb")
     private org.hl7.fhir.r4.model.Patient fhirData;
 
     @Column(updatable = false)

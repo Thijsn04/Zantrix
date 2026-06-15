@@ -25,6 +25,7 @@ export function PatientForm({ onSaved, onCancel }: { onSaved: (id: string, name:
     try {
       const payload = {
         ...formData,
+        birthDate: formData.birthDate || null,
         isEmergency,
         fhirDataJson: null
       };

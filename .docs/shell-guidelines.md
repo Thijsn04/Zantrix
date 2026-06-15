@@ -34,8 +34,8 @@ Gezondheidszorg vereist het in één oogopslag overzien van grote hoeveelheden c
 ## 5. De Enterprise Window Elementen
 Om de structuur van een desktopapplicatie na te bootsen, bevat de layout vaste, niet-scrollende elementen:
 
-- **Window / Menu Bar (Top):** Bevat het logo, de ingelogde gebruiker, globaal zoeken, notificaties en klassieke acties.
-- **Tab Bar (Sub-Top):** Bevat de in-app tabbladen van geopende dossiers of modules.
+- **Window / Menu Bar (Top):** Bevat het logo, de ingelogde gebruiker, notificaties en klassieke acties. Bevat ook een **Globale Zoekbalk (Live Search)** met een pop-up dropdown die de actieve zoekresultaten toont, en gebruikers direct kan doorverwijzen naar het juiste (patiënt)dossier in de hoofdmodule.
+- **Tab Bar (Sub-Top):** Bevat de in-app tabbladen van geopende dossiers of modules. Kan worden aangestuurd via URL parameters (bijv. `?open=...`) zodat een click vanuit de globale zoekbalk direct het juiste tabblad opent.
 - **Werkveld (Midden):** De grote container waar de actieve module in draait (overflow gereguleerd).
 - **Status Bar (Bottom):** Een permanente smalle balk onderaan die vitale systeem-informatie toont (bijv. "Server Verbonden (12ms)", "Gebruiker: Arts", "Omgeving: Productie").
 

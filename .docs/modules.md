@@ -14,8 +14,9 @@ De modules gemarkeerd met `[MVP]` vormen samen het absoluut noodzakelijke fundam
 - **1.3 Audit & Compliance Engine [MVP]**
   - **Status:** **✅ Gerealiseerd (Onderdeel van 1.1)**
   - **Details:** NEN7510/AVG logging van elke lees- en schrijfactie. Gerealiseerd via `@AuditLoggable` aspect.
-- **1.4 Terminology & Ontology Server**
-  - **Details:** Beheer van SNOMED CT, ICD-10, LOINC en DHD/Diagnosethesaurus.
+- **1.4 Terminology & Ontology Server [MVP]**
+  - **Status:** **✅ Gerealiseerd**
+  - **Details:** Volledige HAPI FHIR R4 Terminology Server integratie (PostgreSQL). Bevat automatische import-pipeline (via `OntologyImportService`) voor SNOMED CT (RF2), LOINC en FHIR CodeSystem JSONs (ICD-10/DHD). Inclusief een interne, afgeschermde test-browser in de frontend voor beheerders.
 - **1.5 Interoperability Engine (Bridges)**
   - **Details:** HL7 v2 en FHIR vertaalmachine voor externe communicatie.
 - **1.6 Workflow & Rules Engine**

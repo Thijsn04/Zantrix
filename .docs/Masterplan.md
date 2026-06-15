@@ -13,7 +13,7 @@ Het systeem is ontworpen om uiterst stabiel en veilig te zijn, met bewezen enter
 
 - **Architectuurstijl:** Modulaire Monoliet. Eén applicatie met strikt gescheiden interne domeinen/modules. Dit garandeert snelheid in de beginfase, met de mogelijkheid om later op te splitsen in microservices indien nodig.
 - **Backend:** Java met Spring Boot 3. Bewezen, veilig en robuust. Dit maakt ook integratie met de HAPI FHIR library mogelijk.
-- **Frontend:** React met TypeScript (Vite). Strikte foutcontrole, 100% Vanilla CSS (geen zware frameworks), PWA-compatibel, Meertalig via `react-i18next`.
+- **Frontend:** React met TypeScript (Vite). Strikte foutcontrole, Tailwind CSS, Volledige Light/Dark Mode integratie, PWA-compatibel, Meertalig via `react-i18next`.
 - **API-First:** De frontend en backend communiceren uitsluitend via REST/GraphQL API's. Hierdoor is het systeem direct klaar voor externe koppelingen.
 - **Hosting & Distributie:** Docker Containers.
 
@@ -51,13 +51,16 @@ Zantrix wordt in fases gebouwd. De modules aangeduid met `[MVP]` behoren tot de 
 5. **[MVP] CPOE (Computerized Physician Order Entry):** Elektronisch voorschrijven van medicatie.
 
 ## 8. Huidige Implementatie Status (Gerealiseerd)
-Op dit moment zijn **Module 1.1 (IAM & Security)**, **Module 1.2 (Patient Master Index - PMI)** en **Module 1.3 (Audit & Compliance)** succesvol ontworpen en gebouwd. De technische basis (het fundament) staat robuust overeind:
+Op dit moment zijn **Module 1.1 (IAM & Security)**, **Module 1.2 (Patient Master Index - PMI)**, **Module 1.3 (Audit & Compliance)** en **Module 1.4 (Terminology Server)** succesvol ontworpen en gebouwd. De technische basis (het fundament) staat robuust overeind:
 
-- **Frontend (PWA Shell):** Een React/TypeScript applicatie met Vite, volledig meertalig (`react-i18next`), ingericht als Native App-ervaring. Gerealiseerd met uitsluitend Vanilla CSS voor superieure performance en branding.
+- **Frontend (PWA Shell):** Een React/TypeScript applicatie met Vite, ingericht als Native App-ervaring. Gerealiseerd met Tailwind CSS voor dynamische Dark Mode en superieure performance.
+- **Globale Zoekbalk & Navigatie:** Een app-brede, debounced live-search dropdown is actief in de menubalk, waarmee gebruikers naadloos en direct patiëntendossiers (als nieuwe in-app tabbladen) in de hoofdmodule kunnen openen via slimme deep-linking URL-parameters.
+- **Lokalisatie & Instellingen:** Volledig meertalig (NL/EN via `react-i18next`). De app bevat een Instellingenpagina waarbij het thema (Licht/Donker) en de taal direct gekoppeld zijn aan de sessie/database.
 - **Backend:** Spring Boot 3 met PostgreSQL database. Voorzien van strakke REST API's.
 - **Security:** Keycloak integratie (OAuth2 Resource Server) met Rollen/Groepen (RBAC).
 - **NEN7510 Audit Logging:** Cryptografische vastlegging van elke lezende/schrijvende actie via Spring AOP. Bevat Hash-Chaining en context mapping (`@AuditLoggable`).
 - **Break The Glass:** Een noodprocedure voor verhoogde toegang, veilig ingebed in de applicatie.
 - **PMI (Patiëntenregister):** Het centrale patiëntenregister (Module 1.2) is actief met zoekfunctionaliteit, opslag van verzekeringsdata, en een veilige deduplicatie/merge workflow.
+- **Terminology & Ontology Server:** Een ingebouwde HAPI FHIR R4 server (Module 1.4) draait binnen de backend en faciliteert de razendsnelle opslag en ontsluiting van miljoenen medische concepten. Het bevat een automatische import-pipeline (`OntologyImportService`) voor SNOMED CT, LOINC en DHD (ICD-10) bestanden, direct vanaf de lokale disk, zónder externe dependencies.
 
 De volgende logische module om te ontwikkelen (gezien de MVP-scope) is **Module 2.1: Ambulatory Scheduling (Polikliniek)** of **Module 3.1: Clinical Notes & Charting**.
