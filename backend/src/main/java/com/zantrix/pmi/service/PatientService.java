@@ -10,19 +10,41 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service class for managing patient records in the Patient Master Index.
+ * Encapsulates business logic, BSN validation, and ensures compliance with MDR and NEN7510.
+ * Methods modifying or retrieving sensitive data trigger audit logs.
+ */
 @Service
 public class PatientService {
 
     private final PatientRepository patientRepository;
 
+    /**
+     * Constructs a new PatientService with the required repository.
+     *
+     * @param patientRepository the repository for patient data operations
+     */
     public PatientService(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
     }
 
+    /**
+     * Retrieves all patients in the system.
+     *
+     * @return a list of all {@link Patient} records
+     */
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
     }
 
+    /**
+     * Searches for patients using a specific query.
+     * Searches against BSN or last name.
+     *
+     * @param query the search string
+     * @return a list of matching {@link Patient} records
+     */
     public List<Patient> searchPatients(String query) {
         if (query == null || query.isBlank()) {
             return patientRepository.findAll();
@@ -30,12 +52,28 @@ public class PatientService {
         return patientRepository.searchPatients(query);
     }
 
+    /**
+     * Retrieves a patient by their unique identifier.
+     * This read operation is audit logged per NEN7510 requirements.
+     *
+     * @param id the UUID of the patient
+     * @return the {@link Patient} record
+     * @throws RuntimeException if the patient is not found
+     */
     @AuditLoggable(patientIdParam = "id")
     public Patient getPatientById(UUID id) {
         return patientRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Patient not found"));
     }
 
+    /**
+     * Creates a new patient record.
+     * Performs BSN validation unless it is an emergency registration.
+     *
+     * @param patient the patient entity to be created
+     * @return the saved {@link Patient} record
+     * @throws IllegalArgumentException if the BSN is invalid or already exists
+     */
     @Transactional
     public Patient createPatient(Patient patient) {
         if (!patient.isEmergency()) {
@@ -47,6 +85,15 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
+    /**
+     * Updates an existing patient record.
+     * Merged patients cannot be updated. This operation is audit logged.
+     *
+     * @param id             the UUID of the patient to update
+     * @param updatedDetails the new details for the patient
+     * @return the updated {@link Patient} record
+     * @throws IllegalArgumentException if the patient is merged or the BSN is invalid
+     */
     @Transactional
     @AuditLoggable(patientIdParam = "id")
     public Patient updatePatient(UUID id, Patient updatedDetails) {
@@ -71,6 +118,15 @@ public class PatientService {
         return patientRepository.save(existing);
     }
 
+    /**
+     * Merges a source patient record into a target patient record.
+     * Marks the source patient as MERGED.
+     *
+     * @param sourceId the UUID of the patient to be merged and deactivated
+     * @param targetId the UUID of the patient that will remain active
+     * @return the target {@link Patient} record
+     * @throws IllegalArgumentException if either patient is already merged
+     */
     @Transactional
     public Patient mergePatients(UUID sourceId, UUID targetId) {
         Patient source = getPatientById(sourceId);
@@ -87,6 +143,13 @@ public class PatientService {
         return target;
     }
 
+    /**
+     * Validates a Dutch Citizen Service Number (BSN) using the 11-test algorithm.
+     * Required for non-emergency patient registrations.
+     *
+     * @param bsn the BSN to validate
+     * @throws IllegalArgumentException if the BSN is null, empty, or fails the 11-test
+     */
     public void validateBsn(String bsn) {
         if (bsn == null || bsn.trim().isEmpty()) {
             throw new IllegalArgumentException("BSN cannot be null or empty for non-emergency patients");

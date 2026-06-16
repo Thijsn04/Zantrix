@@ -6,6 +6,9 @@ import { X, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 
+/**
+ * Represents a tab within the PatientsModule workspace.
+ */
 type Tab = {
   id: string;
   title: string;
@@ -13,6 +16,15 @@ type Tab = {
   patientId?: string;
 };
 
+/**
+ * PatientsModule Component
+ * 
+ * The main container for the Patient Master Index (PMI) functionality in the frontend.
+ * It manages an internal tab system, allowing users to keep multiple patient records,
+ * forms, and searches open simultaneously without losing context.
+ * 
+ * @returns {JSX.Element} The rendered module with tabbed navigation.
+ */
 export function PatientsModule() {
   const { t } = useTranslation();
   const [tabs, setTabs] = useState<Tab[]>([{ id: 'search', title: t('patient_search.title'), type: 'SEARCH' }]);

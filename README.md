@@ -75,6 +75,9 @@ Keycloak laadt automatisch de `zantrix` realm in met de volgende ingebouwde test
 Voor verdere technische richtlijnen, gelieve de bestanden in de `/.docs` map in te zien. Ze bevatten onder meer:
 - `Masterplan.md`: Het grote geheel en de doelen.
 - `modules.md`: Overzicht van alle modules en hun status.
+- `modules/IAM.md`: Documentatie IAM module.
+- `modules/PMI.md`: Documentatie PMI module.
+- `modules/Terminology.md`: Documentatie Terminology module.
 - `coding-guidelines.md` & `shell-guidelines.md`: Code- en UX-standaarden.
 
 ---

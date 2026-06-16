@@ -4,16 +4,34 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST Controller for managing the authenticated user's profile.
+ * <p>
+ * Provides endpoints for users to retrieve and update their personal preferences.
+ * Actions here are isolated to the authenticated user context to prevent unauthorized access.
+ * </p>
+ */
 @RestController
 @RequestMapping("/api/v1/iam/me")
 class UserProfileController {
 
     private final UserProfileRepository userProfileRepository;
 
+    /**
+     * Constructs a new {@link UserProfileController}.
+     *
+     * @param userProfileRepository The repository for user profiles.
+     */
     public UserProfileController(UserProfileRepository userProfileRepository) {
         this.userProfileRepository = userProfileRepository;
     }
 
+    /**
+     * Retrieves the profile of the currently authenticated user.
+     * Creates a default profile if none exists.
+     *
+     * @return The user's {@link UserProfile}.
+     */
     @GetMapping
     public UserProfile getMyProfile() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -26,6 +44,12 @@ class UserProfileController {
                 });
     }
 
+    /**
+     * Updates the profile preferences of the currently authenticated user.
+     *
+     * @param updatedProfile The updated profile details.
+     * @return The updated {@link UserProfile}.
+     */
     @PutMapping
     public UserProfile updateMyProfile(@RequestBody UserProfile updatedProfile) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

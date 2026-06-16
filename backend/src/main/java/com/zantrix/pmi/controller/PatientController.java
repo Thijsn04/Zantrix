@@ -13,6 +13,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * REST controller for managing patient data in the Patient Master Index.
+ * Exposes API endpoints for CRUD operations and searching.
+ * Ensures data access is restricted to authorized roles (e.g., DOCTOR, NURSE) per NEN7510.
+ * Supports integration with FHIR resources via JSON exchange.
+ */
 @RestController
 @RequestMapping("/api/v1/patients")
 public class PatientController {
@@ -20,10 +26,21 @@ public class PatientController {
     private final PatientService patientService;
     private static final FhirContext FHIR_CONTEXT = FhirContext.forR4();
 
+    /**
+     * Constructs a new PatientController.
+     *
+     * @param patientService the service containing business logic for patients
+     */
     public PatientController(PatientService patientService) {
         this.patientService = patientService;
     }
 
+    /**
+     * Retrieves a list of all patients.
+     * Accessible by DOCTOR and NURSE roles.
+     *
+     * @return a list of {@link PatientDto} representing all patients
+     */
     @GetMapping
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public List<PatientDto> getAllPatients() {
@@ -32,6 +49,13 @@ public class PatientController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Searches for patients based on a query parameter (BSN or last name).
+     * Accessible by DOCTOR and NURSE roles.
+     *
+     * @param q the search string
+     * @return a list of matching {@link PatientDto} records
+     */
     @GetMapping("/search")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public List<PatientDto> searchPatients(@RequestParam String q) {
@@ -40,12 +64,27 @@ public class PatientController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a specific patient by their unique identifier.
+     * Accessible by DOCTOR and NURSE roles.
+     *
+     * @param id the UUID of the patient
+     * @return a {@link PatientDto} representing the patient
+     */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public PatientDto getPatientById(@PathVariable UUID id) {
         return mapToDto(patientService.getPatientById(id));
     }
 
+    /**
+     * Creates a new patient record.
+     * Supports parsing additional FHIR demographics if provided.
+     * Accessible by DOCTOR and NURSE roles.
+     *
+     * @param dto the data transfer object containing patient details
+     * @return the created {@link PatientDto}
+     */
     @PostMapping
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public PatientDto createPatient(@RequestBody PatientCreateDto dto) {
@@ -67,6 +106,15 @@ public class PatientController {
         return mapToDto(created);
     }
 
+    /**
+     * Updates an existing patient record.
+     * Merged patients cannot be updated.
+     * Accessible by DOCTOR and NURSE roles.
+     *
+     * @param id  the UUID of the patient to update
+     * @param dto the data transfer object with new patient details
+     * @return the updated {@link PatientDto}
+     */
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     public PatientDto updatePatient(@PathVariable UUID id, @RequestBody PatientCreateDto dto) {
@@ -88,6 +136,14 @@ public class PatientController {
         return mapToDto(updated);
     }
 
+    /**
+     * Merges a duplicate patient record into a target record.
+     * Only accessible by users with the DOCTOR role.
+     *
+     * @param id       the UUID of the source patient (to be merged)
+     * @param targetId the UUID of the target patient (to keep)
+     * @return a {@link ResponseEntity} containing the updated target {@link PatientDto}
+     */
     @PostMapping("/{id}/merge")
     @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<PatientDto> mergePatients(@PathVariable UUID id, @RequestParam UUID targetId) {
@@ -95,6 +151,13 @@ public class PatientController {
         return ResponseEntity.ok(mapToDto(merged));
     }
 
+    /**
+     * Helper method to map a {@link Patient} entity to a {@link PatientDto}.
+     * Serializes any FHIR extension data securely back to JSON.
+     *
+     * @param patient the entity to map
+     * @return the mapped Data Transfer Object
+     */
     private PatientDto mapToDto(Patient patient) {
         String fhirJson = null;
         if (patient.getFhirData() != null) {
