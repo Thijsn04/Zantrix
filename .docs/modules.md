@@ -25,7 +25,9 @@ De modules gemarkeerd met `[MVP]` vormen samen het absoluut noodzakelijke fundam
   - **Details:** Gestructureerde data-opslag voor complexe ziekenhuisbrede query's.
 
 ## 2. Patiëntenstroom & Logistiek (Patient Access & Flow)
-- **2.1 Ambulatory Scheduling (Polikliniek) [MVP]:** Complexe agenda's, afspraakbeheer en resource-planning.
+- **2.1 Ambulatory Scheduling (Polikliniek) [MVP]**
+  - **Status:** **✅ Gerealiseerd**
+  - **Details:** Complexe agenda's, afspraakbeheer en resource-planning. Bevat een hybride PostgreSQL/JSONB datamodel voor het opslaan van FHIR `Appointment` en `Encounter` resources. De frontend bevat een geïntegreerde agenda-weergave (`@fullcalendar/react`) met functionaliteit voor het inplannen van consulten en conflict-detectie. Alle acties worden veilig gelogd via de NEN7510 Audit Engine.
 - **2.2 Grand Central / ADT (Kliniek):** Admission, Discharge, Transfer. Het complete bedden- en capaciteitsbeheer.
 - **2.3 Welcome & Kiosk:** Zelfservice aanmeldzuilen in de centrale hal, inclusief ID-scanners.
 - **2.4 Referral Management:** Beheer van inkomende en uitgaande verwijzingen (Integratie met ZorgDomein).

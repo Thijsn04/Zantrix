@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { InactivityProvider } from './components/InactivityProvider';
 import { PrivacyDashboard } from './pages/PrivacyDashboard';
 import { AppShell } from './components/AppShell';
+import { ScheduleView } from './pages/scheduling/ScheduleView';
 import { PatientsModule } from './pages/pmi/PatientsModule';
 import { TerminologyModule } from './pages/terminology/TerminologyModule';
 import { Settings } from './pages/Settings';
@@ -134,6 +135,7 @@ function MainApp() {
         <Routes>
           <Route path="/" element={<Dashboard roles={roles} />} />
           <Route path="/patients" element={<PatientsModule />} />
+          <Route path="/schedule" element={<ScheduleView />} />
           <Route path="/terminology" element={<TerminologyModule roles={roles} />} />
           <Route path="/audit-logs" element={<PrivacyDashboard />} />
           <Route path="/settings" element={<Settings />} />

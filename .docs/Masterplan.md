@@ -15,7 +15,8 @@ Het systeem is ontworpen om uiterst stabiel en veilig te zijn, met bewezen enter
 - **Backend:** Java met Spring Boot 3. Bewezen, veilig en robuust. Dit maakt ook integratie met de HAPI FHIR library mogelijk.
 - **Frontend:** React met TypeScript (Vite). Strikte foutcontrole, Tailwind CSS, Volledige Light/Dark Mode integratie, PWA-compatibel, Meertalig via `react-i18next`.
 - **API-First:** De frontend en backend communiceren uitsluitend via REST/GraphQL API's. Hierdoor is het systeem direct klaar voor externe koppelingen.
-- **Hosting & Distributie:** Docker Containers.
+- **Hosting & Distributie (Backend):** Docker Containers.
+- **Client Distributie (Toekomst):** Native desktop applicatie via Electron voor geavanceerde hardware-integratie (UZI-pas) en strikte sneltoets-controle. Zie [desktop-architecture.md](desktop-architecture.md) voor de volledige uitrolstrategie.
 
 ## 3. Data & Opslag
 Medische data is complex en sterk genest. Zantrix is "FHIR-native", wat betekent dat de interne structuur de HL7 FHIR datamodellen volgt.
@@ -51,7 +52,7 @@ Zantrix wordt in fases gebouwd. De modules aangeduid met `[MVP]` behoren tot de 
 5. **[MVP] CPOE (Computerized Physician Order Entry):** Elektronisch voorschrijven van medicatie.
 
 ## 8. Huidige Implementatie Status (Gerealiseerd)
-Op dit moment zijn **Module 1.1 (IAM & Security)**, **Module 1.2 (Patient Master Index - PMI)**, **Module 1.3 (Audit & Compliance)** en **Module 1.4 (Terminology Server)** succesvol ontworpen en gebouwd. De technische basis (het fundament) staat robuust overeind:
+Op dit moment zijn **Module 1.1 (IAM & Security)**, **Module 1.2 (Patient Master Index - PMI)**, **Module 1.3 (Audit & Compliance)**, **Module 1.4 (Terminology Server)** en **Module 2.1 (Ambulatory Scheduling)** succesvol ontworpen en gebouwd. De technische basis (het fundament) staat robuust overeind:
 
 - **Frontend (PWA Shell):** Een React/TypeScript applicatie met Vite, ingericht als Native App-ervaring. Gerealiseerd met Tailwind CSS voor dynamische Dark Mode en superieure performance.
 - **Globale Zoekbalk & Navigatie:** Een app-brede, debounced live-search dropdown is actief in de menubalk, waarmee gebruikers naadloos en direct patiëntendossiers (als nieuwe in-app tabbladen) in de hoofdmodule kunnen openen via slimme deep-linking URL-parameters.
@@ -62,5 +63,6 @@ Op dit moment zijn **Module 1.1 (IAM & Security)**, **Module 1.2 (Patient Master
 - **Break The Glass:** Een noodprocedure voor verhoogde toegang, veilig ingebed in de applicatie.
 - **PMI (Patiëntenregister):** Het centrale patiëntenregister (Module 1.2) is actief met zoekfunctionaliteit, opslag van verzekeringsdata, en een veilige deduplicatie/merge workflow.
 - **Terminology & Ontology Server:** Een ingebouwde HAPI FHIR R4 server (Module 1.4) draait binnen de backend en faciliteert de razendsnelle opslag en ontsluiting van miljoenen medische concepten. Het bevat een automatische import-pipeline (`OntologyImportService`) voor SNOMED CT, LOINC en DHD (ICD-10) bestanden, direct vanaf de lokale disk, zónder externe dependencies.
+- **Ambulatory Scheduling (Module 2.1):** Een hybride JSONB/PostgreSQL afspraken-engine met overlap-detectie, gekoppeld aan artsen en patiënten. Dit vormt de basis voor FHIR 'Encounters'. De React frontend bevat een dynamische (Dark Mode compatible) kalender, gebouwd op `@fullcalendar/react`.
 
-De volgende logische module om te ontwikkelen (gezien de MVP-scope) is **Module 2.1: Ambulatory Scheduling (Polikliniek)** of **Module 3.1: Clinical Notes & Charting**.
+De volgende logische module om te ontwikkelen (gezien de MVP-scope) is **Module 3.1: Clinical Notes & Charting**.

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { useAuth } from 'react-oidc-context';
-import { Stethoscope, LogOut, ShieldCheck, Search, Settings, Home, FileText, Server, LockOpen, X, User, Database } from 'lucide-react';
+import { Stethoscope, LogOut, ShieldCheck, Search, Settings, Home, FileText, Server, LockOpen, X, User, Database, Calendar } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -72,6 +72,7 @@ export function AppShell({ children, userProfile, roles, onBreakGlass, breakGlas
   const navItems = [
     { name: t('shell.nav.home'), path: '/', icon: Home },
     { name: t('shell.nav.patient_dossier'), path: '/patients', icon: FileText },
+    { name: 'Scheduling', path: '/schedule', icon: Calendar },
   ];
 
   if (roles.includes('SYSTEM_ADMIN')) {
