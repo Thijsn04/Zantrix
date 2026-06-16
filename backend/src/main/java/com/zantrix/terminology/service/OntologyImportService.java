@@ -22,6 +22,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
+/**
+ * Service responsible for automatically importing medical terminologies into the FHIR server.
+ * This pipeline scans the 'data/terminologies' folder on startup and processes any new
+ * SNOMED CT, LOINC, or custom JSON CodeSystem files. It ensures terminologies are only
+ * imported once by tracking them in the ImportJobRepository.
+ */
 @Service
 public class OntologyImportService {
 

@@ -7,14 +7,32 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
 
+/**
+ * Service responsible for securely generating and saving audit logs.
+ * <p>
+ * Implements a cryptographic hash-chaining mechanism to guarantee log immutability and tamper detection.
+ * This ensures strict adherence to MDR and NEN7510 requirements for secure electronic health data auditing.
+ * </p>
+ */
 @Service
 class AuditService {
     private final AuditLogRepository auditLogRepository;
 
+    /**
+     * Constructs a new {@link AuditService}.
+     *
+     * @param auditLogRepository The repository for audit logs.
+     */
     public AuditService(AuditLogRepository auditLogRepository) {
         this.auditLogRepository = auditLogRepository;
     }
 
+    /**
+     * Persists an audit log entry while linking it securely to the previous entry via SHA-256 hash.
+     *
+     * @param log The {@link AuditLog} entry to save.
+     * @throws RuntimeException If the hashing algorithm is unavailable.
+     */
     @Transactional
     public void saveSecureLog(AuditLog log) {
         String previousHash = auditLogRepository.findTopByOrderByIdDesc()

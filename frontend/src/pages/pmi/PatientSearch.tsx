@@ -3,6 +3,18 @@ import { useAuth } from 'react-oidc-context';
 import { UserPlus, AlertCircle, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * PatientSearch Component
+ * 
+ * Provides a UI for searching patients in the Master Index.
+ * Includes capabilities to search by query string (name, BSN) and triggers
+ * the opening of existing patient records or the creation of new ones.
+ * 
+ * @param {Object} props - Component properties.
+ * @param {Function} props.onOpenPatient - Callback fired when a patient row is clicked. Passes the patient ID and formatted name.
+ * @param {Function} props.onCreatePatient - Callback fired when the "New Patient" button is clicked.
+ * @returns {JSX.Element} The rendered patient search interface.
+ */
 export function PatientSearch({ onOpenPatient, onCreatePatient }: { onOpenPatient: (id: string, name: string) => void, onCreatePatient: () => void }) {
   const { t } = useTranslation();
   const auth = useAuth();

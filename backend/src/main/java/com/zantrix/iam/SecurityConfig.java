@@ -14,11 +14,27 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Security configuration for the IAM module.
+ * <p>
+ * Configures OAuth2 resource server settings, JWT authentication, CORS, and endpoint authorization.
+ * Also registers the {@link BreakTheGlassFilter} to handle emergency access privilege elevation.
+ * This configuration ensures that API access is secure and complies with MDR/NEN7510 requirements.
+ * </p>
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 class SecurityConfig {
 
+    /**
+     * Configures the Spring Security filter chain.
+     *
+     * @param http The {@link HttpSecurity} to modify.
+     * @param breakTheGlassFilter The custom filter for handling break-the-glass sessions.
+     * @return The built {@link SecurityFilterChain}.
+     * @throws Exception If an error occurs during configuration.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, BreakTheGlassFilter breakTheGlassFilter) throws Exception {
         http
@@ -35,6 +51,11 @@ class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Configures the JWT authentication converter to extract roles from Keycloak tokens.
+     *
+     * @return The configured {@link JwtAuthenticationConverter}.
+     */
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
@@ -53,6 +74,11 @@ class SecurityConfig {
         return converter;
     }
 
+    /**
+     * Configures Cross-Origin Resource Sharing (CORS) rules.
+     *
+     * @return The {@link CorsConfigurationSource}.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
