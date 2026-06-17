@@ -75,7 +75,13 @@ public class AppointmentService {
      */
     @AuditLoggable
     public AppointmentEntity createAppointment(AppointmentEntity appointment) {
-        // Overlap detection logic can go here. For now we allow double booking.
+        List<AppointmentEntity> overlaps = checkOverlaps(
+                appointment.getPractitionerId(),
+                appointment.getStartTime(),
+                appointment.getEndTime());
+        if (!overlaps.isEmpty()) {
+            throw new IllegalArgumentException("Practitioner is double-booked during this time");
+        }
         return repository.save(appointment);
     }
 

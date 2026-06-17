@@ -1,6 +1,8 @@
 spring:
   application:
     name: zantrix-backend
+  elasticsearch:
+    uris: http://localhost:9200
   datasource:
     url: jdbc:postgresql://${ZANTRIX_DB_HOST:127.0.0.1}:${ZANTRIX_DB_PORT:5433}/${ZANTRIX_DB_NAME:zantrix_db}
     username: ${ZANTRIX_DB_USERNAME:zantrix}

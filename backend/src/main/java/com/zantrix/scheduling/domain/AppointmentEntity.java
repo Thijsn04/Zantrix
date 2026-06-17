@@ -3,6 +3,8 @@ package com.zantrix.scheduling.domain;
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Entity representing a medical appointment in the Scheduling module.
@@ -21,17 +23,22 @@ public class AppointmentEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @NotNull(message = "Patient ID is required")
     @Column(nullable = false)
     private UUID patientId;
 
+    @NotNull(message = "Practitioner ID is required")
     @Column(nullable = false)
     private UUID practitionerId;
 
     private UUID locationId;
 
+    @NotNull(message = "Start time is required")
+    @FutureOrPresent(message = "Start time must be in the present or future")
     @Column(nullable = false)
     private OffsetDateTime startTime;
 
+    @NotNull(message = "End time is required")
     @Column(nullable = false)
     private OffsetDateTime endTime;
 

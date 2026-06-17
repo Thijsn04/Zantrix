@@ -57,12 +57,13 @@ Op dit moment zijn **Module 1.1 (IAM & Security)**, **Module 1.2 (Patient Master
 - **Frontend (PWA Shell):** Een React/TypeScript applicatie met Vite, ingericht als Native App-ervaring. Gerealiseerd met Tailwind CSS voor dynamische Dark Mode en superieure performance.
 - **Globale Zoekbalk & Navigatie:** Een app-brede, debounced live-search dropdown is actief in de menubalk, waarmee gebruikers naadloos en direct patiëntendossiers (als nieuwe in-app tabbladen) in de hoofdmodule kunnen openen via slimme deep-linking URL-parameters.
 - **Lokalisatie & Instellingen:** Volledig meertalig (NL/EN via `react-i18next`). De app bevat een Instellingenpagina waarbij het thema (Licht/Donker) en de taal direct gekoppeld zijn aan de sessie/database.
-- **Backend:** Spring Boot 3 met PostgreSQL database. Voorzien van strakke REST API's.
+- **Backend:** Spring Boot 3 met PostgreSQL database. Voorzien van strakke REST API's en veilige globale foutafhandeling (`GlobalExceptionHandler`).
 - **Security:** Keycloak integratie (OAuth2 Resource Server) met Rollen/Groepen (RBAC).
 - **NEN7510 Audit Logging:** Cryptografische vastlegging van elke lezende/schrijvende actie via Spring AOP. Bevat Hash-Chaining en context mapping (`@AuditLoggable`).
 - **Break The Glass:** Een noodprocedure voor verhoogde toegang, veilig ingebed in de applicatie.
 - **PMI (Patiëntenregister):** Het centrale patiëntenregister (Module 1.2) is actief met zoekfunctionaliteit, opslag van verzekeringsdata, en een veilige deduplicatie/merge workflow.
-- **Terminology & Ontology Server:** Een ingebouwde HAPI FHIR R4 server (Module 1.4) draait binnen de backend en faciliteert de razendsnelle opslag en ontsluiting van miljoenen medische concepten. Het bevat een automatische import-pipeline (`OntologyImportService`) voor SNOMED CT, LOINC en DHD (ICD-10) bestanden, direct vanaf de lokale disk, zónder externe dependencies.
-- **Ambulatory Scheduling (Module 2.1):** Een hybride JSONB/PostgreSQL afspraken-engine met overlap-detectie, gekoppeld aan artsen en patiënten. Dit vormt de basis voor FHIR 'Encounters'. De React frontend bevat een dynamische (Dark Mode compatible) kalender, gebouwd op `@fullcalendar/react`.
+- **Terminology & Ontology Server:** Een ingebouwde HAPI FHIR R4 server (Module 1.4) draait binnen de backend en faciliteert de razendsnelle opslag en ontsluiting van miljoenen medische concepten via **Elasticsearch** integratie (`ConceptRepository`, `TerminologySearchController`). Het bevat een automatische import-pipeline (`OntologyImportService`) voor SNOMED CT, LOINC en DHD (ICD-10) bestanden, direct vanaf de lokale disk, zónder externe dependencies.
+- **Ambulatory Scheduling (Module 2.1):** Een hybride JSONB/PostgreSQL afspraken-engine met strikte datavalidatie, overlap-detectie en preventie van dubbele boekingen, gekoppeld aan artsen en patiënten. Dit vormt de basis voor FHIR 'Encounters'. De React frontend bevat een dynamische (Dark Mode compatible) kalender, gebouwd op `@fullcalendar/react`.
+- **Automated Testing:** Robuuste testinfrastructuur gebaseerd op **Testcontainers** voor hermetische integratietests (`IntegrationTestBase`) met geïsoleerde PostgreSQL instanties.
 
 De volgende logische module om te ontwikkelen (gezien de MVP-scope) is **Module 3.1: Clinical Notes & Charting**.

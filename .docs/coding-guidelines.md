@@ -18,7 +18,10 @@ De backend is het hart van Zantrix en beheert alle medische logica, gebouwd in J
   - Gebruik de HAPI FHIR library voor alle datamodellen die naar buiten gaan.
   - Interne domeinmodellen (Entities) en FHIR-resources moeten gescheiden blijven. Gebruik mappers (bijv. MapStruct) om interne Entities om te zetten naar FHIR Resources.
 - **Foutafhandeling:**
-  - Geef nooit ruwe stacktraces terug aan de API. Gebruik een globale `@ControllerAdvice` in Spring om exceptions op te vangen en gestandaardiseerde, veilige JSON-foutmeldingen terug te sturen.
+  - Geef nooit ruwe stacktraces terug aan de API. Gebruik de ingebouwde globale `GlobalExceptionHandler` (`@ControllerAdvice`) in Spring om exceptions (inclusief `@Valid` fouten) op te vangen en gestandaardiseerde, veilige JSON-foutmeldingen terug te sturen.
+- **Testing & Kwaliteitsborging:**
+  - **Unit Tests:** Schrijf gerichte unit tests voor converters en business logica (met behulp van JUnit 5 en Mockito).
+  - **Integratie Tests:** Gebruik `Testcontainers` (via `IntegrationTestBase`) voor het opstarten van échte, hermetische PostgreSQL (en Keycloak) databases tijdens integratietests. Vermijd H2 databases om 'false positives' door dialect-verschillen te voorkomen.
 
 ## 3. Frontend Guidelines (React & TypeScript)
 De frontend levert de taak-gedreven interface voor het zorgpersoneel, gebouwd in React met TypeScript via Vite.

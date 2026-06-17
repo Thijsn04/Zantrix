@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 /**
  * Global exception handler for the Zantrix EPD application.
@@ -65,6 +67,26 @@ public class GlobalExceptionHandler {
         // Prevent raw stack traces from bleeding to the frontend.
         // Log the exception securely here without PHI if necessary.
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected internal server error occurred.");
+    }
+
+    /**
+     * Handles exceptions from invalid @Valid payloads.
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new LinkedHashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("error", "Validation Failed");
+        body.put("message", "Input validation failed");
+        body.put("fieldErrors", errors);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     /**

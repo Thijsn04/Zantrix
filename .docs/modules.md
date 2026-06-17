@@ -16,7 +16,7 @@ De modules gemarkeerd met `[MVP]` vormen samen het absoluut noodzakelijke fundam
   - **Details:** NEN7510/AVG logging van elke lees- en schrijfactie. Gerealiseerd via `@AuditLoggable` aspect.
 - **1.4 Terminology & Ontology Server [MVP]**
   - **Status:** **✅ Gerealiseerd**
-  - **Details:** Volledige HAPI FHIR R4 Terminology Server integratie (PostgreSQL). Bevat automatische import-pipeline (via `OntologyImportService`) voor SNOMED CT (RF2), LOINC en FHIR CodeSystem JSONs (ICD-10/DHD). Inclusief een interne, afgeschermde test-browser in de frontend voor beheerders.
+  - **Details:** Volledige HAPI FHIR R4 Terminology Server integratie met supersnelle zoekmogelijkheden via **Elasticsearch** (`ConceptRepository`). Bevat automatische import-pipeline (via `OntologyImportService`) voor SNOMED CT (RF2), LOINC en FHIR CodeSystem JSONs (ICD-10/DHD). Inclusief een interne, afgeschermde test-browser in de frontend voor beheerders.
 - **1.5 Interoperability Engine (Bridges)**
   - **Details:** HL7 v2 en FHIR vertaalmachine voor externe communicatie.
 - **1.6 Workflow & Rules Engine**
@@ -27,7 +27,7 @@ De modules gemarkeerd met `[MVP]` vormen samen het absoluut noodzakelijke fundam
 ## 2. Patiëntenstroom & Logistiek (Patient Access & Flow)
 - **2.1 Ambulatory Scheduling (Polikliniek) [MVP]**
   - **Status:** **✅ Gerealiseerd**
-  - **Details:** Complexe agenda's, afspraakbeheer en resource-planning. Bevat een hybride PostgreSQL/JSONB datamodel voor het opslaan van FHIR `Appointment` en `Encounter` resources. De frontend bevat een geïntegreerde agenda-weergave (`@fullcalendar/react`) met functionaliteit voor het inplannen van consulten en conflict-detectie. Alle acties worden veilig gelogd via de NEN7510 Audit Engine.
+  - **Details:** Complexe agenda's, afspraakbeheer en resource-planning. Bevat een hybride PostgreSQL/JSONB datamodel voor het opslaan van FHIR `Appointment` en `Encounter` resources met **strikte validatie en automatische double-booking preventie**. De frontend bevat een geïntegreerde agenda-weergave (`@fullcalendar/react`) met functionaliteit voor het inplannen van consulten en conflict-detectie. Alle acties worden veilig gelogd via de NEN7510 Audit Engine.
 - **2.2 Grand Central / ADT (Kliniek):** Admission, Discharge, Transfer. Het complete bedden- en capaciteitsbeheer.
 - **2.3 Welcome & Kiosk:** Zelfservice aanmeldzuilen in de centrale hal, inclusief ID-scanners.
 - **2.4 Referral Management:** Beheer van inkomende en uitgaande verwijzingen (Integratie met ZorgDomein).
