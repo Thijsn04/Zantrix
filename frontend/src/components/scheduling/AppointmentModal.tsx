@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Calendar as CalendarIcon, User, Clock } from 'lucide-react';
-import { Appointment } from '../../hooks/useAppointments';
+import type { Appointment } from '../../hooks/useAppointments';
 
 interface Props {
   onClose: () => void;

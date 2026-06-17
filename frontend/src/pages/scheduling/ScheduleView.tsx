@@ -6,7 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { useTranslation } from 'react-i18next';
 import { useAppointments } from '../../hooks/useAppointments';
 import { Calendar, Users } from 'lucide-react';
-import { AppointmentModal } from './AppointmentModal';
+import { AppointmentModal } from '../../components/scheduling/AppointmentModal';
 
 export function ScheduleView() {
   const { t } = useTranslation();
