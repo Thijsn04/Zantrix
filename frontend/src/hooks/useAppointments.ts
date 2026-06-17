@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from 'react-oidc-context';
 
+/**
+ * Represents a medical appointment in the frontend application.
+ */
 export interface Appointment {
   id?: string;
   patientId: string;
@@ -12,6 +15,17 @@ export interface Appointment {
   fhirData?: any;
 }
 
+/**
+ * Custom hook for fetching and managing appointments.
+ * 
+ * Automatically fetches appointments for a specific practitioner within a given time range.
+ * Requires the user to be authenticated.
+ *
+ * @param {string} [practitionerId] - The UUID of the practitioner.
+ * @param {string} [start] - The ISO string representing the start of the query window.
+ * @param {string} [end] - The ISO string representing the end of the query window.
+ * @returns An object containing the appointments, loading state, error state, and mutator methods.
+ */
 export function useAppointments(practitionerId?: string, start?: string, end?: string) {
   const auth = useAuth();
   const [appointments, setAppointments] = useState<Appointment[]>([]);

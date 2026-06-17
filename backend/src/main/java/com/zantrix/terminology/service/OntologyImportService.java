@@ -39,11 +39,20 @@ public class OntologyImportService {
     @Value("${server.port:8080}")
     private String serverPort;
 
+    /**
+     * Constructs a new {@link OntologyImportService}.
+     *
+     * @param importJobRepository The repository to track imported terminology files.
+     */
     public OntologyImportService(ImportJobRepository importJobRepository) {
         this.importJobRepository = importJobRepository;
         this.restTemplate = new RestTemplate();
     }
 
+    /**
+     * Triggered automatically when the Spring Application is ready.
+     * Scans the terminology directories and imports any files that haven't been processed yet.
+     */
     @EventListener(ApplicationReadyEvent.class)
     public void checkAndImportTerminologies() {
         log.info("Starting automated terminology import pipeline check...");

@@ -2,6 +2,19 @@ import { useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { AlertCircle, Search, X } from 'lucide-react';
 
+/**
+ * Modal component to facilitate merging duplicate patient records.
+ * 
+ * Allows users to search for a target patient and merge the current (source) 
+ * patient into it. This action updates the source patient's status to 'MERGED'
+ * and permanently links the records.
+ *
+ * @param {Object} props - The component properties.
+ * @param {string} props.sourcePatientId - The UUID of the patient being merged (made inactive).
+ * @param {string} props.sourcePatientName - The display name of the source patient for context.
+ * @param {Function} props.onClose - Callback to close the modal without merging.
+ * @param {Function} props.onMerged - Callback invoked after a successful merge operation.
+ */
 export function PatientMergeModal({ 
   sourcePatientId, 
   sourcePatientName, 

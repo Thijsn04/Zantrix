@@ -1,6 +1,12 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+/**
+ * Internationalization (i18n) configuration for the Zantrix frontend.
+ * 
+ * Defines translation dictionaries for supported languages (Dutch, English).
+ * Used globally via the `useTranslation` hook to provide a localized UI.
+ */
 const resources = {
   nl: {
     translation: {

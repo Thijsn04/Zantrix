@@ -12,6 +12,13 @@ import { TerminologyModule } from './pages/terminology/TerminologyModule';
 import { Settings } from './pages/Settings';
 import i18nInstance from './i18n';
 
+/**
+ * Renders the default workspace dashboard when no specific module is selected.
+ * 
+ * @param {Object} props - The component properties.
+ * @param {string[]} props.roles - The user's active Keycloak roles.
+ * @returns {JSX.Element} The dashboard UI.
+ */
 function Dashboard({ roles }: { roles: string[] }) {
   const { t } = useTranslation();
   
@@ -34,6 +41,15 @@ function Dashboard({ roles }: { roles: string[] }) {
   );
 }
 
+/**
+ * The core application router and state manager.
+ * 
+ * Handles OIDC token parsing, fetches the user's profile and preferences (theme, language),
+ * and defines the React Router routes for all Zantrix modules (PMI, Scheduling, Terminology).
+ * Connects the 'Break The Glass' mechanism to the backend IAM service.
+ * 
+ * @returns {JSX.Element} The routed application within the AppShell.
+ */
 function MainApp() {
   const { t } = useTranslation();
   const auth = useAuth();
@@ -146,6 +162,13 @@ function MainApp() {
   );
 }
 
+/**
+ * The root App component.
+ * 
+ * Wraps the application in a BrowserRouter to enable client-side routing.
+ * 
+ * @returns {JSX.Element} The root application component.
+ */
 export default function App() {
   return (
     <BrowserRouter>

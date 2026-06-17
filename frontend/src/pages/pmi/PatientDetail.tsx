@@ -4,6 +4,15 @@ import { User, Activity, FileText } from 'lucide-react';
 import { PatientMergeModal } from './PatientMergeModal';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Displays the detailed medical dossier for a single patient.
+ * 
+ * Fetches patient data from the backend by ID and presents demographics,
+ * insurance details, notes, and vitals. Allows the user to trigger a patient merge workflow.
+ *
+ * @param {Object} props - The component properties.
+ * @param {string} props.patientId - The UUID of the patient to display.
+ */
 export function PatientDetail({ patientId }: { patientId: string }) {
   const { t } = useTranslation();
   const auth = useAuth();

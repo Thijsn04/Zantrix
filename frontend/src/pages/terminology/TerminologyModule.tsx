@@ -3,6 +3,17 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { Database, Search, UploadCloud, CheckCircle, AlertCircle, ShieldAlert } from 'lucide-react';
 
+/**
+ * Administrative module for managing medical terminologies and ontologies.
+ * 
+ * Provides an interface to query the FHIR ValueSet $expand endpoint for 
+ * standard codes (SNOMED, LOINC). Also exposes an import interface to trigger
+ * asynchronous backend terminology loading jobs (e.g., importing RF2 files).
+ * 
+ * @param {Object} props - The component properties.
+ * @param {string[]} props.roles - The user's active roles (used to restrict access to SYSTEM_ADMIN).
+ * @returns {JSX.Element} The terminology administration UI.
+ */
 export function TerminologyModule({ roles }: { roles: string[] }) {
   const { t } = useTranslation();
   const auth = useAuth();

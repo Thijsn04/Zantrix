@@ -5,8 +5,13 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * Entity representing an Encounter in the Scheduling module.
- * Represents a visit or interaction. Hybrid storage model.
+ * Entity representing a patient Encounter (visit or admission) in the Scheduling module.
+ * <p>
+ * This class tracks the progression of a patient through the healthcare facility.
+ * Similar to appointments, it employs a hybrid storage model where core properties
+ * are queried directly and extended FHIR details are stored as JSONB. This allows
+ * Zantrix to maintain strict NEN7510 compliance and FHIR interoperability simultaneously.
+ * </p>
  */
 @Entity
 @Table(name = "encounter")

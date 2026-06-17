@@ -4,6 +4,15 @@ import { useAuth } from 'react-oidc-context';
 import { Settings as SettingsIcon, Save } from 'lucide-react';
 import i18nInstance from '../i18n';
 
+/**
+ * User settings page.
+ * 
+ * Allows users to configure personal preferences such as UI Theme (light/dark)
+ * and Language (nl/en). Syncs these preferences with the backend UserProfile
+ * database to persist across devices.
+ * 
+ * @returns {JSX.Element} The rendered settings form.
+ */
 export function Settings() {
   const { t } = useTranslation();
   const auth = useAuth();

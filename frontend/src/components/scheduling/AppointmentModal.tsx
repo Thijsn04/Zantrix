@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { X, Calendar as CalendarIcon, User, Clock } from 'lucide-react';
 import type { Appointment } from '../../hooks/useAppointments';
 
+/**
+ * Properties for the AppointmentModal component.
+ */
 interface Props {
   onClose: () => void;
   selectedSlot: { start: Date, end: Date } | null;
@@ -9,6 +12,14 @@ interface Props {
   onSave: (appt: Appointment) => Promise<void>;
 }
 
+/**
+ * Modal component for creating a new medical appointment.
+ * 
+ * Allows users to input patient ID, start time, and end time. Ensures dates
+ * are properly formatted into ISO 8601 strings expected by the backend FHIR server.
+ *
+ * @param {Props} props - The component properties.
+ */
 export function AppointmentModal({ onClose, selectedSlot, practitionerId, onSave }: Props) {
   const [patientId, setPatientId] = useState(''); // Normally a search dropdown
   const [startTime, setStartTime] = useState(selectedSlot ? selectedSlot.start.toISOString().slice(0, 16) : '');

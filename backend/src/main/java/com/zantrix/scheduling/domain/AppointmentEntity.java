@@ -5,8 +5,13 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * Entity representing an Appointment in the Scheduling module.
- * Hybrid storage model: indexed columns + JSONB FHIR resource.
+ * Entity representing a medical appointment in the Scheduling module.
+ * <p>
+ * This class uses a hybrid storage model: core fields are mapped to dedicated columns
+ * for efficient querying, while extended or custom demographic data can be stored
+ * as a JSONB FHIR resource. This supports complex hospital workflows while retaining
+ * database performance and HL7 FHIR compliance.
+ * </p>
  */
 @Entity
 @Table(name = "appointment")

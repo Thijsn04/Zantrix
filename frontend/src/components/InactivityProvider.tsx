@@ -2,6 +2,9 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { Lock } from 'lucide-react';
 import { useAuth } from 'react-oidc-context';
 
+/**
+ * Context type for managing session inactivity.
+ */
 interface InactivityContextType {
   isLocked: boolean;
   unlock: () => void;
@@ -9,12 +12,22 @@ interface InactivityContextType {
 
 const InactivityContext = createContext<InactivityContextType | null>(null);
 
+/**
+ * Custom hook to access the inactivity context.
+ * Must be used within an InactivityProvider.
+ */
 export const useInactivity = () => {
   const context = useContext(InactivityContext);
   if (!context) throw new Error('useInactivity must be used within InactivityProvider');
   return context;
 };
 
+/**
+ * Provider component that monitors user activity and locks the screen after a timeout.
+ * 
+ * Essential for NEN7510 compliance (ensuring unattended terminals do not leak PHI).
+ * The current timeout is set to 5 minutes of inactivity.
+ */
 export const InactivityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const auth = useAuth();
   const [isLocked, setIsLocked] = useState(false);

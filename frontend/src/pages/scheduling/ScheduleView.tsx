@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useTranslation } from 'react-i18next';
 import { useAppointments } from '../../hooks/useAppointments';
-import { Calendar, Users } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { AppointmentModal } from '../../components/scheduling/AppointmentModal';
 
+/**
+ * The main scheduling view for practitioners.
+ * 
+ * Integrates FullCalendar to display appointments and clinical encounters in
+ * a graphical grid (day/week/month). Connects to the backend FHIR endpoints
+ * to fetch and create Appointment resources.
+ * 
+ * @returns {JSX.Element} The rendered scheduling calendar view.
+ */
 export function ScheduleView() {
   const { t } = useTranslation();
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const currentDate = new Date();
   
   // Hardcoded practitioner for demo purposes. In reality, we'd fetch the logged in user or selected doctors.
   const practitionerId = "00000000-0000-0000-0000-000000000000"; 
@@ -18,7 +27,7 @@ export function ScheduleView() {
   const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).toISOString();
   const end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).toISOString();
 
-  const { appointments, isLoading, createAppointment, refresh } = useAppointments(practitionerId, start, end);
+  const { appointments, isLoading, createAppointment } = useAppointments(practitionerId, start, end);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<{ start: Date, end: Date } | null>(null);
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { Shield, Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface AuditLog {
   id: number;
@@ -9,8 +10,18 @@ interface AuditLog {
   action: string;
   resource: string;
   breakTheGlass: boolean;
+  context?: string;
 }
 
+/**
+ * Privacy Officer dashboard for reviewing NEN7510 audit logs.
+ * 
+ * Fetches and displays the system's central audit trail. Highlights critical
+ * events such as "Break The Glass" access. Restricted to users with the 
+ * PRIVACY_OFFICER role.
+ * 
+ * @returns {JSX.Element} The rendered audit log dashboard.
+ */
 export const PrivacyDashboard = () => {
   const { t } = useTranslation();
   const auth = useAuth();

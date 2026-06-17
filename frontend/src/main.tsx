@@ -5,6 +5,12 @@ import './i18n'
 import App from './App.tsx'
 import { AuthProvider } from 'react-oidc-context'
 
+/**
+ * OpenID Connect (OIDC) configuration for Keycloak integration.
+ * 
+ * Establishes the connection parameters for the 'zantrix' realm and 
+ * the 'zantrix-frontend' client. Handles post-login redirects.
+ */
 const oidcConfig = {
   authority: "http://localhost:8081/realms/zantrix",
   client_id: "zantrix-frontend",

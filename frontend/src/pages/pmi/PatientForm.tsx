@@ -2,6 +2,17 @@ import { useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { AlertCircle, Save, X } from 'lucide-react';
 
+/**
+ * Form component for registering a new patient.
+ * 
+ * Collects demographics and insurance information. Supports a quick toggle for 
+ * emergency patient registration ("John Doe" scenario), which disables standard 
+ * required fields. Submits the new patient to the backend FHIR-compliant endpoint.
+ *
+ * @param {Object} props - The component properties.
+ * @param {Function} props.onSaved - Callback invoked when the patient is successfully saved.
+ * @param {Function} props.onCancel - Callback invoked when the form is cancelled.
+ */
 export function PatientForm({ onSaved, onCancel }: { onSaved: (id: string, name: string) => void, onCancel: () => void }) {
   const auth = useAuth();
   const [isEmergency, setIsEmergency] = useState(false);

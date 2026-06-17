@@ -5,6 +5,9 @@ import { Stethoscope, LogOut, ShieldCheck, Search, Settings, Home, FileText, Ser
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Properties for the AppShell component.
+ */
 interface AppShellProps {
   children: ReactNode;
   userProfile?: any;
@@ -13,6 +16,15 @@ interface AppShellProps {
   breakGlassStatus: string | null;
 }
 
+/**
+ * The main application shell layout component.
+ * 
+ * Provides the global navigation, search functionality, theming context, 
+ * and persistent status bar across all authenticated routes. Handles the 
+ * "Break the Glass" (BTG) emergency access workflow UI.
+ *
+ * @param {AppShellProps} props - The properties for configuring the AppShell.
+ */
 export function AppShell({ children, userProfile, roles, onBreakGlass, breakGlassStatus }: AppShellProps) {
   const { t } = useTranslation();
   const auth = useAuth();
