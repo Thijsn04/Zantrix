@@ -11,6 +11,16 @@ import { PatientsModule } from './pages/pmi/PatientsModule';
 import { TerminologyModule } from './pages/terminology/TerminologyModule';
 import { Settings } from './pages/Settings';
 import i18nInstance from './i18n';
+import React, { Suspense } from 'react';
+
+const InteropDashboard = React.lazy(() => import('./pages/interop/InteropDashboard'));
+const WorkflowManager = React.lazy(() => import('./pages/workflow/WorkflowManager'));
+const DwhReports = React.lazy(() => import('./pages/dwh/DwhReports'));
+const GrandCentralDashboard = React.lazy(() => import('./pages/adt/GrandCentralDashboard'));
+const KioskTerminal = React.lazy(() => import('./pages/kiosk/KioskTerminal'));
+const ReferralInbox = React.lazy(() => import('./pages/referral/ReferralInbox'));
+const TransportManager = React.lazy(() => import('./pages/logistics/TransportManager'));
+const BedCleaningManager = React.lazy(() => import('./pages/logistics/BedCleaningManager'));
 
 /**
  * Renders the default workspace dashboard when no specific module is selected.
@@ -155,6 +165,46 @@ function MainApp() {
           <Route path="/terminology" element={<TerminologyModule roles={roles} />} />
           <Route path="/audit-logs" element={<PrivacyDashboard />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/interop" element={
+            <Suspense fallback={<div className="p-6">Loading Interop Engine...</div>}>
+              <InteropDashboard />
+            </Suspense>
+          } />
+          <Route path="/workflow" element={
+            <Suspense fallback={<div className="p-6">Loading Workflow Manager...</div>}>
+              <WorkflowManager />
+            </Suspense>
+          } />
+          <Route path="/dwh" element={
+            <Suspense fallback={<div className="p-6">Loading Data Warehouse...</div>}>
+              <DwhReports />
+            </Suspense>
+          } />
+          <Route path="/adt" element={
+            <Suspense fallback={<div className="p-6">Loading Grand Central...</div>}>
+              <GrandCentralDashboard />
+            </Suspense>
+          } />
+          <Route path="/kiosk" element={
+            <Suspense fallback={<div className="h-screen w-screen bg-zantrix-blue"></div>}>
+              <KioskTerminal />
+            </Suspense>
+          } />
+          <Route path="/referral" element={
+            <Suspense fallback={<div className="p-6">Loading Referrals...</div>}>
+              <ReferralInbox />
+            </Suspense>
+          } />
+          <Route path="/logistics" element={
+            <Suspense fallback={<div className="p-6">Loading Logistics...</div>}>
+              <TransportManager />
+            </Suspense>
+          } />
+          <Route path="/cleaning" element={
+            <Suspense fallback={<div className="p-6">Loading Cleaning Management...</div>}>
+              <BedCleaningManager />
+            </Suspense>
+          } />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AppShell>

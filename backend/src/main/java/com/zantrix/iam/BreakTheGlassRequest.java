@@ -13,6 +13,7 @@ public class BreakTheGlassRequest {
      * The mandatory reason explaining why emergency access is needed.
      */
     private String reason;
+    private java.util.UUID patientId;
     
     /**
      * Retrieves the reason for emergency access.
@@ -27,4 +28,7 @@ public class BreakTheGlassRequest {
      * @param reason The reason text.
      */
     public void setReason(String reason) { this.reason = reason; }
+
+    public java.util.UUID getPatientId() { return patientId; }
+    public void setPatientId(java.util.UUID patientId) { this.patientId = patientId; }
 }

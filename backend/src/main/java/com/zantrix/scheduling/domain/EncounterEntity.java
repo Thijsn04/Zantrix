@@ -30,6 +30,10 @@ public class EncounterEntity {
     @Column(nullable = false)
     private EncounterStatus status = EncounterStatus.PLANNED;
 
+    private UUID locationId;
+
+    private String bedNumber;
+
     /** FHIR R4 Encounter resource stored as JSONB */
     @Convert(converter = FhirEncounterConverter.class)
     @Column(columnDefinition = "jsonb")
@@ -59,6 +63,12 @@ public class EncounterEntity {
 
     public EncounterStatus getStatus() { return status; }
     public void setStatus(EncounterStatus status) { this.status = status; }
+
+    public UUID getLocationId() { return locationId; }
+    public void setLocationId(UUID locationId) { this.locationId = locationId; }
+
+    public String getBedNumber() { return bedNumber; }
+    public void setBedNumber(String bedNumber) { this.bedNumber = bedNumber; }
 
     public org.hl7.fhir.r4.model.Encounter getFhirData() { return fhirData; }
     public void setFhirData(org.hl7.fhir.r4.model.Encounter fhirData) { this.fhirData = fhirData; }

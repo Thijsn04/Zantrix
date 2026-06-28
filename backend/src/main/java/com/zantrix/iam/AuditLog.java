@@ -47,7 +47,21 @@ public class AuditLog {
     private String ipAddress;
     
     /** The identifier of the patient associated with the action, if applicable. */
+    /** The identifier of the patient associated with the action, if applicable. */
     private String patientId;
+
+    /** The type of entity being accessed or modified. */
+    private String entityType;
+
+    /** The unique identifier of the entity. */
+    private String entityId;
+
+    /** The reason code, especially for break-the-glass actions. */
+    private String reasonCode;
+
+    /** JSON Patch or diff representation of the changes. */
+    @Column(columnDefinition = "text")
+    private String diff;
 
     /**
      * Default constructor for JPA.
@@ -94,4 +108,12 @@ public class AuditLog {
     public void setIpAddress(String ipAddress) { this.ipAddress = ipAddress; }
     public String getPatientId() { return patientId; }
     public void setPatientId(String patientId) { this.patientId = patientId; }
+    public String getEntityType() { return entityType; }
+    public void setEntityType(String entityType) { this.entityType = entityType; }
+    public String getEntityId() { return entityId; }
+    public void setEntityId(String entityId) { this.entityId = entityId; }
+    public String getReasonCode() { return reasonCode; }
+    public void setReasonCode(String reasonCode) { this.reasonCode = reasonCode; }
+    public String getDiff() { return diff; }
+    public void setDiff(String diff) { this.diff = diff; }
 }

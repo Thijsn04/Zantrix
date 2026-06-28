@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { useAuth } from 'react-oidc-context';
-import { Stethoscope, LogOut, ShieldCheck, Search, Settings, Home, FileText, Server, LockOpen, X, User, Database, Calendar } from 'lucide-react';
+import { Stethoscope, LogOut, ShieldCheck, Search, Settings, Home, FileText, Server, LockOpen, X, User, Database, Calendar, Activity, Network, BarChart2, Bed, Monitor, Inbox, Truck, Sparkles } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -85,10 +85,18 @@ export function AppShell({ children, userProfile, roles, onBreakGlass, breakGlas
     { name: t('shell.nav.home'), path: '/', icon: Home },
     { name: t('shell.nav.patient_dossier'), path: '/patients', icon: FileText },
     { name: 'Scheduling', path: '/schedule', icon: Calendar },
+    { name: 'Referrals', path: '/referral', icon: Inbox },
+    { name: 'Grand Central (ADT)', path: '/adt', icon: Bed },
+    { name: 'Transport', path: '/logistics', icon: Truck },
+    { name: 'Cleaning', path: '/cleaning', icon: Sparkles },
+    { name: 'Tasks', path: '/workflow', icon: Network },
+    { name: 'Kiosk Terminal', path: '/kiosk', icon: Monitor },
   ];
 
   if (roles.includes('SYSTEM_ADMIN')) {
     navItems.push({ name: t('shell.nav.terminology'), path: '/terminology', icon: Database });
+    navItems.push({ name: 'Interop Engine', path: '/interop', icon: Activity });
+    navItems.push({ name: 'Data Warehouse', path: '/dwh', icon: BarChart2 });
   }
 
   if (isPrivacyOfficer) {

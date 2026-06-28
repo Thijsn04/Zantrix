@@ -4,6 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from 'react-oidc-context';
 import { useAppointments } from '../../hooks/useAppointments';
 import { Calendar } from 'lucide-react';
 import { AppointmentModal } from '../../components/scheduling/AppointmentModal';
@@ -21,8 +22,10 @@ export function ScheduleView() {
   const { t } = useTranslation();
   const currentDate = new Date();
   
-  // Hardcoded practitioner for demo purposes. In reality, we'd fetch the logged in user or selected doctors.
-  const practitionerId = "00000000-0000-0000-0000-000000000000"; 
+  const auth = useAuth();
+  
+  // Use the logged-in user's ID as the practitioner ID. Fallback to empty string if not available.
+  const practitionerId = auth.user?.profile?.sub || "00000000-0000-0000-0000-000000000000";  
   
   const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).toISOString();
   const end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).toISOString();

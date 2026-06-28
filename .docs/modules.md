@@ -1,16 +1,14 @@
-# Zantrix EPD - Volledige Module Catalogus (Enterprise Editie)
+# Zantrix Modules Catalogus
 
-Dit document bevat de uitputtende, fijnmazige lijst van alle meer dan 50+ modules voor het Zantrix EPD, ontworpen om te concurreren met systemen als EPIC en HiX. Dankzij de modulaire architectuur kunnen zorginstellingen exact hun eigen ecosysteem samenstellen.
-De modules gemarkeerd met `[MVP]` vormen samen het absoluut noodzakelijke fundament voor versie 1.0.
+Deze catalogus beschrijft de architectonische opdeling van het Zantrix EPD in losse, ontkoppelde domeinen (volgens de principles van Domain-Driven Design en Spring Modulith). Elke module is verantwoordelijk voor zijn eigen business logica en communiceert asynchroon of via gedefinieerde interfaces met andere modules.
 
-## 1. Fundament & Systeem (Core Foundation)
-
+## 1. Fundament (Core Foundation)
 - **1.1 Identity & Access Management (IAM) [MVP]**
   - **Status:** **✅ Gerealiseerd**
-  - **Details:** Bevat RBAC integratie via OAuth2 (Keycloak/JWT). Bevat PWA Frontend Shell met routering. Inclusief `Break-the-Glass` noodtoegang via JWT-manipulatie en filter override. Volledige cryptografische audit logging (NEN7510) via Spring AOP (wie, wat, IP, patient ID, hash-chaining).
+  - **Details:** Bevat Role-Based Access Control (RBAC), context-gebaseerde autorisatie en integratie met externe identity providers (zoals UZI-pas, ADFS). Verantwoordelijk voor het genereren en valideren van JWT's.
 - **1.2 Patient Master Index (PMI) [MVP]**
   - **Status:** **✅ Gerealiseerd**
-  - **Details:** Centrale database voor NAW, BSN, verzekeringsdata en deduplicatie. Inclusief zoekfunctionaliteit en merge/deduplicatie logica.
+  - **Details:** De 'Single Source of Truth' voor patiëntdemografie (NAW-gegevens, BSN, Huisarts). Bevat geavanceerde logica voor 'Merge' en 'Unmerge' van dubbele patiëntdossiers en synchronisatie met landelijke GBA/BRP systemen.
 - **1.3 Audit & Compliance Engine [MVP]**
   - **Status:** **✅ Gerealiseerd (Onderdeel van 1.1)**
   - **Details:** NEN7510/AVG logging van elke lees- en schrijfactie. Gerealiseerd via `@AuditLoggable` aspect.
@@ -95,3 +93,9 @@ De modules gemarkeerd met `[MVP]` vormen samen het absoluut noodzakelijke fundam
 - **8.2 Clinical Trials & Research:** Afschermen en anonimiseren van cohort-data voor wetenschappelijk onderzoek.
 - **8.3 Population Health Management:** Identificeren van risicogroepen (bijv. alle diabetespatiënten met een stijgend HbA1c).
 - **8.4 AI & Predictive Analytics:** Machine learning modellen voor bijv. het voorspellen van no-shows of het risico op sepsis.
+
+## 9. Operatie & Supply Chain (toegevoegd na analyse)
+- **9.1 Supply Chain & Materials Management:** Beheer van inkoop, implantaten (Implant Registry) en voorraad in het ziekenhuis.
+- **9.2 Sterile Processing Department (CSA):** Tracking & tracing van de sterilisatie van chirurgische netten en instrumentarium.
+- **9.3 Medical Device Integration (MDI):** Integratie met hardware zoals ECG-karren, infuuspompen en vitale-functies monitoren.
+- **9.4 Workforce Management & Rostering:** Rooster- en capaciteitsplanning voor verpleegkundigen en artsen.

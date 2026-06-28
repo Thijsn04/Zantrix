@@ -55,9 +55,14 @@ class BreakTheGlassController {
             return ResponseEntity.badRequest().body(Map.of("error", "Reason is required"));
         }
         
+        if (request.getPatientId() == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "patientId is required"));
+        }
+        
         BreakTheGlassSession session = new BreakTheGlassSession(
                 authentication.getName(),
                 request.getReason(),
+                request.getPatientId(),
                 LocalDateTime.now().plusHours(4)
         );
         repository.save(session);

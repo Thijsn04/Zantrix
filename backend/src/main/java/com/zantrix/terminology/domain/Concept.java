@@ -16,12 +16,20 @@ public class Concept {
     @Field(type = FieldType.Keyword)
     private String semanticTag;
 
+    @Field(type = FieldType.Keyword)
+    private String codeSystem;
+
+    @Field(type = FieldType.Keyword)
+    private String code;
+
     public Concept() {}
 
-    public Concept(String id, String preferredTerm, String semanticTag) {
+    public Concept(String id, String preferredTerm, String semanticTag, String codeSystem, String code) {
         this.id = id;
         this.preferredTerm = preferredTerm;
         this.semanticTag = semanticTag;
+        this.codeSystem = codeSystem;
+        this.code = code;
     }
 
     public String getId() { return id; }
@@ -32,4 +40,10 @@ public class Concept {
 
     public String getSemanticTag() { return semanticTag; }
     public void setSemanticTag(String semanticTag) { this.semanticTag = semanticTag; }
+
+    public String getCodeSystem() { return codeSystem; }
+    public void setCodeSystem(String codeSystem) { this.codeSystem = codeSystem; }
+
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
 }

@@ -54,6 +54,9 @@ public class Patient {
     /** If this record was merged, holds the ID of the target patient record. */
     private UUID mergedIntoId;
 
+    /** Indicates if the patient is merged */
+    private boolean isMerged = false;
+
     /** FHIR R4 Patient resource stored as JSONB for extended/custom demographic data. */
     @Convert(converter = FhirPatientConverter.class)
     @Column(columnDefinition = "jsonb")
@@ -142,6 +145,12 @@ public class Patient {
 
     /** @param mergedIntoId the target patient ID */
     public void setMergedIntoId(UUID mergedIntoId) { this.mergedIntoId = mergedIntoId; }
+
+    /** @return if patient is merged */
+    public boolean isMerged() { return isMerged; }
+
+    /** @param isMerged merge status */
+    public void setMerged(boolean isMerged) { this.isMerged = isMerged; }
 
     /** @return the FHIR patient data */
     public org.hl7.fhir.r4.model.Patient getFhirData() { return fhirData; }

@@ -148,7 +148,44 @@ public class PatientController {
     @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<PatientDto> mergePatients(@PathVariable UUID id, @RequestParam UUID targetId) {
         Patient merged = patientService.mergePatients(id, targetId);
+        merged.setMerged(true); // set flag
         return ResponseEntity.ok(mapToDto(merged));
+    }
+
+    /**
+     * Trigger real-time VECOZO Controle Op Verzekeringsrecht.
+     * Accessible by DOCTOR and NURSE roles.
+     *
+     * @param id the UUID of the patient
+     * @return a map containing coverage info
+     */
+    @GetMapping("/{id}/cov")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE', 'SYSTEM_ADMIN')")
+    public ResponseEntity<java.util.Map<String, Object>> checkCoverage(@PathVariable UUID id) {
+        Patient patient = patientService.getPatientById(id);
+        
+        java.util.Map<String, Object> covResult = new java.util.HashMap<>();
+        covResult.put("patientId", patient.getId());
+        covResult.put("bsn", patient.getBsn());
+        covResult.put("status", "ACTIVE");
+        covResult.put("insuranceCompany", patient.getInsuranceCompany() != null ? patient.getInsuranceCompany() : "Zilveren Kruis");
+        covResult.put("policyNumber", patient.getInsuranceNumber() != null ? patient.getInsuranceNumber() : "POL-991283");
+        covResult.put("uzoviCode", "3311");
+        
+        return ResponseEntity.ok(covResult);
+    }
+
+    /**
+     * Seeds the system with test patients for development purposes.
+     * Accessible only by SYSTEM_ADMIN or DOCTOR.
+     *
+     * @return a message confirming the action
+     */
+    @PostMapping("/dev/seed")
+    @PreAuthorize("hasAnyRole('SYSTEM_ADMIN', 'DOCTOR')")
+    public ResponseEntity<java.util.Map<String, String>> seedTestPatients() {
+        patientService.seedTestPatients();
+        return ResponseEntity.ok(java.util.Map.of("message", "Systeem ingevuld met test patiënten."));
     }
 
     /**

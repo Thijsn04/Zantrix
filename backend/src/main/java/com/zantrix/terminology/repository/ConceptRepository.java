@@ -6,5 +6,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 
 public interface ConceptRepository extends ElasticsearchRepository<Concept, String> {
-    List<Concept> findByPreferredTermContainingIgnoreCase(String term);
+    List<Concept> findByPreferredTermContainingIgnoreCase(String preferredTerm);
+    java.util.Optional<Concept> findByCodeSystemAndCode(String codeSystem, String code);
 }

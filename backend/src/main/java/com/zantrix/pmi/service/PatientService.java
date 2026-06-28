@@ -138,9 +138,39 @@ public class PatientService {
 
         source.setStatus(PatientStatus.MERGED);
         source.setMergedIntoId(targetId);
+        source.setMerged(true);
         patientRepository.save(source);
         
         return target;
+    }
+
+    /**
+     * Generates and saves a list of test patients for local development and testing.
+     */
+    @Transactional
+    public void seedTestPatients() {
+        String[] firstNames = {"Jan", "Piet", "Klaas", "Marie", "Anna", "Sophie", "Emma", "Tom", "Sanne", "Lars"};
+        String[] lastNames = {"Jansen", "Peters", "Visser", "De Jong", "Bakker", "Dijkstra", "Smit", "Veenstra", "De Boer", "Mulder"};
+
+        for (int i = 0; i < 10; i++) {
+            Patient p = new Patient();
+            p.setFirstName(firstNames[i]);
+            p.setLastName(lastNames[i]);
+            p.setBirthDate(java.time.LocalDate.of(1950 + (int)(Math.random() * 50), 1 + (int)(Math.random() * 11), 1 + (int)(Math.random() * 27)));
+            p.setGender(i % 2 == 0 ? com.zantrix.pmi.domain.Gender.MALE : com.zantrix.pmi.domain.Gender.FEMALE);
+            p.setEmergency(true); // Bypass BSN validation to ensure it always seeds successfully
+            p.setBsn("99999999" + i);
+            p.setInsuranceCompany("Zilveren Kruis");
+            p.setInsuranceNumber("POL-TEST-" + i);
+            
+            try {
+                if (patientRepository.findByBsn(p.getBsn()).isEmpty()) {
+                    patientRepository.save(p);
+                }
+            } catch (Exception e) {
+                // Ignore duplicates
+            }
+        }
     }
 
     /**

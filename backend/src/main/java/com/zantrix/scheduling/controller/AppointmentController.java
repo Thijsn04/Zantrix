@@ -55,8 +55,10 @@ public class AppointmentController {
         } else if (patientId != null) {
             return service.getAppointmentsForPatient(patientId);
         }
-        // In a real scenario we might return a bad request if no valid combination is provided.
-        return List.of();
+        throw new org.springframework.web.server.ResponseStatusException(
+                org.springframework.http.HttpStatus.BAD_REQUEST, 
+                "Provide either patientId, or practitionerId with start and end dates."
+        );
     }
 
     /**

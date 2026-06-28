@@ -12,6 +12,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class IntegrationTestBase {
 
     @Container
+    @SuppressWarnings("resource")
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
             .withDatabaseName("zantrix_db_test")
             .withUsername("zantrix")

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
-import { Settings as SettingsIcon, Save } from 'lucide-react';
+import { Settings as SettingsIcon, Save, Database } from 'lucide-react';
 import i18nInstance from '../i18n';
 
 /**
@@ -61,6 +61,25 @@ export function Settings() {
       }
     } catch (e) {
       setStatus({ type: 'error', message: t('settings.error') });
+    }
+  };
+
+  const handleSeedTestPatients = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/patients/dev/seed', {
+        method: 'POST',
+        headers: { 
+          'Authorization': `Bearer ${auth.user?.access_token}`
+        }
+      });
+      
+      if (response.ok) {
+        setStatus({ type: 'success', message: 'Systeem is succesvol ingevuld met test patiënten.' });
+      } else {
+        setStatus({ type: 'error', message: 'Fout bij het genereren van test patiënten. Controleer of je de juiste rechten hebt.' });
+      }
+    } catch (e) {
+      setStatus({ type: 'error', message: 'Netwerkfout bij het bereiken van de backend.' });
     }
   };
 
@@ -146,6 +165,24 @@ export function Settings() {
             <Save size={16} />
             {t('settings.save')}
           </button>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-6 mt-6">
+        <div>
+          <h2 className="text-lg font-medium text-slate-900 dark:text-white">Developer & Testing</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+            Test acties voor lokaal ontwikkelen en testen. Alleen beschikbaar voor beheerders of artsen.
+          </p>
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
+            <button 
+              onClick={handleSeedTestPatients}
+              className="flex items-center gap-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition shadow-sm border border-slate-300 dark:border-slate-600"
+            >
+              <Database size={16} />
+              Vul systeem met Test Patiënten
+            </button>
+          </div>
         </div>
       </div>
     </div>

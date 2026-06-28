@@ -47,6 +47,10 @@ class AuditService {
                 log.getTimestamp().toString(),
                 log.getIpAddress() != null ? log.getIpAddress() : "UNKNOWN",
                 log.getPatientId() != null ? log.getPatientId() : "NONE",
+                log.getEntityType() != null ? log.getEntityType() : "NONE",
+                log.getEntityId() != null ? log.getEntityId() : "NONE",
+                log.getReasonCode() != null ? log.getReasonCode() : "NONE",
+                log.getDiff() != null ? log.getDiff() : "NONE",
                 String.valueOf(log.isBreakTheGlass()),
                 previousHash
         );

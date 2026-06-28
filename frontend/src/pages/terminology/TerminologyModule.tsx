@@ -56,12 +56,11 @@ export function TerminologyModule({ roles }: { roles: string[] }) {
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery, auth.user?.access_token, isSystemAdmin]);
 
-  const handleImport = async (type: string) => {
+  const handleImport = async (type: string, file: File) => {
     try {
       setImportStatus(null);
-      // In a real frontend this would be a file upload, mocking the payload for demonstration
       const formData = new FormData();
-      formData.append('file', new Blob(['dummy content'], { type: 'text/csv' }), 'snomed_test.csv');
+      formData.append('file', file);
       
       const res = await fetch(`http://localhost:8080/api/v1/terminology/admin/${type}`, {
         method: 'POST',
@@ -78,6 +77,19 @@ export function TerminologyModule({ roles }: { roles: string[] }) {
     } catch(e) {
       setImportStatus({ type: 'error', msg: 'System Error' });
     }
+  };
+
+  const triggerFileInput = (type: string) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = type === 'snomed' || type === 'loinc' ? '.zip,.csv' : '.json';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        handleImport(type, file);
+      }
+    };
+    input.click();
   };
 
   if (!isSystemAdmin) {
@@ -184,7 +196,7 @@ export function TerminologyModule({ roles }: { roles: string[] }) {
               
               <div className="space-y-4">
                 <button 
-                  onClick={() => handleImport('snomed')}
+                  onClick={() => triggerFileInput('snomed')}
                   className="w-full flex items-center justify-between p-4 border border-slate-200 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-700/50 transition group"
                 >
                   <div className="flex items-center gap-3">
@@ -202,7 +214,7 @@ export function TerminologyModule({ roles }: { roles: string[] }) {
                 </button>
                 
                 <button 
-                  onClick={() => handleImport('loinc')}
+                  onClick={() => triggerFileInput('loinc')}
                   className="w-full flex items-center justify-between p-4 border border-slate-200 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-700/50 transition group"
                 >
                   <div className="flex items-center gap-3">
@@ -220,7 +232,7 @@ export function TerminologyModule({ roles }: { roles: string[] }) {
                 </button>
 
                 <button 
-                  onClick={() => handleImport('custom-codesystem')}
+                  onClick={() => triggerFileInput('custom-codesystem')}
                   className="w-full flex items-center justify-between p-4 border border-slate-200 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-700/50 transition group"
                 >
                   <div className="flex items-center gap-3">
