@@ -1,84 +1,86 @@
-# Zantrix EPD
+<div align="center">
 
-Zantrix is een modern, open-source Elektronisch Patiëntendossier (EPD), ontworpen met de filosofie van maximale standaardisatie, veiligheid en modulaire schaalbaarheid.
+# 🏥 Zantrix
 
-De applicatie is opgesplitst in een React/TypeScript PWA-frontend (met Vite) en een robuuste Java Spring Boot 3 backend, ondersteund door een PostgreSQL database en beveiligd met Keycloak (OAuth2 / OpenID Connect).
+**An open-source, FHIR-native Electronic Health Record (EHR/EPD)**
 
-## Systeemvereisten
+Zantrix is a modern, transparent alternative to closed EHR platforms — built around international healthcare standards, an immutable audit trail, and modular scale, so a small clinic and an academic hospital can run the same core.
 
-Zorg dat de volgende software is geïnstalleerd:
-- [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
-- [Java 21](https://adoptium.net/) (of hoger)
-- [Node.js](https://nodejs.org/) (minimaal v20 aanbevolen)
-- Optioneel: Maven (er wordt een Maven Wrapper `mvnw` meegeleverd)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPLv3-blue.svg)](LICENSE)
+[![Java 21](https://img.shields.io/badge/Java-21-orange.svg)](https://adoptium.net/)
+[![Spring Boot 3](https://img.shields.io/badge/Spring%20Boot-3-6DB33F.svg?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB.svg?logo=react&logoColor=black)](https://react.dev/)
+[![HL7 FHIR](https://img.shields.io/badge/HL7-FHIR%20native-e6007e.svg)](https://hl7.org/fhir/)
+![Status](https://img.shields.io/badge/status-MVP%20in%20progress-yellow.svg)
+
+</div>
 
 ---
 
-## 🚀 Snelstartgids (Lokale Ontwikkeling)
+## Why Zantrix
 
-### 1. Start de infrastructuur (Database & Identity Provider)
-Zantrix maakt gebruik van PostgreSQL voor dataopslag en Keycloak voor Identity & Access Management (IAM). Start deze services via Docker:
+Electronic Health Records are typically locked behind proprietary vendors, with closed data models and hard vendor lock-in. Zantrix takes the opposite stance:
+
+- **Open-source & transparent** — control stays with the care provider (AGPLv3).
+- **Standards-first** — HL7 FHIR as the core data model, extended with SNOMED CT, ICD-10 and DICOM. No closed, proprietary formats.
+- **Modular** — turn modules on or off, from an independent treatment centre (ZBC) to a large hospital.
+- **Task-driven UI** — designed to reduce the registration burden on clinical staff.
+
+> Zantrix applies medical-informatics domain knowledge to an inspectable EHR — informed by first-hand experience with hospital information systems.
+
+## Architecture
+
+A **modular monolith**: one application with strictly separated internal domains, ready to split into services later if needed.
+
+| Layer | Technology |
+|---|---|
+| **Backend** | Java 21 · Spring Boot 3 (HAPI FHIR-ready) |
+| **Frontend** | React 19 · TypeScript · Vite · Tailwind CSS · i18next (light/dark, PWA) |
+| **Database** | PostgreSQL 16 (`JSONB` for FHIR resources + ACID guarantees) |
+| **Identity** | Keycloak 24 (OAuth2 / OpenID Connect, 2FA, SSO) |
+| **Search** | Elasticsearch 8 |
+| **API** | REST-first — ready for external integrations from day one |
+
+### Security by design (targeting NEN7510 / ISO 27001)
+
+- **RBAC** — fine-grained role-based access control via Keycloak.
+- **Immutable audit trail** — every action is hash-chained (previous-hash, current-hash, IP, patient ID) via Spring AOP.
+- **Break-the-glass** — emergency access escalation on the ER, with mandatory after-the-fact accountability.
+- **2FA & SSO** as standard.
+
+## Getting started
+
+**Requirements:** Docker & Docker Compose · Java 21+ · Node.js 20+
 
 ```bash
+# 1. Start infrastructure (PostgreSQL :5433, Keycloak :8081, Elasticsearch)
 docker-compose up -d
-```
-*Dit start de PostgreSQL database (port 5433) en Keycloak (port 8081). De Keycloak server importeert automatisch de testgebruikers via `realm-export.json`.*
 
-### 2. Start de Backend (Spring Boot)
-De backend zorgt voor de bedrijfslogica en is toegankelijk via poort 8080. 
-Open een nieuwe terminal in de map `backend`:
-
-```bash
+# 2. Start the backend (Spring Boot API on :8080)
 cd backend
-./mvnw spring-boot:run
-```
-*(Op Windows gebruik je `.\mvnw.cmd spring-boot:run`)*
+./mvnw spring-boot:run        # Windows: .\mvnw.cmd spring-boot:run
 
-De Spring Boot API zal starten. Inclusief automatische database-migraties via Flyway (indien geconfigureerd) of Hibernate DDL.
-
-### 3. Start de Frontend (React / Vite)
-De frontend is een React applicatie met een 'native desktop' uitstraling, geschreven in TypeScript en gebouwd met Vite. 
-Open een nieuwe terminal in de map `frontend`:
-
-```bash
+# 3. Start the frontend (Vite dev server)
 cd frontend
 npm install
 npm run dev
 ```
-De web-applicatie zal lokaal bereikbaar zijn op `http://localhost:5173/`.
+
+Keycloak auto-imports test users from `realm-export.json`. See [`.docs/`](.docs/) for the full masterplan, architecture and module specifications.
+
+## Roadmap (MVP)
+
+- [x] **Core Identity & Security** — login, RBAC, immutable audit logging, 2FA
+- [ ] **Patient Master Index (PMI)** — central patient register (demographics, BSN) *(in progress)*
+- [ ] **Scheduling & Resource Planning** — calendars for practitioners, rooms and appointments
+- [ ] Clinical documentation, ordering & results modules
+
+## License
+
+Licensed under the **GNU Affero General Public License v3.0 (AGPLv3)** — improvements to the codebase must be shared back with the community. See [LICENSE](LICENSE).
 
 ---
 
-## 👤 Test Accounts (Inloggen)
-
-Keycloak laadt automatisch de `zantrix` realm in met de volgende ingebouwde test-accounts. Het wachtwoord voor al deze accounts is **`test`**.
-
-| Gebruikersnaam  | Rol | Omschrijving |
-| :--- | :--- | :--- |
-| `doctor_test` | DOCTOR | Standaard medische toegang. Kan *Break-the-Glass* (noodtoegang) triggeren. |
-| `nurse_test` | NURSE | Toegang voor verpleegkundigen. Kan *Break-the-Glass* triggeren. |
-| `privacy_test` | PRIVACY_OFFICER | Administratieve privacy toegang (voor Audit Logs etc.). |
-
-*Beheerder van Keycloak zelf? Ga naar `http://localhost:8081/` en log in met `admin` / `admin`.*
-
----
-
-## 🛠 Project Structuur
-
-- **`/.docs`**: Uitgebreide documentatie over architectuur, masterplan, UI/UX (shell) guidelines, codeer-regels en de roadmap.
-- **`/backend`**: Spring Boot 3 + Java applicatie met de interne modules (IAM, PMI, etc.).
-- **`/frontend`**: React + TypeScript client applicatie, PWA ready, zonder overbodige framework ballast (uitsluitend Vanilla CSS voor maximale performance).
-- **`docker-compose.yml`**: Voorziening voor de onderliggende resources (Database, Keycloak).
-- **`realm-export.json`**: Pre-geconfigureerde Keycloak omgeving met rollen en test accounts.
-
-## 📖 Documentatie
-Voor verdere technische richtlijnen, gelieve de bestanden in de `/.docs` map in te zien. Ze bevatten onder meer:
-- `Masterplan.md`: Het grote geheel en de doelen.
-- `modules.md`: Overzicht van alle modules en hun status.
-- `modules/IAM.md`: Documentatie IAM module.
-- `modules/PMI.md`: Documentatie PMI module.
-- `modules/Terminology.md`: Documentatie Terminology module.
-- `coding-guidelines.md` & `shell-guidelines.md`: Code- en UX-standaarden.
-
----
-*Gelicenseerd onder AGPLv3 (GNU Affero General Public License v3.0).*
+<div align="center">
+<sub>Built by <a href="https://github.com/Thijsn04">Thijs Nannings</a> · Medical Informatics @ UvA · <a href="https://lythos.nl">Lythos</a></sub>
+</div>
