@@ -49,7 +49,7 @@ public class SecurityConfig {
 
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
+        converter.setJwtGrantedAuthoritiesConverter(new JwtAuthoritiesConverter());
         return converter;
     }
 
