@@ -25,10 +25,10 @@ Zantrix
 The Docker Compose file starts the supporting services currently implemented: PostgreSQL, Keycloak, and HAPI FHIR. Elasticsearch is planned for terminology and search work and is not part of the current Compose file.
 
 ```bash
-docker compose up -d
+docker compose up --build -d
 ```
 
-This starts PostgreSQL (port 5433), Keycloak (port 8081), and the dedicated HAPI FHIR JPA server (port 8090). On first start, PostgreSQL creates separate databases for the application, the FHIR server, and Keycloak. The FHIR server is reachable at `http://localhost:8090/fhir`.
+This builds and starts PostgreSQL (port 5433), Keycloak (port 8081), the dedicated HAPI FHIR JPA server (port 8090), the backend (port 8080), and the frontend (port 5173). On first start, PostgreSQL creates separate databases for the application, the FHIR server, and Keycloak. The FHIR server is reachable at `http://localhost:8090/fhir`.
 
 The credentials in the compose file are development only values. They are not secrets and must never be used in a real deployment.
 
@@ -54,7 +54,7 @@ npm ci
 npm run dev
 ```
 
-The Vite dev server prints the local URL, normally `http://localhost:5173`. The frontend defaults to the local backend and Keycloak values shown in `frontend/.env.example`; copy that file to `.env.local` only when overrides are needed. OIDC provider wiring exists, but the placeholder screen does not yet start login or call the backend.
+The Vite dev server prints the local URL, normally `http://localhost:5173`. The frontend defaults to the local backend and Keycloak values shown in `frontend/.env.example`; copy that file to `.env.local` only when overrides are needed. It offers OIDC sign-in and calls `/api/v1/iam/me` only after authentication. The workspace does not yet include clinical flows or patient selection.
 
 ## Test accounts
 
@@ -83,7 +83,7 @@ npm run build
 npm audit --omit=dev --audit-level=high
 ```
 
-Run `npm ci` first when validating a fresh checkout. The frontend currently has one smoke test; Playwright and end-to-end clinical flows have not landed.
+Run `npm ci` first when validating a fresh checkout. Component tests cover the unauthenticated sign-in entry point. Playwright and end-to-end clinical flows have not landed because no clinical flow exists yet.
 
 ## Coding standards
 

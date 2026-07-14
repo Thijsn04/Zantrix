@@ -17,7 +17,7 @@ The following is present on the default branch:
 - `FhirAccessGateway` is the only supported application entry point to HAPI. It supports capabilities plus read, create, update, and delete, applies SMART resource-scope checks, and audits success and failure.
 - Patient-context scopes are deliberately limited to direct access to the token's own Patient resource. Search, compartment-aware authorization, batch, transactions, and custom operations are not implemented.
 - The Zantrix database contains a Flyway-managed, tamper evident relational audit chain. FHIR AuditEvent export, audit search UI, break-glass review, and cross-service mutation reconciliation are not implemented.
-- The frontend has strict TypeScript, Vite, Tailwind CSS, i18next, PWA support, runtime API/OIDC configuration, and an OIDC provider. It still renders a placeholder and has no application shell, patient context, typed API client, design system, or end-to-end suite.
+- The frontend has strict TypeScript, Vite, Tailwind CSS, i18next, PWA support, runtime API/OIDC configuration, an OIDC provider, typed API client, authenticated session lookup, a responsive workspace shell, patient-context location, command palette, and light/dark design tokens. It intentionally contains no clinical screen or patient data yet.
 - CI builds and tests the backend, verifies Modulith boundaries, lints/tests/builds the frontend, audits production npm dependencies, reviews pull-request dependencies, and enforces the repository house style.
 
 ## Milestones

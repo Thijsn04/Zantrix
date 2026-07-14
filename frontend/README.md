@@ -1,6 +1,6 @@
 # Zantrix Frontend
 
-The Zantrix frontend is a React and TypeScript clinical application foundation. It is in Milestone 0 development. The current screen is a placeholder; runtime OIDC configuration and a top-level OIDC provider are wired, while login controls, protected routing, the API client, patient context, workspace shell, and design system still need to be built.
+The Zantrix frontend is a React and TypeScript clinical application foundation. It provides an OIDC sign-in boundary, authenticated session lookup, a typed API client, a responsive workspace shell, theme tokens, accessible button primitives, persistent patient-context location, and a keyboard command palette. It deliberately does not display fabricated patient or clinical data.
 
 ## Commands
 

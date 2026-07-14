@@ -19,7 +19,7 @@ Zantrix is a modern, transparent alternative to closed EHR platforms. It is buil
 
 ## Status
 
-Zantrix is in early development and is not production ready. The current repository contains the Milestone 0 foundation: local PostgreSQL, Keycloak, and HAPI FHIR infrastructure; an authenticated Spring Boot gateway with guarded FHIR CRUD access; a hash chained relational audit trail; a minimal React shell; and continuous integration. Clinical workflows, consent, break the glass, a public FHIR gateway, and the full frontend design system are not implemented yet.
+Zantrix is in early development and is not production ready. The current repository contains the Milestone 0 foundation: local PostgreSQL, Keycloak, and HAPI FHIR infrastructure; an authenticated Spring Boot gateway with guarded FHIR CRUD access; a hash chained relational audit trail; a secure React workspace shell; and continuous integration. Clinical workflows, consent, break the glass, a public FHIR gateway, and patient data workflows are not implemented yet.
 
 The [roadmap](docs/roadmap.md) is the source of truth for what is built and what comes next.
 
@@ -74,10 +74,11 @@ See [security and privacy](docs/architecture/security-and-privacy.md) for the fu
 **Requirements:** Docker and Docker Compose, a Java 21 JDK, and a Node.js version supported by Vite 8 (`^20.19.0` or `>=22.12.0`). CI uses Java 21 and Node 20.
 
 ```bash
-# 1. Start infrastructure (PostgreSQL, Keycloak, HAPI FHIR)
-docker compose up -d
+# 1. Build and start the full local stack
+docker compose up --build -d
 
-# 2. Start the backend (Spring Boot API on port 8080)
+# Or run the backend and frontend outside Compose while developing:
+# backend: Spring Boot API on port 8080
 cd backend
 ./mvnw spring-boot:run          # Windows: .\mvnw.cmd spring-boot:run
 

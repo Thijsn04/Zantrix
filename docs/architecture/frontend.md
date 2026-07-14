@@ -4,9 +4,9 @@ The Zantrix frontend is a clinical workspace. It should feel like a focused desk
 
 ## Current implementation
 
-The frontend currently renders a localized placeholder screen. It has React 19, TypeScript 6 strict mode, Vite 8, Tailwind CSS 4, i18next, PWA generation, environment-driven backend/OIDC configuration, and a top-level `react-oidc-context` provider. One Testing Library smoke test covers the placeholder.
+The frontend has React 19, TypeScript 6 strict mode, Vite 8, Tailwind CSS 4, i18next, PWA generation, environment-driven backend/OIDC configuration, and a top-level `react-oidc-context` provider. It presents an explicit sign-in state, loads the authenticated session from `/api/v1/iam/me` through the single typed API client, and renders a responsive workspace shell after authentication.
 
-React Query, React Router, Lucide, and the OIDC libraries are installed as foundation dependencies. The application does not yet have routes, backend calls, login controls, patient context, workspace tabs, a command palette, a typed FHIR/API client, a design system, or Playwright tests. The remainder of this document is the target frontend architecture.
+The shell has light and dark token themes, accessible Button and icon-button primitives, a visible patient-context region that starts empty, and a Ctrl/Cmd+K command palette with focus and Escape handling. React Query handles session caching and Lucide supplies icons. The first clinical routes, patient selection, workspace tabs, typed FHIR client, and Playwright tests remain future work because no clinical capability exists yet.
 
 ## An application, not a website
 
@@ -50,7 +50,7 @@ frontend/src
 - **Auth is centralized.** A top-level OIDC provider is wired today. Login/logout controls, protected routing, token attachment, refresh behavior, and the current-session API integration remain to be built.
 - **FHIR aware.** A FHIR client wraps the platform's FHIR API with types generated from the resource definitions, so features work with typed resources rather than untyped JSON.
 - **Server state via React Query.** Caching, background revalidation, and optimistic updates are handled by React Query. This is what makes navigation feel instant.
-- **Strict typing.** TypeScript strict mode is on. ESLint currently applies the recommended TypeScript rules; an explicit repository-wide `any` prohibition still needs to be added.
+- **Strict typing.** TypeScript strict mode is on and ESLint rejects explicit `any`.
 
 ## Internationalization
 

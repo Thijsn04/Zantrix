@@ -1,21 +1,33 @@
+import { useAuth } from 'react-oidc-context';
+import { AppWorkspace } from './app/AppWorkspace';
+import { Button } from './design/Button';
 import { useTranslation } from 'react-i18next';
 
-/**
- * Placeholder application root.
- *
- * The previous application shell, pages, and API layer were removed during the
- * Milestone 0 rebuild. The real application shell and design system are built
- * next. See docs/architecture/frontend.md.
- */
+/** Application entry point with explicit authentication states. */
 export default function App() {
   const { t } = useTranslation();
+  const auth = useAuth();
 
-  return (
-    <main className="min-h-screen flex items-center justify-center px-6">
-      <div className="max-w-md text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">{t('app.title')}</h1>
-        <p className="mt-2 text-sm text-slate-500">{t('app.rebuilding')}</p>
-      </div>
-    </main>
-  );
+  if (auth.isLoading) {
+    return <main className="screen-state" aria-busy="true">{t('session.loading')}</main>;
+  }
+
+  if (auth.error) {
+    return <main className="screen-state" role="alert">{t('session.unavailable')}</main>;
+  }
+
+  if (!auth.isAuthenticated) {
+    return (
+      <main className="welcome">
+        <section className="welcome-card" aria-labelledby="welcome-title">
+          <p className="eyebrow">{t('app.productType')}</p>
+          <h1 id="welcome-title">{t('app.title')}</h1>
+          <p>{t('app.welcome')}</p>
+          <Button onClick={() => void auth.signinRedirect()}>{t('session.signIn')}</Button>
+        </section>
+      </main>
+    );
+  }
+
+  return <AppWorkspace accessToken={auth.user?.access_token ?? ''} onSignOut={() => void auth.signoutRedirect()} />;
 }

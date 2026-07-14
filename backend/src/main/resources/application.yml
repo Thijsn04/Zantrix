@@ -43,4 +43,4 @@ zantrix:
 
 logging:
   level:
-    com.zantrix: DEBUG
+    com.zantrix: INFO
