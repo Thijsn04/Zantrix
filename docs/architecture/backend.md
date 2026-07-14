@@ -1,0 +1,59 @@
+# Backend Architecture
+
+The backend is a modular monolith built with Java 21 and Spring Boot 3, using Spring Modulith to enforce module boundaries. It embeds the HAPI FHIR JPA server as the canonical data platform.
+
+## Why a modular monolith
+
+A large EHR spans many domains, but at this stage the team and the deployments are small. A modular monolith gives the separation of a service architecture without the operational cost of running many services. Boundaries are enforced in the codebase and verified in tests, so the option to extract a module into its own service later stays open. See [ADR 0001](decisions/0001-modular-monolith.md).
+
+## Module structure
+
+Each capability from the [module vision](../modules/README.md) maps to a Spring Modulith module, one top level package under `com.zantrix`.
+
+A module is organized by responsibility, for example:
+
+```
+com.zantrix.orders
+  api            published interface and events other modules may use
+  internal       implementation, not visible to other modules
+  web            REST controllers for the frontend
+```
+
+Rules:
+
+1. **No cross module internals.** A module never imports another module's `internal` package. This is enforced by Spring Modulith verification tests, which fail the build on a violation.
+2. **Talk through the front door.** Modules interact through a published `api` interface or by consuming domain events. There is no shared reaching into another module's data.
+3. **Events for decoupling.** State changes that other modules care about are published as application events, for example an event when an order result is finalized. Consumers subscribe. This keeps modules loosely coupled and mirrors how they would communicate if later split into services.
+4. **One owner per resource area.** Each FHIR resource area has a single owning module, which prevents the duplication that the previous codebase suffered from.
+
+## Data access
+
+Clinical state is FHIR. Modules access it through the internal FHIR access layer described in [FHIR strategy](fhir-strategy.md), not through direct JPA entities that shadow FHIR resources.
+
+Schema for supporting tables and for the HAPI server is owned exclusively by **Flyway**. Hibernate automatic schema generation is disabled. There is one migration history, and every schema change is a reviewed migration in version control. This removes the schema drift risk that comes from letting Hibernate mutate tables at runtime.
+
+## API surface
+
+The backend exposes two kinds of HTTP API:
+
+- The **FHIR REST API**, for standards based access and for external clients and SMART apps.
+- A small set of **application endpoints** for the frontend, where a task oriented, aggregated call is clearer than a series of raw FHIR calls. These endpoints are thin. They compose FHIR operations and module interfaces, and they never become a parallel data model.
+
+All endpoints are documented. FHIR conformance is published as a CapabilityStatement. Application endpoints are published as OpenAPI.
+
+## Cross cutting infrastructure
+
+- **Security.** A single security layer validates OAuth2 and OpenID Connect tokens, resolves SMART scopes and roles, and applies consent and break the glass rules. See [security and privacy](security-and-privacy.md).
+- **Audit.** Access and change are recorded centrally as FHIR AuditEvent. The audit mechanism is designed to be concurrency safe and to never capture protected health information in plain application logs. This is a deliberate redesign of the earlier approach, which serialized every write through the tail of a single table and logged method arguments broadly.
+- **Error handling.** Domain errors are typed and mapped to correct HTTP status codes and FHIR OperationOutcome payloads through a single handler. Raw stack traces are never returned.
+- **Observability.** Structured JSON logging, Micrometer metrics, distributed tracing, and health and readiness probes are part of the platform.
+- **Configuration.** Feature flags enable or disable capabilities per deployment. Secrets come from the environment or a secret manager, never from source.
+
+## Testing strategy
+
+- **Unit tests** for domain logic, mappers, and calculators.
+- **Integration tests** with Testcontainers against real PostgreSQL, Keycloak, and Elasticsearch. No in memory database substitutes, to avoid dialect false positives.
+- **Modulith verification tests** that fail the build if module boundaries are violated.
+- **Contract and conformance tests** against the FHIR CapabilityStatement and the active profiles.
+
+See [development](../development.md) for how to run these locally.
