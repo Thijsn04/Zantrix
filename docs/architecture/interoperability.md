@@ -1,41 +1,36 @@
 # Interoperability and Localization
 
-Interoperability is a first class capability, and it is also where all country specific behaviour lives. Keeping regional concerns in adapter packs is what lets the Zantrix core stay international first.
+Interoperability and country-specific behavior belong at explicit boundaries so the Zantrix core remains region neutral.
 
-## Principles
+## Current implementation
 
-1. **FHIR is the internal lingua franca.** Everything that enters or leaves Zantrix is translated to or from FHIR at the boundary. Internally there is one representation.
-2. **The core is region neutral.** No national identifier, exchange network, or reimbursement rule is hardcoded into a core module.
-3. **Regions are packs.** Country specific integration, profiles, terminology bindings, and rules are packaged as adapter packs that a deployment enables. They are off by default.
+No interoperability adapter, regional pack, Apache Camel route, HL7 v2 interface, FHIR Subscription integration, document exchange, DICOM integration, or national-system connector is implemented. The dedicated HAPI FHIR service and the backend's internal HAPI client establish the FHIR data-platform foundation only. They are not an external interoperability product surface yet.
 
-## Inbound and outbound integration
+The repository contains no Netherlands pack and performs no BSN verification, national exchange, insurance eligibility, or Dutch reimbursement operation. Zantrix never returns fabricated responses for those services.
 
-- **HL7 v2.** Classic hospital messaging, such as ADT, orders, and results, is handled through Apache Camel routes that map v2 messages to and from FHIR resources. This lets Zantrix participate in existing hospital integration engines.
-- **FHIR APIs.** Zantrix both exposes a FHIR API and can act as a FHIR client to external servers.
-- **FHIR Subscriptions.** Internal and external subscribers can be notified of changes, which drives event based integration without polling.
-- **Documents.** C-CDA and other document formats are imported and exported where needed, stored as FHIR DocumentReference and Composition.
-- **Imaging.** DICOM and DICOMweb connect imaging systems, with ImagingStudy resources referencing the images.
+## Target principles
+
+1. **FHIR is the internal lingua franca.** Data entering or leaving Zantrix is translated to or from FHIR at the boundary.
+2. **The core is region neutral.** National identifiers, exchange networks, and reimbursement rules are not hardcoded into core modules.
+3. **Regions are packs.** Country-specific profiles, terminology bindings, rules, and connectors are optional adapter packs and are disabled by default.
+4. **Integration status is explicit.** A connector is never presented as functional until it communicates with and is verified against the real external service.
+
+## Target integration surfaces
+
+- **HL7 v2:** Apache Camel routes for messages such as ADT, orders, and results.
+- **FHIR APIs:** secured inbound FHIR/SMART access through the Zantrix gateway and outbound clients for external servers.
+- **FHIR Subscriptions:** event-driven internal and external notifications.
+- **Documents:** import and export of formats such as C-CDA, represented with DocumentReference and Composition.
+- **Imaging:** DICOM and DICOMweb integration with ImagingStudy references.
+
+These are planned surfaces, not current features.
 
 ## Regional adapter packs
 
-An adapter pack bundles everything specific to a country or network:
+An adapter pack will bundle region-specific profiles, terminology bindings, identifier systems, connector implementations, and workflow rules. The planned Netherlands pack is the first reference implementation and is expected to cover standard FHIR representation of the BSN, authorized person-registry verification, national exchange connectivity, payer eligibility, and Dutch reimbursement coding.
 
-- Profiles and terminology bindings, for example US Core, or Nictiz zib for the Netherlands.
-- Identifier systems, for example the Dutch BSN as a standard FHIR identifier.
-- Connectors to national systems.
-- Region specific validation and workflow rules.
+Exact services, legal bases, certification requirements, and terminology licenses must be confirmed during pack design. The core must not depend on the pack.
 
-### The Netherlands pack
+## Why this boundary matters
 
-The first adapter pack targets the Netherlands and includes:
-
-- BSN handling and verification against the national person registry service.
-- National exchange connectivity.
-- Insurance eligibility checks against the national payer clearinghouse.
-- Reimbursement coding for the Dutch system.
-
-This pack is a reference for how future regional packs are structured. It is disabled by default, and the core does not depend on it.
-
-## Why this matters
-
-The earlier codebase mixed Dutch specific logic, such as fixed insurer names and national identifiers, directly into core modules, and returned fabricated responses in place of real integrations. Moving these concerns into explicit, honest adapters does two things. It keeps the core usable anywhere, and it makes clear where an integration is real versus where it is a stub awaiting a real connection.
+The earlier codebase mixed Dutch-specific assumptions into core modules and returned fabricated integration responses. Explicit adapter packs keep the core portable and make the difference between a real connector, a development stub, and a future design unambiguous.

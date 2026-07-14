@@ -19,7 +19,9 @@ Zantrix is a modern, transparent alternative to closed EHR platforms. It is buil
 
 ## Status
 
-Zantrix is in early development. The project is undergoing a ground up rebuild of its foundation and documentation. Nothing here should be treated as production ready yet. The [roadmap](docs/roadmap.md) tracks honest, verifiable status per capability, and the documentation states clearly what is planned versus what is built.
+Zantrix is in early development and is not production ready. The current repository contains the Milestone 0 foundation: local PostgreSQL, Keycloak, and HAPI FHIR infrastructure; an authenticated Spring Boot gateway with guarded FHIR CRUD access; a hash chained relational audit trail; a minimal React shell; and continuous integration. Clinical workflows, consent, break the glass, a public FHIR gateway, and the full frontend design system are not implemented yet.
+
+The [roadmap](docs/roadmap.md) is the source of truth for what is built and what comes next.
 
 If you are looking for the design of the system, start with the [documentation](docs/README.md).
 
@@ -28,7 +30,7 @@ If you are looking for the design of the system, start with the [documentation](
 Electronic Health Records are typically locked behind proprietary vendors, with closed data models and hard vendor lock in. Zantrix takes the opposite position:
 
 - **Open source and transparent.** Control stays with the care provider, under the AGPLv3 license.
-- **Standards first.** HL7 FHIR R4 is the canonical data model, served by a conformant FHIR API. It is extended with SNOMED CT, LOINC, ICD, and DICOM. There are no closed, proprietary formats.
+- **Standards first.** HL7 FHIR R4 is the canonical data model. The internal HAPI service provides the FHIR API today; the target is secured external FHIR access with terminology and imaging standards layered on deliberately. There are no closed, proprietary formats.
 - **International first.** The core is region neutral. Country specific concerns, such as the Dutch BSN, national exchange networks, and reimbursement rules, live in optional adapter packs that are disabled by default.
 - **Modular.** Capabilities can be turned on or off, so the same platform fits an independent treatment centre or an academic hospital.
 - **Task driven.** The interface is designed to reduce the registration burden on clinical staff and to run like a real clinical application, not a marketing website.
@@ -41,22 +43,20 @@ Zantrix is a **modular monolith**: one deployable application with strictly sepa
 |---|---|
 | **FHIR platform** | HAPI FHIR R4 JPA server as the canonical resource store and REST API |
 | **Backend** | Java 21, Spring Boot 3, Spring Modulith |
-| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS, i18next, PWA |
+| **Frontend** | React 19, TypeScript 6, Vite 8, Tailwind CSS 4, i18next, PWA |
 | **Database** | PostgreSQL 16 |
-| **Identity** | Keycloak, OAuth2 and OpenID Connect, SMART on FHIR |
+| **Identity** | Keycloak, OAuth2 and OpenID Connect, SMART scope enforcement in the backend |
 | **Search (planned)** | Elasticsearch for terminology and resource indexing |
 | **Interoperability (planned)** | HL7 v2 and FHIR bridges via Apache Camel |
 
 For the reasoning behind these choices, see the [architecture decision records](docs/architecture/decisions/).
 
-### Security by design
+### Security foundation and target
 
 Zantrix targets NEN 7510 and ISO 27001 as design goals. These are goals, not certifications.
 
-- **Access control.** Role based and attribute based access via Keycloak and SMART scopes.
-- **Immutable audit trail.** Every access is recorded as a FHIR AuditEvent in a tamper evident, hash chained log.
-- **Break the glass.** Emergency access escalation with mandatory justification and after the fact review.
-- **Consent and privacy.** Consent aware access and GDPR data subject workflows.
+- **Implemented:** stateless JWT authentication, Keycloak realm-role mapping, SMART resource-scope checks on gateway operations, and a tamper evident relational audit chain.
+- **Planned:** attribute and relationship checks, consent enforcement, break the glass, privacy-officer workflows, FHIR AuditEvent export, and durable reconciliation between FHIR mutations and audit writes.
 
 See [security and privacy](docs/architecture/security-and-privacy.md) for the full model.
 
@@ -71,7 +71,7 @@ See [security and privacy](docs/architecture/security-and-privacy.md) for the fu
 
 ## Getting started
 
-**Requirements:** Docker and Docker Compose, Java 21 or newer, Node.js 20 or newer.
+**Requirements:** Docker and Docker Compose, a Java 21 JDK, and a Node.js version supported by Vite 8 (`^20.19.0` or `>=22.12.0`). CI uses Java 21 and Node 20.
 
 ```bash
 # 1. Start infrastructure (PostgreSQL, Keycloak, HAPI FHIR)
@@ -83,7 +83,7 @@ cd backend
 
 # 3. Start the frontend (Vite dev server)
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 

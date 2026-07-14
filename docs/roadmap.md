@@ -8,6 +8,18 @@ Zantrix is being rebuilt from the foundation up. An earlier prototype existed wi
 
 The current phase is **foundation implementation**. The repository contains the first security, FHIR connectivity, audit, and frontend foundations, but Milestone 0 is not complete.
 
+### Implemented baseline
+
+The following is present on the default branch:
+
+- Docker Compose starts PostgreSQL 16, Keycloak 24.0.4, and the official HAPI FHIR 8.10 image with separate application, identity, and FHIR databases.
+- The Java 21 / Spring Boot 3.3 backend is a stateless OAuth2 resource server. It maps Keycloak realm roles and OAuth2 or SMART scopes into Spring Security authorities.
+- `FhirAccessGateway` is the only supported application entry point to HAPI. It supports capabilities plus read, create, update, and delete, applies SMART resource-scope checks, and audits success and failure.
+- Patient-context scopes are deliberately limited to direct access to the token's own Patient resource. Search, compartment-aware authorization, batch, transactions, and custom operations are not implemented.
+- The Zantrix database contains a Flyway-managed, tamper evident relational audit chain. FHIR AuditEvent export, audit search UI, break-glass review, and cross-service mutation reconciliation are not implemented.
+- The frontend has strict TypeScript, Vite, Tailwind CSS, i18next, PWA support, runtime API/OIDC configuration, and an OIDC provider. It still renders a placeholder and has no application shell, patient context, typed API client, design system, or end-to-end suite.
+- CI builds and tests the backend, verifies Modulith boundaries, lints/tests/builds the frontend, audits production npm dependencies, reviews pull-request dependencies, and enforces the repository house style.
+
 ## Milestones
 
 The sequence is deliberate. Each milestone must be genuinely production grade, tested, and documented before the next begins. Feature count is not the goal. Quality is.
@@ -54,7 +66,7 @@ This table is the single source of truth for status and is updated as work lands
 | Capability | Milestone | Status |
 |---|---|---|
 | Repository hygiene | 0 | Done |
-| Continuous integration | 0 | In progress |
+| Continuous integration | 0 | Done |
 | Platform security foundation (OAuth2 resource server) | 0 | Done |
 | FHIR Data Platform (dedicated HAPI FHIR server) | 0 | In progress |
 | Identity and Access Management (roles, SMART scopes) | 0 | In progress |
@@ -76,7 +88,7 @@ This table is the single source of truth for status and is updated as work lands
 | Clinical Decision Support | 1 | Planned |
 | Everything else | 2+ | Planned |
 
-The audit module records and verifies a privacy conscious hash chain, and the guarded FHIR access layer records successful, denied, and failed resource operations. No clinical module uses that layer yet, and FHIR AuditEvent export plus durable reconciliation between remote FHIR writes and audit writes remain open. Continuous integration now includes the integration test lifecycle and dependency review, but the full deployment smoke flow and frontend end to end suite remain to be completed.
+The deployment smoke flow and frontend end-to-end suite remain Milestone 0 acceptance work. They are tracked separately from the completed continuous-integration pipeline because the current frontend has no clinical flow to exercise yet.
 
 ## How status is kept honest
 

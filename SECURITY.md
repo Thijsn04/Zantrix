@@ -22,7 +22,7 @@ Please include:
 
 ## Scope
 
-Zantrix is in early development and is not yet production ready. Reports are still welcome, and they help shape a secure foundation. Please keep in mind that some capabilities are stubs or works in progress, as tracked in the [roadmap](docs/roadmap.md).
+Zantrix is in early development and is not production ready. Reports are still welcome, and they help shape a secure foundation. Most clinical and privacy capabilities are planned rather than implemented, as tracked in the [roadmap](docs/roadmap.md).
 
 ## Responsible disclosure
 

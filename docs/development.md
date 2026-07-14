@@ -5,8 +5,8 @@ This guide gets a contributor from a fresh clone to a running local Zantrix. The
 ## Prerequisites
 
 - Docker and Docker Compose
-- Java 21 or newer (a JDK, not just a JRE)
-- Node.js 20 or newer
+- Java 21 JDK (the compilation target and CI version)
+- Node.js `^20.19.0` or `>=22.12.0` (the Vite 8 engine range; CI uses Node 20)
 - Git
 
 ## Repository layout
@@ -39,23 +39,28 @@ cd backend
 ./mvnw spring-boot:run        # Windows: .\mvnw.cmd spring-boot:run
 ```
 
-The backend serves the application API on port 8080. It is a client of the FHIR server and acts as the secured gateway in front of it. Confirm connectivity once authenticated at `GET /api/v1/fhir/status`.
+The backend serves the application API on port 8080. It is a client of the FHIR server and is the intended secured gateway in front of it. The currently exposed endpoints are:
+
+- Public: `GET /actuator/health`, health subpaths, and `GET /actuator/info`.
+- Authenticated: `GET /api/v1/system/info`, `GET /api/v1/iam/me`, and `GET /api/v1/fhir/status`.
+
+The raw HAPI endpoint on port 8090 is exposed only for local development. There is no public Zantrix FHIR REST proxy yet.
 
 ## 3. Run the frontend
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
-The Vite dev server prints the local URL. The frontend reads its API base URL and identity settings from configuration, so it points at the local backend and Keycloak by default.
+The Vite dev server prints the local URL, normally `http://localhost:5173`. The frontend defaults to the local backend and Keycloak values shown in `frontend/.env.example`; copy that file to `.env.local` only when overrides are needed. OIDC provider wiring exists, but the placeholder screen does not yet start login or call the backend.
 
 ## Test accounts
 
 Keycloak imports a development realm from `realm-export.json` on first start. It contains test users for local development only. Their credentials are intentionally trivial and exist only in this development realm. Never reuse this realm or these accounts outside local development.
 
-The realm defines roles for clinical, nursing, administrative, and privacy officer users. See `realm-export.json` for the current set. As the identity model is rebuilt in Milestone 0, this realm and its roles will be aligned to the roles the application actually checks.
+The imported users are `physician_test`, `nurse_test`, `admin_test`, and `privacy_test`, all with the development-only password `test`. The realm also defines `PHARMACIST` and `PATIENT` roles, but does not currently include users for them. See `realm-export.json` for the authoritative configuration.
 
 ## Running tests
 
@@ -75,7 +80,10 @@ cd frontend
 npm run lint
 npm test
 npm run build
+npm audit --omit=dev --audit-level=high
 ```
+
+Run `npm ci` first when validating a fresh checkout. The frontend currently has one smoke test; Playwright and end-to-end clinical flows have not landed.
 
 ## Coding standards
 

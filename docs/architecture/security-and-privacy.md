@@ -1,63 +1,55 @@
 # Security and Privacy
 
-Zantrix handles some of the most sensitive data there is. Security and privacy are part of the platform, applied to every capability, not features that individual modules opt into. Zantrix targets NEN 7510 and ISO 27001 as design goals. These are goals the architecture is built to support, not certifications the project holds.
+Zantrix handles highly sensitive data. Security and privacy are platform concerns, not optional module features. Zantrix targets NEN 7510 and ISO 27001 as design goals; the project does not claim certification or production readiness.
 
-## Authentication
+## Current implementation
 
-- Authentication is delegated to **Keycloak** using OAuth2 and OpenID Connect.
-- The backend is an OAuth2 resource server. It validates access tokens and never handles passwords itself.
-- **SMART on FHIR** launch is supported for both EHR launched and standalone applications, so third party clinical apps integrate through a standard, scoped flow.
-- Multi factor authentication and single sign on are configured in Keycloak.
+The Milestone 0 security baseline currently includes:
 
-## Authorization
+- Keycloak 24.0.4 in the local Compose environment with a development realm, synthetic users, and realm roles.
+- A stateless Spring Security OAuth2 resource server that validates issuer-backed JWTs outside tests.
+- Conversion of Keycloak realm roles to `ROLE_*` authorities and OAuth2/SMART scopes to `SCOPE_*` authorities.
+- Authentication on every backend route except Actuator health and info.
+- A central `FhirAccessGateway` that checks SMART resource scopes for read, create, update, and delete.
+- Conservative patient-context handling: patient scopes can access only the token's own Patient resource. Other compartment resources are denied until compartment-aware policy exists.
+- A Flyway-managed relational audit chain that records actor, action, resource reference, patient reference, outcome, source IP, and break-glass flag without resource bodies or clinical content.
+- Verification that detects changed entries, broken links, and deletion from the end of the chain through the separately locked chain head.
 
-Access control combines several layers, evaluated on every request:
+Known gaps are consent enforcement, treatment-relationship and organization checks, sensitive-record policy, break the glass, multi-factor policy for production, audit search/review tooling, FHIR AuditEvent and Provenance export, transport/TLS deployment policy, rate limiting, security headers, encryption-at-rest guidance, and durable reconciliation when a remote FHIR mutation succeeds but its audit write fails.
 
-- **Roles.** Coarse grained roles such as clinician, nurse, administrator, and privacy officer. Roles are defined in the identity provider and carried in the token.
-- **SMART scopes.** Fine grained scopes describe what an application or session may do with which resource types.
-- **Attribute and relationship checks.** Whether a user has a treatment relationship with a patient, whether the patient record is flagged sensitive, and the user's organization and location context.
-- **Consent.** The patient's recorded consent can narrow what is visible. See below.
+## Target authentication
 
-Authorization decisions are made centrally so that every path, both the FHIR API and application endpoints, is protected consistently. A capability cannot accidentally expose data by forgetting to add a check.
+Authentication remains delegated to Keycloak through OAuth2 and OpenID Connect. Production deployments will define strong session, passwordless or multi-factor, and single sign-on policies in the identity provider. SMART on FHIR launch support for EHR-launched and standalone third-party apps is planned; the current code only recognizes SMART-style scopes in bearer tokens.
 
-## Consent and privacy
+## Target authorization
 
-- Patient **Consent** resources can restrict access to a record or parts of it. The access layer is consent aware and filters accordingly.
-- Records can carry **sensitive flags**, for example for VIP patients or behavioral health, which raise the bar for access and route it through break the glass.
-- **GDPR data subject workflows** are supported: a privacy officer can produce a complete export of a patient's processed data, including access logs, and can process erasure requests within legal constraints.
-- **No protected health information in application logs.** Identifiers, names, and clinical detail are never written to standard application logs. Access to clinical data is recorded in the audit trail, not in console logs.
+The completed access model combines:
 
-## Break the glass
+- **Roles** for coarse application actions.
+- **SMART scopes** for resource-type and operation permissions.
+- **Context and relationships** such as organization, location, practitioner-patient relationship, and patient context.
+- **Consent and sensitivity** rules that can narrow otherwise valid access.
 
-Emergency access allows a clinician to reach a record they would normally not have access to, for example in the emergency department.
+All FHIR access must pass through the gateway so these decisions and audit behavior remain centralized. The raw HAPI client is internal by architectural decision.
 
-- It requires an explicit, recorded justification before access is granted.
-- It is time limited and clearly indicated in the interface while active.
-- It generates a high visibility audit entry and a review task for a privacy officer.
-- Accountability is after the fact and mandatory. Break the glass widens access, it does not hide it.
+## Consent, privacy, and break the glass
 
-## Audit trail
+Consent resources, sensitive-record flags, GDPR data-subject workflows, and emergency access are target capabilities. Break-glass access will require a justification, be time limited and visible, produce a high-priority audit record, and create a mandatory review task. None of these workflows is implemented yet.
 
-Every access to and change of patient data is recorded as a FHIR **AuditEvent**.
+Application logs must never contain resource bodies, names, clinical detail, tokens, or other unnecessary protected health information. Development data must be synthetic.
 
-- The audit log is **tamper evident** through a hash chain, so that removal or alteration of an entry is detectable.
-- The mechanism is designed to be **concurrency safe**. It does not serialize all writes through the tail of a single table, which was a scalability and correctness weakness in the earlier design.
-- Audit records reference the actor, the patient, the action, the source, and whether break the glass was in effect. They do not embed protected health information beyond the necessary references.
-- **Provenance** resources record who made clinically significant changes and why, complementing FHIR resource history.
+## Audit model
 
-Privacy officers have tooling to search, review, and verify the integrity of the audit trail.
+The current audit trail is append only and tamper evident, but it is not a FHIR AuditEvent store. Writes take a row lock on one chain-head record, append the event, and advance the head in one Zantrix database transaction. This serializes audit appends while leaving unrelated application work concurrent.
 
-## Secrets and transport
+Guarded FHIR mutations cross two services: HAPI may commit before the Zantrix audit write completes. ADR 0007 therefore prevents clinical write capabilities from being called stable until a durable operation journal and reconciliation process closes that failure window.
 
-- No secrets in source control. Credentials and keys come from the environment or a secret manager. The development Docker setup uses clearly non production values, documented as such.
-- All traffic is over TLS in any real deployment.
-- Cross origin access, security headers, and rate limiting are configured explicitly rather than left to defaults.
+FHIR AuditEvent export, Provenance for clinically significant changes, privacy-officer search, review queues, and integrity reports are planned on top of the relational source trail.
 
-## Data protection
+## Secrets, transport, and data protection
 
-- Sensitive identifiers, such as national numbers, are protected at rest.
-- Backups and the analytics store inherit the same access and audit expectations as the operational store.
+The checked-in Compose credentials and accounts are intentionally weak local-development values. They must never be reused in a real deployment. Production requirements include external secret management, TLS for all traffic, explicit CORS and security headers, rate limiting, protected backups, and appropriate encryption at rest. These controls are deployment requirements and are not delivered by the current local Compose file.
 
 ## Responsible disclosure
 
-Security issues are handled under [SECURITY.md](../../SECURITY.md). Please do not open public issues for vulnerabilities.
+Follow [SECURITY.md](../../SECURITY.md) and do not open public issues for vulnerabilities.

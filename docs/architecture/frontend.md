@@ -2,6 +2,12 @@
 
 The Zantrix frontend is a clinical workspace. It should feel like a focused desktop grade application that clinicians work in all day, not like a website they visit. This document defines what that means and how the frontend is built.
 
+## Current implementation
+
+The frontend currently renders a localized placeholder screen. It has React 19, TypeScript 6 strict mode, Vite 8, Tailwind CSS 4, i18next, PWA generation, environment-driven backend/OIDC configuration, and a top-level `react-oidc-context` provider. One Testing Library smoke test covers the placeholder.
+
+React Query, React Router, Lucide, and the OIDC libraries are installed as foundation dependencies. The application does not yet have routes, backend calls, login controls, patient context, workspace tabs, a command palette, a typed FHIR/API client, a design system, or Playwright tests. The remainder of this document is the target frontend architecture.
+
 ## An application, not a website
 
 The difference is not decoration. A clinical application earns the feel through real behaviour:
@@ -40,11 +46,11 @@ frontend/src
 
 ## Data layer
 
-- **One typed API client.** All network access goes through a single client. There is no hardcoded host scattered across the codebase. The base URL comes from configuration. The previous code hardcoded a development host in dozens of places, and some calls sent no authentication token. Both are corrected here.
-- **Auth is centralized.** Tokens, refresh, and the current session are handled in one place and exposed through context. The frontend does not decode tokens by hand in individual components.
+- **One typed API client.** All network access will go through a single client. The base URL already comes from configuration, but the client itself has not been built. The previous code hardcoded a development host in many places and sometimes omitted authentication; the rebuild will not repeat that pattern.
+- **Auth is centralized.** A top-level OIDC provider is wired today. Login/logout controls, protected routing, token attachment, refresh behavior, and the current-session API integration remain to be built.
 - **FHIR aware.** A FHIR client wraps the platform's FHIR API with types generated from the resource definitions, so features work with typed resources rather than untyped JSON.
 - **Server state via React Query.** Caching, background revalidation, and optimistic updates are handled by React Query. This is what makes navigation feel instant.
-- **Strict typing.** TypeScript strict mode is on and the `any` type is not allowed. Medical data requires full type safety. The previous code used `any` in many places despite its own guideline forbidding it.
+- **Strict typing.** TypeScript strict mode is on. ESLint currently applies the recommended TypeScript rules; an explicit repository-wide `any` prohibition still needs to be added.
 
 ## Internationalization
 
@@ -52,10 +58,10 @@ The product is English first, with full internationalization through i18next. Ev
 
 ## Progressive Web App
 
-The frontend is a PWA so it can be installed and can degrade gracefully on unreliable networks. Offline behaviour is scoped carefully: it never hides that data may be stale, and it never allows unsafe clinical actions against stale data.
+The build currently generates a PWA manifest and service worker. Installability and safe offline behavior still need product-level testing and policy. Offline behavior must never hide stale data or allow unsafe clinical actions against stale data.
 
 ## Quality
 
 - **Component tests** with the Testing Library for behaviour.
-- **End to end tests** with Playwright for critical clinical flows, such as registering a patient, placing an order, and signing a note.
+- **End to end tests** with Playwright are planned for critical clinical flows once those flows exist.
 - **Linting and type checking** run in continuous integration and block merges on failure.

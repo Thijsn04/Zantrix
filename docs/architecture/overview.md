@@ -2,6 +2,10 @@
 
 Zantrix is a FHIR native, modular monolith EHR. This document gives the high level shape of the system. Deeper topics have their own documents, linked below.
 
+## Current implementation
+
+Milestone 0 is underway. The default branch currently provides the three local infrastructure services shown below, a Spring Boot backend with authenticated diagnostic endpoints and guarded FHIR CRUD access, a relational hash chained audit module, and a minimal React/OIDC application shell. No clinical capability module is implemented yet. The public FHIR facade, consent, break the glass, terminology, interoperability, analytics, feature flags, and the complete clinical workspace are target architecture.
+
 ## System context
 
 ```
@@ -38,7 +42,7 @@ Zantrix is a FHIR native, modular monolith EHR. This document gives the high lev
 
 2. **Modular monolith.** One deployable application, with strictly separated internal modules enforced by Spring Modulith. Modules communicate through published interfaces and domain events, never by reaching into each other's internals. A module can be extracted into its own service later if it needs independent scaling, without a rewrite. See [backend architecture](backend.md).
 
-3. **An application, not a website.** The frontend is a focused clinical workspace: persistent patient context, keyboard driven navigation, a command palette, real workspace tabs, and dense, calm information design. It is built on a proper design system, not ad hoc styling. See [frontend architecture](frontend.md).
+3. **An application, not a website.** The frontend will be a focused clinical workspace with persistent patient context, keyboard driven navigation, a command palette, real workspace tabs, and dense, calm information design. The current UI is a placeholder while that foundation is built. See [frontend architecture](frontend.md).
 
 ## Layers
 
@@ -49,18 +53,18 @@ Zantrix is a FHIR native, modular monolith EHR. This document gives the high lev
 | FHIR platform | Canonical resource store, validation, search, operations | [fhir-strategy.md](fhir-strategy.md) |
 | Identity | Authentication, authorization, SMART scopes | [security-and-privacy.md](security-and-privacy.md) |
 | Interoperability | External integration and regional adapters | [interoperability.md](interoperability.md) |
-| Data platform | PostgreSQL, Elasticsearch, analytics export | [fhir-strategy.md](fhir-strategy.md) |
+| Data platform | PostgreSQL today; Elasticsearch and analytics export planned | [fhir-strategy.md](fhir-strategy.md) |
 
 ## Cross cutting concerns
 
-- **Security and privacy** are built into the platform, not bolted on. Access control, consent, break the glass, and a tamper evident audit trail apply to every capability. See [security and privacy](security-and-privacy.md).
-- **Terminology** is a shared service. Coded data everywhere resolves through it.
-- **Observability** is a first class requirement. Structured logs, metrics, tracing, and health probes ship with the platform.
-- **Configuration** decides which capabilities are enabled for a given deployment. The same build runs a small clinic or a hospital.
+- **Security and privacy.** Authentication, role/scope conversion, guarded FHIR operations, and the audit chain are implemented foundations. Consent, break the glass, and broader contextual authorization are planned. See [security and privacy](security-and-privacy.md).
+- **Terminology** is planned as a shared service through which coded data resolves.
+- **Observability** currently consists of Spring Boot Actuator health and info endpoints plus standard application logging. Structured JSON logs, metrics export, tracing, and deployment-level readiness remain planned.
+- **Configuration** currently covers service URLs, database credentials, CORS, and OIDC settings through environment variables. Capability-level feature flags are planned.
 
 ## What is deliberately not here yet
 
-Zantrix is in an early, honest state. The [module vision](../modules/README.md) describes the full intended scope, and the [roadmap](../roadmap.md) states what is actually being built now. When this overview describes a capability, it describes the target design. Status always lives in the roadmap, never inflated in prose.
+The [module vision](../modules/README.md) describes the full intended scope, and the [roadmap](../roadmap.md) states what is actually being built now. Unless a section explicitly says "current implementation," capability descriptions are target design.
 
 ## Key decisions
 

@@ -15,18 +15,24 @@ The benefits are direct:
 
 The cost is that the team must know FHIR well and must model carefully with profiles. That cost is accepted deliberately (see [ADR 0002](decisions/0002-fhir-native-hapi-jpa.md)).
 
+## Current implementation
+
+Docker Compose runs the official HAPI FHIR 8.10 image in R4 mode against its own PostgreSQL database. The backend uses the HAPI R4 client through `FhirAccessGateway`; application code cannot inject the raw transport. The gateway currently supports server capabilities plus resource read, create, update, and delete. It checks SMART resource scopes, restricts patient-context scopes to direct self-Patient access, and records successful and failed operations in the Zantrix audit chain.
+
+The local HAPI port is available directly for development and tests. It must remain internal in a real deployment. The Zantrix backend does not yet expose a public FHIR facade.
+
 ## The FHIR platform
 
 The core of the data layer is the **HAPI FHIR R4 JPA server**, run as a dedicated service using the official image (see [ADR 0006](decisions/0006-hapi-fhir-as-dedicated-service.md)). The Zantrix backend is a client of that server and acts as the secured gateway in front of it.
 
 - **Storage.** Resources are persisted by HAPI in its own PostgreSQL database. Zantrix does not hand write clinical tables that duplicate FHIR resources.
-- **API.** The FHIR REST API (read, create, update, patch, delete, history, search, transaction, and operations) is served by HAPI. The server is internal, and FHIR and SMART on FHIR access is provided through the Zantrix gateway, which applies authentication, authorization, consent, and audit.
-- **Validation.** Resources are validated against the active profiles on write. Invalid resources are rejected with an OperationOutcome.
-- **Search indexing.** HAPI search parameters back standard FHIR search. Elasticsearch is used for terminology and for large scale or full text search where the relational indexes are not enough.
+- **API.** HAPI provides the complete internal FHIR REST API. The Zantrix gateway currently exposes only its Java CRUD boundary to application modules and a connectivity-status endpoint over HTTP. Public FHIR/SMART access, search, history, patch, batch, transactions, and custom operations remain planned.
+- **Validation.** HAPI performs its default resource handling today. Zantrix profile packs and explicit validation against active profiles have not been configured.
+- **Search indexing.** HAPI's relational search is available on the internal service. Elasticsearch, terminology indexing, and gateway search are not present.
 
 ## Profiles and regionalization
 
-Zantrix ships an **international core profile set** based on the base FHIR R4 specification and widely used international profiles. This keeps the core region neutral.
+Zantrix will ship an **international core profile set** based on the base FHIR R4 specification and widely used international profiles. No Zantrix profile pack is present in the repository yet.
 
 Regional requirements are packaged as **profile packs** that a deployment can enable:
 
@@ -43,7 +49,7 @@ Application modules do not each open their own connection to the database. They 
 - A module owns a set of resource types and profiles as its responsibility, and publishes a narrow interface plus domain events for other modules. For example, the Orders capability owns ServiceRequest and DiagnosticReport handling, and emits events when a result is finalized.
 - Where a workflow needs state that FHIR does not model well, that state is kept as a supporting FHIR resource (such as Task) or, only when genuinely necessary, as a small module private table that references FHIR resources by id. Clinical facts always live in FHIR.
 
-The first version of this facade is implemented as `FhirAccessGateway`. It keeps the raw HAPI client internal, enforces SMART resource scopes, verifies patient context for patient-scoped tokens, and records successful, denied, and failed operations. Search, transactions, profile enforcement, consent evaluation, and durable reconciliation between FHIR mutations and audit writes remain Milestone 0 work. See [ADR 0007](decisions/0007-guarded-fhir-access.md).
+The first version of this facade is implemented as `FhirAccessGateway`. It keeps the raw HAPI client internal, enforces SMART resource scopes, verifies direct self-Patient access for patient-scoped tokens, and records successful and failed operations. A denied operation follows the same failure-audit path. Search, transactions, profile enforcement, consent evaluation, compartment-aware patient access, and durable reconciliation between FHIR mutations and audit writes remain Milestone 0 work. See [ADR 0007](decisions/0007-guarded-fhir-access.md).
 
 ## Analytics without hurting the operational store
 
@@ -54,8 +60,8 @@ Serving analytics from the live FHIR store hurts clinical performance. Instead:
 
 ## Versioning and history
 
-FHIR resource versioning and `_history` provide a per resource audit of change. This complements, and does not replace, the AuditEvent based access log described in [security and privacy](security-and-privacy.md). Provenance resources capture who did what and why for clinically significant changes.
+HAPI's FHIR resource versioning and `_history` provide per-resource change history on the internal service. The implemented Zantrix access log is relational and hash chained; FHIR AuditEvent and Provenance export are planned. These records serve different purposes and neither replaces the other.
 
 ## Terminology
 
-Terminology is served through the standard FHIR terminology operations (`$lookup`, `$validate-code`, `$translate`, and value set `$expand`) backed by SNOMED CT, LOINC, ICD, and RxNorm. See the Terminology capability in the [module vision](../modules/README.md).
+The target terminology service uses standard FHIR terminology operations (`$lookup`, `$validate-code`, `$translate`, and value set `$expand`) backed by licensed or distributable terminology content such as SNOMED CT, LOINC, ICD, and RxNorm. Terminology loading and operations are not configured yet. See the Terminology capability in the [module vision](../modules/README.md).

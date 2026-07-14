@@ -11,7 +11,7 @@ Each capability lists:
 - **Purpose.** What clinical or operational need it serves.
 - **Primary FHIR resources.** The canonical resources it reads and writes. Zantrix is FHIR native, so these resources are the real storage and API surface, not an export format.
 - **Depends on.** The platform or clinical capabilities it builds on.
-- **Status.** One of `Planned`, `In design`, `In progress`, `Beta`, or `Stable`. At the time of writing every capability is `Planned`, because the project is rebuilding its foundation. Status is tracked for real in the [roadmap](../roadmap.md), and no capability is marked further along than the code supports.
+- **Status.** One of `Planned`, `In design`, `In progress`, `Beta`, or `Stable`. The platform foundations that have code today are marked `In progress`; everything else remains `Planned`. The [roadmap](../roadmap.md) is authoritative if this capability catalog ever differs.
 
 ## Status legend
 
@@ -42,13 +42,13 @@ The horizontal foundation. Everything else depends on this layer. This is where 
 - **Purpose.** The canonical clinical data store and REST API. Hosts the HAPI FHIR R4 JPA server, resource validation against profiles, search, history, transactions, and FHIR operations.
 - **Primary FHIR resources.** All resource types. CapabilityStatement, StructureDefinition, OperationDefinition.
 - **Depends on.** PostgreSQL, Elasticsearch.
-- **Status.** `Planned`.
+- **Status.** `In progress`. The dedicated R4 server and guarded CRUD client exist; profiles, gateway search/history/transactions, and the public FHIR surface do not.
 
 ### P2. Identity and Access Management
 - **Purpose.** Authentication, authorization, sessions, and the practitioner and organization directory. Role based and attribute based access, SMART on FHIR scopes, and single sign on.
 - **Primary FHIR resources.** Practitioner, PractitionerRole, Organization, Location, Group, Person.
 - **Depends on.** Keycloak, FHIR Data Platform.
-- **Status.** `Planned`.
+- **Status.** `In progress`. JWT validation, realm-role mapping, SMART scope authorities, and a current-user endpoint exist; directory resources and full SMART launch flows do not.
 
 ### P3. Consent and Privacy
 - **Purpose.** Patient consent, sensitive record flags, and GDPR data subject workflows including access, export, and erasure requests. Enforces consent aware filtering of clinical data.
@@ -57,10 +57,10 @@ The horizontal foundation. Everything else depends on this layer. This is where 
 - **Status.** `Planned`.
 
 ### P4. Audit and Compliance
-- **Purpose.** A tamper evident record of every access and change, recorded as FHIR AuditEvent, with a verifiable hash chain and reporting for privacy officers. Includes break the glass review.
+- **Purpose.** A tamper evident record of every access and change, with FHIR AuditEvent export, a verifiable hash chain, and reporting for privacy officers. Includes break the glass review.
 - **Primary FHIR resources.** AuditEvent, Provenance.
 - **Depends on.** IAM.
-- **Status.** `Planned`.
+- **Status.** `In progress`. The relational hash chain and integrity verifier exist; FHIR export, review tooling, and break-glass review do not.
 
 ### P5. Terminology and Ontology
 - **Purpose.** Terminology services for SNOMED CT, LOINC, ICD-10 and ICD-11, RxNorm, and local value sets. Supports lookup, validate-code, translate, and value set expansion, backed by fast search.
