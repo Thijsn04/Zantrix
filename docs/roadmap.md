@@ -49,15 +49,19 @@ Goal: grow into the wider module vision, one capability at a time, each to the s
 
 ## Status table
 
-At the time of writing, every capability is `Planned` or part of the active foundation work. This table is the single source of truth for status and will be updated as work lands.
+This table is the single source of truth for status and is updated as work lands.
 
 | Capability | Milestone | Status |
 |---|---|---|
-| Repository hygiene and CI | 0 | In progress |
-| FHIR Data Platform | 0 | Planned |
-| Identity and Access Management | 0 | Planned |
-| Audit and Compliance | 0 | Planned |
-| Frontend shell and design system | 0 | Planned |
+| Repository hygiene | 0 | Done |
+| Continuous integration | 0 | Done |
+| Platform security foundation (OAuth2 resource server) | 0 | Done |
+| FHIR Data Platform (dedicated HAPI FHIR server) | 0 | In progress |
+| Identity and Access Management (roles, SMART scopes) | 0 | In progress |
+| Audit and Compliance (hash chained trail) | 0 | In progress |
+| Frontend shell and design system | 0 | In progress |
+
+The audit trail records to a tamper evident, privacy safe hash chain today. Rendering audit entries as FHIR AuditEvent resources for export is a near term follow up; the stored fields already carry the FHIR action and outcome codes.
 | Terminology and Ontology | 1 | Planned |
 | Consent and Privacy | 1 | Planned |
 | Workflow and Rules Engine | 1 | Planned |

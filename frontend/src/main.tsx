@@ -1,24 +1,23 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import './i18n'
-import App from './App.tsx'
-import { AuthProvider } from 'react-oidc-context'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { AuthProvider } from 'react-oidc-context';
+import './index.css';
+import './i18n';
+import App from './App';
+import { config } from './config';
 
 /**
- * OpenID Connect (OIDC) configuration for Keycloak integration.
- * 
- * Establishes the connection parameters for the 'zantrix' realm and 
- * the 'zantrix-frontend' client. Handles post-login redirects.
+ * OpenID Connect configuration for Keycloak, driven by runtime config so that
+ * no host is hardcoded. See config.ts and .env.example.
  */
 const oidcConfig = {
-  authority: "http://localhost:8081/realms/zantrix",
-  client_id: "zantrix-frontend",
-  redirect_uri: "http://localhost:5173",
-  post_logout_redirect_uri: "http://localhost:5173",
+  authority: config.oidc.authority,
+  client_id: config.oidc.clientId,
+  redirect_uri: config.oidc.redirectUri,
+  post_logout_redirect_uri: config.oidc.redirectUri,
   onSigninCallback: () => {
     window.history.replaceState({}, document.title, window.location.pathname);
-  }
+  },
 };
 
 createRoot(document.getElementById('root')!).render(
@@ -27,4 +26,4 @@ createRoot(document.getElementById('root')!).render(
       <App />
     </AuthProvider>
   </StrictMode>,
-)
+);

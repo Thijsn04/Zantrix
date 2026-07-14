@@ -17,10 +17,10 @@ The cost is that the team must know FHIR well and must model carefully with prof
 
 ## The FHIR platform
 
-The core of the data layer is the **HAPI FHIR R4 JPA server**, embedded in the Spring Boot application.
+The core of the data layer is the **HAPI FHIR R4 JPA server**, run as a dedicated service using the official image (see [ADR 0006](decisions/0006-hapi-fhir-as-dedicated-service.md)). The Zantrix backend is a client of that server and acts as the secured gateway in front of it.
 
-- **Storage.** Resources are persisted by HAPI in PostgreSQL. Zantrix does not hand write clinical tables that duplicate FHIR resources.
-- **API.** The FHIR REST API (read, create, update, patch, delete, history, search, transaction, and operations) is exposed under a FHIR base path and secured by the identity layer.
+- **Storage.** Resources are persisted by HAPI in its own PostgreSQL database. Zantrix does not hand write clinical tables that duplicate FHIR resources.
+- **API.** The FHIR REST API (read, create, update, patch, delete, history, search, transaction, and operations) is served by HAPI. The server is internal, and FHIR and SMART on FHIR access is provided through the Zantrix gateway, which applies authentication, authorization, consent, and audit.
 - **Validation.** Resources are validated against the active profiles on write. Invalid resources are rejected with an OperationOutcome.
 - **Search indexing.** HAPI search parameters back standard FHIR search. Elasticsearch is used for terminology and for large scale or full text search where the relational indexes are not enough.
 
@@ -39,7 +39,7 @@ A deployment selects which packs are active. Validation, terminology bindings, a
 
 Application modules do not each open their own connection to the database. They use an internal FHIR access layer:
 
-- Reads and writes go through a typed FHIR client facade against the embedded server, so all access is validated, audited, and consistent.
+- Reads and writes go through a typed FHIR client facade against the FHIR server, so all access is validated, audited, and consistent.
 - A module owns a set of resource types and profiles as its responsibility, and publishes a narrow interface plus domain events for other modules. For example, the Orders capability owns ServiceRequest and DiagnosticReport handling, and emits events when a result is finalized.
 - Where a workflow needs state that FHIR does not model well, that state is kept as a supporting FHIR resource (such as Task) or, only when genuinely necessary, as a small module private table that references FHIR resources by id. Clinical facts always live in FHIR.
 

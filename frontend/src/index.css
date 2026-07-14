@@ -3,12 +3,16 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply h-screen w-screen overflow-hidden select-none bg-zantrix-background text-zantrix-text font-sans antialiased;
-    -webkit-user-drag: none;
+  :root {
+    color-scheme: light dark;
   }
-  
-  /* Tabular figures for numbers as per guidelines */
+
+  body {
+    @apply bg-white text-slate-900 font-sans antialiased;
+  }
+}
+
+@layer utilities {
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }

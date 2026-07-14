@@ -2,27 +2,33 @@ package com.zantrix;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.ResponseEntity;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureMockMvc
-public class ApplicationIT extends IntegrationTestBase {
+/**
+ * Smoke tests for the platform foundation: the context boots against a real
+ * database, the health probe is public, and application endpoints require
+ * authentication.
+ */
+class ApplicationIT extends IntegrationTestBase {
 
     @Autowired
-    private MockMvc mockMvc;
+    TestRestTemplate restTemplate;
 
     @Test
-    void testPublicEndpointAccessibleWithoutAuth() throws Exception {
-        mockMvc.perform(get("/api/public/health"))
-                .andExpect(status().isNotFound()); // Endpoint may not exist, but shouldn't be 401/403
+    void healthProbeIsPublicAndReportsUp() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/actuator/health", String.class);
+
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(response.getBody()).contains("UP");
     }
-    
+
     @Test
-    void testProtectedEndpointRequiresAuth() throws Exception {
-        mockMvc.perform(get("/api/pmi/patients"))
-                .andExpect(status().isUnauthorized()); // Should be 401
+    void systemEndpointRequiresAuthentication() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/api/v1/system/info", String.class);
+
+        assertThat(response.getStatusCode().value()).isEqualTo(401);
     }
 }

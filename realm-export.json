@@ -4,10 +4,12 @@
   "enabled": true,
   "roles": {
     "realm": [
-      { "name": "DOCTOR", "description": "Medical Doctor" },
+      { "name": "PHYSICIAN", "description": "Physician" },
       { "name": "NURSE", "description": "Nurse" },
-      { "name": "ADMIN", "description": "System Administrator" },
-      { "name": "PRIVACY_OFFICER", "description": "Privacy Officer" }
+      { "name": "PHARMACIST", "description": "Pharmacist" },
+      { "name": "ADMIN", "description": "System administrator" },
+      { "name": "PRIVACY_OFFICER", "description": "Privacy officer" },
+      { "name": "PATIENT", "description": "Patient" }
     ]
   },
   "clients": [
@@ -22,40 +24,51 @@
         "http://localhost:5173"
       ],
       "webOrigins": [
-        "+"
+        "http://localhost:5173"
       ],
       "protocol": "openid-connect"
     }
   ],
   "users": [
     {
-      "username": "doctor_test",
+      "username": "physician_test",
       "enabled": true,
-      "email": "doctor@zantrix.local",
-      "firstName": "Doctor",
-      "lastName": "Test",
+      "email": "physician@zantrix.local",
+      "firstName": "Test",
+      "lastName": "Physician",
       "credentials": [
         { "type": "password", "value": "test", "temporary": false }
       ],
-      "realmRoles": [ "DOCTOR" ]
+      "realmRoles": [ "PHYSICIAN" ]
     },
     {
       "username": "nurse_test",
       "enabled": true,
       "email": "nurse@zantrix.local",
-      "firstName": "Nurse",
-      "lastName": "Test",
+      "firstName": "Test",
+      "lastName": "Nurse",
       "credentials": [
         { "type": "password", "value": "test", "temporary": false }
       ],
       "realmRoles": [ "NURSE" ]
     },
     {
+      "username": "admin_test",
+      "enabled": true,
+      "email": "admin@zantrix.local",
+      "firstName": "Test",
+      "lastName": "Admin",
+      "credentials": [
+        { "type": "password", "value": "test", "temporary": false }
+      ],
+      "realmRoles": [ "ADMIN" ]
+    },
+    {
       "username": "privacy_test",
       "enabled": true,
       "email": "privacy@zantrix.local",
-      "firstName": "Privacy",
-      "lastName": "Officer",
+      "firstName": "Test",
+      "lastName": "Privacy Officer",
       "credentials": [
         { "type": "password", "value": "test", "temporary": false }
       ],
