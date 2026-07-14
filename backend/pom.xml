@@ -13,7 +13,7 @@
     <artifactId>zantrix-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>zantrix-backend</name>
-    <description>Zantrix EPD Backend Core</description>
+    <description>Zantrix Backend</description>
     <licenses>
         <license>
             <name>GNU Affero General Public License v3.0</name>

@@ -1,8 +1,6 @@
 spring:
   application:
     name: zantrix-backend
-  elasticsearch:
-    uris: http://localhost:9200
   datasource:
     url: jdbc:postgresql://${ZANTRIX_DB_HOST:127.0.0.1}:${ZANTRIX_DB_PORT:5433}/${ZANTRIX_DB_NAME:zantrix_db}
     username: ${ZANTRIX_DB_USERNAME:zantrix}
@@ -10,31 +8,17 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update # Allow Hibernate to generate HAPI FHIR Schema
+      # Flyway is the sole owner of the schema. Hibernate never mutates it.
+      ddl-auto: validate
+    open-in-view: false
     show-sql: false
   flyway:
+    enabled: true
     baseline-on-migrate: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8081/realms/zantrix
 
 server:
   port: 8080
 
 logging:
   level:
-    org.springframework.web: INFO
     com.zantrix: DEBUG
-    ca.uhn.fhir: INFO
-
-hapi:
-  fhir:
-    version: R4
-    server:
-      path: /fhir/*
-    jpa:
-      enabled: true
-    tester:
-      enabled: false
