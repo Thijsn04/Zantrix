@@ -1,6 +1,5 @@
 package com.zantrix.platform.fhir;
 
-import ca.uhn.fhir.rest.client.api.IGenericClient;
 import com.zantrix.IntegrationTestBase;
 import org.hl7.fhir.r4.model.CapabilityStatement;
 import org.hl7.fhir.r4.model.Enumerations;
@@ -39,13 +38,11 @@ class FhirServerIT extends IntegrationTestBase {
     }
 
     @Autowired
-    IGenericClient fhirClient;
+    FhirAccessGateway fhirAccess;
 
     @Test
     void backendReachesFhirServerAndReadsR4CapabilityStatement() {
-        CapabilityStatement capabilities = fhirClient.capabilities()
-                .ofType(CapabilityStatement.class)
-                .execute();
+        CapabilityStatement capabilities = fhirAccess.capabilities();
 
         assertThat(capabilities.getFhirVersion()).isEqualTo(Enumerations.FHIRVersion._4_0_1);
     }

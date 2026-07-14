@@ -24,7 +24,7 @@ import java.util.List;
  * <p>The application is a stateless OAuth2 resource server. Every request is
  * authenticated against a Keycloak issued JWT, except the public health and
  * info probes. Keycloak realm roles are mapped to Spring authorities by
- * {@link KeycloakRealmRoleConverter}. This single configuration protects both
+ * {@link JwtAuthoritiesConverter}. This single configuration protects both
  * the FHIR API and the application endpoints, so no capability can expose data
  * by forgetting to add a check.
  */

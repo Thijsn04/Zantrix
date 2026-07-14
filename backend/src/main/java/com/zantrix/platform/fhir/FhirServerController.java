@@ -1,6 +1,5 @@
 package com.zantrix.platform.fhir;
 
-import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.r4.model.CapabilityStatement;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +20,12 @@ import java.util.Map;
 @RequestMapping("/api/v1/fhir")
 public class FhirServerController {
 
-    private final IGenericClient fhirClient;
+    private final FhirAccessGateway fhirAccess;
     private final String fhirBaseUrl;
 
-    public FhirServerController(IGenericClient fhirClient,
+    public FhirServerController(FhirAccessGateway fhirAccess,
                                 @Value("${zantrix.fhir.base-url}") String fhirBaseUrl) {
-        this.fhirClient = fhirClient;
+        this.fhirAccess = fhirAccess;
         this.fhirBaseUrl = fhirBaseUrl;
     }
 
@@ -35,9 +34,7 @@ public class FhirServerController {
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("baseUrl", fhirBaseUrl);
         try {
-            CapabilityStatement capabilities = fhirClient.capabilities()
-                    .ofType(CapabilityStatement.class)
-                    .execute();
+            CapabilityStatement capabilities = fhirAccess.capabilities();
             result.put("reachable", true);
             result.put("fhirVersion", capabilities.getFhirVersion().toCode());
             result.put("software", capabilities.getSoftware().getName());

@@ -12,6 +12,11 @@ services:
       - zantrix_pgdata:/var/lib/postgresql/data
       # Creates the hapi and keycloak databases on first initialization.
       - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zantrix -d zantrix_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
     restart: unless-stopped
 
   keycloak:
@@ -30,7 +35,8 @@ services:
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
 
   # Canonical FHIR store and API (ADR 0006). The Zantrix backend is a client of
@@ -49,7 +55,8 @@ services:
     ports:
       - "8090:8080"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:

@@ -17,4 +17,9 @@ interface AuditChainHeadRepository extends JpaRepository<AuditChainHeadEntity, L
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select h from AuditChainHeadEntity h where h.id = :id")
     Optional<AuditChainHeadEntity> findByIdForUpdate(@Param("id") Long id);
+
+    /** Holds a shared lock while the verifier reads the chain. */
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Query("select h from AuditChainHeadEntity h where h.id = :id")
+    Optional<AuditChainHeadEntity> findByIdForVerification(@Param("id") Long id);
 }

@@ -22,7 +22,7 @@ Zantrix
 
 ## 1. Start infrastructure
 
-The Docker Compose file starts the supporting services: PostgreSQL, Keycloak, and Elasticsearch.
+The Docker Compose file starts the supporting services currently implemented: PostgreSQL, Keycloak, and HAPI FHIR. Elasticsearch is planned for terminology and search work and is not part of the current Compose file.
 
 ```bash
 docker compose up -d
@@ -63,17 +63,18 @@ Backend:
 
 ```bash
 cd backend
-./mvnw test
+./mvnw clean verify
 ```
 
-Backend integration tests use Testcontainers, which requires a running Docker daemon. They start real PostgreSQL and other dependencies in containers, so no in memory database is used.
+Backend integration tests use Maven Failsafe and Testcontainers, which requires a running Docker daemon. Zantrix-owned persistence is tested against PostgreSQL, and FHIR connectivity is tested against the official HAPI FHIR image. The Compose topology that connects HAPI to PostgreSQL still needs its own smoke test. JWT decoding is mocked in IAM integration tests; a real Keycloak integration suite has not landed yet.
 
 Frontend:
 
 ```bash
 cd frontend
 npm run lint
-npm test          # once the test setup lands
+npm test
+npm run build
 ```
 
 ## Coding standards

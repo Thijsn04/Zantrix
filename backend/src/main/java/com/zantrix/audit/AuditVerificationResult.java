@@ -5,7 +5,8 @@ package com.zantrix.audit;
  *
  * @param intact       true if the chain is unbroken and every hash recomputes
  * @param checkedCount how many entries were checked
- * @param brokenAtId   the id of the first entry that failed, or null if intact
+ * @param brokenAtId   the id of the first entry that failed, or null when only
+ *                     the persisted chain head does not match
  */
 public record AuditVerificationResult(boolean intact, long checkedCount, Long brokenAtId) {
 
@@ -15,5 +16,9 @@ public record AuditVerificationResult(boolean intact, long checkedCount, Long br
 
     public static AuditVerificationResult broken(long checkedCount, long brokenAtId) {
         return new AuditVerificationResult(false, checkedCount, brokenAtId);
+    }
+
+    public static AuditVerificationResult headMismatch(long checkedCount) {
+        return new AuditVerificationResult(false, checkedCount, null);
     }
 }

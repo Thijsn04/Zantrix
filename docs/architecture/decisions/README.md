@@ -16,3 +16,4 @@ Each ADR has: a status, the context that forced a decision, the decision itself,
 | [0004](0004-frontend-application-shell.md) | Frontend as an application shell, not a website | Accepted |
 | [0005](0005-english-first-with-i18n.md) | English first with internationalization | Accepted |
 | [0006](0006-hapi-fhir-as-dedicated-service.md) | HAPI FHIR JPA server as a dedicated service | Accepted |
+| [0007](0007-guarded-fhir-access.md) | Guarded FHIR access boundary | Accepted |

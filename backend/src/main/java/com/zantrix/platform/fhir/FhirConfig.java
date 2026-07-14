@@ -1,8 +1,6 @@
 package com.zantrix.platform.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
  *
  * <p>The canonical FHIR store and API is a dedicated HAPI FHIR JPA server (see
  * ADR 0006). The Zantrix backend is a client of that server. This configuration
- * exposes a shared R4 {@link FhirContext} and a thread safe {@link IGenericClient}
- * pointed at the configured server, so capabilities can read and write FHIR
- * resources through one place.
+ * exposes a shared R4 {@link FhirContext}. The raw HAPI client is kept inside
+ * the FHIR module so capabilities cannot bypass the authorized and audited
+ * {@link FhirAccessGateway}.
  */
 @Configuration
 public class FhirConfig {
@@ -25,11 +23,5 @@ public class FhirConfig {
     @Bean
     public FhirContext fhirContext() {
         return FhirContext.forR4();
-    }
-
-    @Bean
-    public IGenericClient fhirClient(FhirContext fhirContext,
-                                     @Value("${zantrix.fhir.base-url}") String fhirBaseUrl) {
-        return fhirContext.newRestfulGenericClient(fhirBaseUrl);
     }
 }

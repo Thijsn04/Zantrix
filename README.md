@@ -44,8 +44,8 @@ Zantrix is a **modular monolith**: one deployable application with strictly sepa
 | **Frontend** | React 19, TypeScript, Vite, Tailwind CSS, i18next, PWA |
 | **Database** | PostgreSQL 16 |
 | **Identity** | Keycloak, OAuth2 and OpenID Connect, SMART on FHIR |
-| **Search** | Elasticsearch for terminology and resource indexing |
-| **Interoperability** | HL7 v2 and FHIR bridges via Apache Camel |
+| **Search (planned)** | Elasticsearch for terminology and resource indexing |
+| **Interoperability (planned)** | HL7 v2 and FHIR bridges via Apache Camel |
 
 For the reasoning behind these choices, see the [architecture decision records](docs/architecture/decisions/).
 
@@ -74,7 +74,7 @@ See [security and privacy](docs/architecture/security-and-privacy.md) for the fu
 **Requirements:** Docker and Docker Compose, Java 21 or newer, Node.js 20 or newer.
 
 ```bash
-# 1. Start infrastructure (PostgreSQL, Keycloak, Elasticsearch)
+# 1. Start infrastructure (PostgreSQL, Keycloak, HAPI FHIR)
 docker compose up -d
 
 # 2. Start the backend (Spring Boot API on port 8080)

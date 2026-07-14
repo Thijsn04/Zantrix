@@ -62,8 +62,10 @@ class AuditServiceImpl implements AuditRecorder, AuditTrailVerifier {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public AuditVerificationResult verify() {
+        AuditChainHeadEntity head = chainHead.findByIdForVerification(HEAD_ID)
+                .orElseThrow(() -> new IllegalStateException("Audit chain head is not initialized"));
         String previousHash = AuditHashing.GENESIS;
         long checked = 0;
         for (AuditEventEntity event : events.findAllByOrderByIdAsc()) {
@@ -80,6 +82,9 @@ class AuditServiceImpl implements AuditRecorder, AuditTrailVerifier {
             }
             previousHash = event.getHash();
             checked++;
+        }
+        if (!previousHash.equals(head.getLastHash())) {
+            return AuditVerificationResult.headMismatch(checked);
         }
         return AuditVerificationResult.ok(checked);
     }

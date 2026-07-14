@@ -43,6 +43,8 @@ Application modules do not each open their own connection to the database. They 
 - A module owns a set of resource types and profiles as its responsibility, and publishes a narrow interface plus domain events for other modules. For example, the Orders capability owns ServiceRequest and DiagnosticReport handling, and emits events when a result is finalized.
 - Where a workflow needs state that FHIR does not model well, that state is kept as a supporting FHIR resource (such as Task) or, only when genuinely necessary, as a small module private table that references FHIR resources by id. Clinical facts always live in FHIR.
 
+The first version of this facade is implemented as `FhirAccessGateway`. It keeps the raw HAPI client internal, enforces SMART resource scopes, verifies patient context for patient-scoped tokens, and records successful, denied, and failed operations. Search, transactions, profile enforcement, consent evaluation, and durable reconciliation between FHIR mutations and audit writes remain Milestone 0 work. See [ADR 0007](decisions/0007-guarded-fhir-access.md).
+
 ## Analytics without hurting the operational store
 
 Serving analytics from the live FHIR store hurts clinical performance. Instead:

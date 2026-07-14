@@ -52,7 +52,7 @@ All endpoints are documented. FHIR conformance is published as a CapabilityState
 ## Testing strategy
 
 - **Unit tests** for domain logic, mappers, and calculators.
-- **Integration tests** with Testcontainers against real PostgreSQL, Keycloak, and Elasticsearch. No in memory database substitutes, to avoid dialect false positives.
+- **Integration tests** with Testcontainers against real infrastructure. PostgreSQL and HAPI FHIR are covered today. Keycloak and Elasticsearch suites are added with the capabilities that require them. No in memory database substitutes are used for implemented persistence paths, to avoid dialect false positives.
 - **Modulith verification tests** that fail the build if module boundaries are violated.
 - **Contract and conformance tests** against the FHIR CapabilityStatement and the active profiles.
 
