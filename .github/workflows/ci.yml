@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [master, "claude/**"]
+  pull_request:
+    branches: [master]
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Build and test
+        working-directory: backend
+        run: ./mvnw -B verify
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Lint
+        working-directory: frontend
+        run: npm run lint
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+
+  house-style:
+    name: House style
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No em dashes
+        run: |
+          python3 - <<'PY'
+          import pathlib, sys
+          offenders = []
+          for path in pathlib.Path('.').rglob('*'):
+              if not path.is_file():
+                  continue
+              if '.git' in path.parts or 'node_modules' in path.parts:
+                  continue
+              try:
+                  text = path.read_text(encoding='utf-8', errors='ignore')
+              except Exception:
+                  continue
+              if chr(0x2014) in text:
+                  offenders.append(str(path))
+          if offenders:
+              print('Em dashes are not allowed in this repository. Found in:')
+              print('\n'.join(offenders))
+              sys.exit(1)
+          print('No em dashes found.')
+          PY

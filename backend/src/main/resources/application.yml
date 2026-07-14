@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      # Flyway is the sole owner of the schema. Hibernate never mutates it.
+      # Flyway owns the Zantrix schema. Hibernate never mutates it.
       ddl-auto: validate
     open-in-view: false
     show-sql: false
@@ -18,6 +18,25 @@ spring:
 
 server:
   port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+zantrix:
+  security:
+    oauth2:
+      # OpenID Connect issuer (Keycloak). Required in every non-test profile.
+      issuer-uri: ${ZANTRIX_OIDC_ISSUER_URI:http://localhost:8081/realms/zantrix}
+  web:
+    cors:
+      allowed-origins: ${ZANTRIX_CORS_ALLOWED_ORIGINS:http://localhost:5173}
 
 logging:
   level:
