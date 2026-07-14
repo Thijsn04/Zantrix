@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -12,6 +10,8 @@ services:
       - "5433:5432"
     volumes:
       - zantrix_pgdata:/var/lib/postgresql/data
+      # Creates the hapi and keycloak databases on first initialization.
+      - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
     restart: unless-stopped
 
   keycloak:
@@ -20,7 +20,7 @@ services:
     command: start-dev --import-realm
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres:5432/zantrix_db
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
       KC_DB_USERNAME: zantrix
       KC_DB_PASSWORD: zantrix_password
       KEYCLOAK_ADMIN: admin
@@ -33,19 +33,24 @@ services:
       - postgres
     restart: unless-stopped
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
-    container_name: zantrix-elasticsearch
+  # Canonical FHIR store and API (ADR 0006). The Zantrix backend is a client of
+  # this server. Not exposed to the public internet in a real deployment; the
+  # backend is the secured gateway in front of it.
+  hapi-fhir:
+    image: hapiproject/hapi:v8.10.0-2
+    container_name: zantrix-hapi-fhir
     environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hapi
+      SPRING_DATASOURCE_USERNAME: zantrix
+      SPRING_DATASOURCE_PASSWORD: zantrix_password
+      SPRING_DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      HAPI_FHIR_FHIR_VERSION: R4
     ports:
-      - "9200:9200"
-    volumes:
-      - zantrix_esdata:/usr/share/elasticsearch/data
+      - "8090:8080"
+    depends_on:
+      - postgres
     restart: unless-stopped
 
 volumes:
   zantrix_pgdata:
-  zantrix_esdata:

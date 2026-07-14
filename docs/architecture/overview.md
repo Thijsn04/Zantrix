@@ -15,23 +15,21 @@ Zantrix is a FHIR native, modular monolith EHR. This document gives the high lev
                         |       Zantrix Backend       |
                         |   Spring Boot, modular      |
                         |   monolith (Spring Modulith)|
-                        |                             |
-                        |  +-----------------------+  |
-                        |  |  HAPI FHIR JPA server |  |
-                        |  |  canonical FHIR API   |  |
-                        |  +-----------------------+  |
+                        |   secured FHIR gateway      |
                         +----+---------+---------+----+
                              |         |         |
-                   +---------+   +-----+----+   +----------+
-                   |PostgreSQL|  |Elastic-  |  | Keycloak |
-                   |  16      |  |search    |  | (OIDC)   |
-                   +----------+  +----------+  +----------+
-                             |
-                   +---------+---------------------+
-                   | External systems via          |
-                   | Interoperability (HL7 v2,     |
-                   | FHIR, regional adapter packs) |
-                   +-------------------------------+
+              +--------------+   +-----+----+   +----------+
+              |  HAPI FHIR   |   | Keycloak |   |Postgres  |
+              |  JPA server  |   |  (OIDC)  |   |(Zantrix) |
+              | canonical    |   +----------+   +----------+
+              | FHIR API     |
+              +------+-------+
+                     |
+              +------+-------+   +-------------------------------+
+              | Postgres     |   | External systems via          |
+              | (FHIR store) |   | Interoperability (HL7 v2,     |
+              +--------------+   | FHIR, regional adapter packs) |
+                                 +-------------------------------+
 ```
 
 ## The three big ideas

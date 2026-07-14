@@ -11,7 +11,8 @@ Each ADR has: a status, the context that forced a decision, the decision itself,
 | ADR | Title | Status |
 |---|---|---|
 | [0001](0001-modular-monolith.md) | Modular monolith with Spring Modulith | Accepted |
-| [0002](0002-fhir-native-hapi-jpa.md) | FHIR native persistence via HAPI FHIR JPA server | Accepted |
+| [0002](0002-fhir-native-hapi-jpa.md) | FHIR native persistence via HAPI FHIR JPA server | Accepted (topology superseded by 0006) |
 | [0003](0003-international-first-with-regional-adapters.md) | International first core with regional adapter packs | Accepted |
 | [0004](0004-frontend-application-shell.md) | Frontend as an application shell, not a website | Accepted |
 | [0005](0005-english-first-with-i18n.md) | English first with internationalization | Accepted |
+| [0006](0006-hapi-fhir-as-dedicated-service.md) | HAPI FHIR JPA server as a dedicated service | Accepted |

@@ -1,6 +1,6 @@
 # Backend Architecture
 
-The backend is a modular monolith built with Java 21 and Spring Boot 3, using Spring Modulith to enforce module boundaries. It embeds the HAPI FHIR JPA server as the canonical data platform.
+The backend is a modular monolith built with Java 21 and Spring Boot 3, using Spring Modulith to enforce module boundaries. Its canonical data platform is a dedicated HAPI FHIR JPA server ([ADR 0006](decisions/0006-hapi-fhir-as-dedicated-service.md)) that the backend talks to as a client and secures as a gateway.
 
 ## Why a modular monolith
 
@@ -30,7 +30,7 @@ Rules:
 
 Clinical state is FHIR. Modules access it through the internal FHIR access layer described in [FHIR strategy](fhir-strategy.md), not through direct JPA entities that shadow FHIR resources.
 
-Schema for supporting tables and for the HAPI server is owned exclusively by **Flyway**. Hibernate automatic schema generation is disabled. There is one migration history, and every schema change is a reviewed migration in version control. This removes the schema drift risk that comes from letting Hibernate mutate tables at runtime.
+Schema ownership is split cleanly by database. **Flyway** owns the Zantrix application schema in the Zantrix database, with Hibernate automatic schema generation disabled and every change a reviewed migration in version control. The **HAPI FHIR server** owns and migrates the FHIR resource schema in its own separate database. Neither tool manages the other's tables, so there is no schema drift.
 
 ## API surface
 

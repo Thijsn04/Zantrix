@@ -37,6 +37,9 @@ zantrix:
   web:
     cors:
       allowed-origins: ${ZANTRIX_CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  fhir:
+    # Base URL of the dedicated HAPI FHIR JPA server (see ADR 0006).
+    base-url: ${ZANTRIX_FHIR_BASE_URL:http://localhost:8090/fhir}
 
 logging:
   level:

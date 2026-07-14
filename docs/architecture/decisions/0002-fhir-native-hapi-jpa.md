@@ -2,7 +2,11 @@
 
 ## Status
 
-Accepted.
+Accepted, with the deployment topology superseded by [ADR 0006](0006-hapi-fhir-as-dedicated-service.md).
+
+The core decision holds: FHIR R4 is the canonical model and the HAPI FHIR JPA
+server is the canonical store and API. ADR 0006 changes only how the HAPI server
+is run. It is a dedicated service rather than embedded in the Zantrix process.
 
 ## Context
 

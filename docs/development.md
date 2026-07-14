@@ -13,7 +13,7 @@ This guide gets a contributor from a fresh clone to a running local Zantrix. The
 
 ```
 Zantrix
-  backend/      Spring Boot modular monolith, embeds the HAPI FHIR JPA server
+  backend/      Spring Boot modular monolith, client of the HAPI FHIR server
   frontend/     React, TypeScript, Vite application
   docs/         documentation (you are here)
   docker-compose.yml   local infrastructure
@@ -28,6 +28,8 @@ The Docker Compose file starts the supporting services: PostgreSQL, Keycloak, an
 docker compose up -d
 ```
 
+This starts PostgreSQL (port 5433), Keycloak (port 8081), and the dedicated HAPI FHIR JPA server (port 8090). On first start, PostgreSQL creates separate databases for the application, the FHIR server, and Keycloak. The FHIR server is reachable at `http://localhost:8090/fhir`.
+
 The credentials in the compose file are development only values. They are not secrets and must never be used in a real deployment.
 
 ## 2. Run the backend
@@ -37,7 +39,7 @@ cd backend
 ./mvnw spring-boot:run        # Windows: .\mvnw.cmd spring-boot:run
 ```
 
-The backend serves the application API and the FHIR API on port 8080.
+The backend serves the application API on port 8080. It is a client of the FHIR server and acts as the secured gateway in front of it. Confirm connectivity once authenticated at `GET /api/v1/fhir/status`.
 
 ## 3. Run the frontend
 
