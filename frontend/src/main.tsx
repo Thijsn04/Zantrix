@@ -15,6 +15,7 @@ const oidcConfig = {
   client_id: config.oidc.clientId,
   redirect_uri: config.oidc.redirectUri,
   post_logout_redirect_uri: config.oidc.redirectUri,
+  scope: 'openid profile email user/*.cruds',
   onSigninCallback: () => {
     window.history.replaceState({}, document.title, window.location.pathname);
   },

@@ -7,6 +7,7 @@ import com.zantrix.audit.AuditOutcome;
 import com.zantrix.audit.AuditRecorder;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.CapabilityStatement;
+import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Patient;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,7 +20,13 @@ class FhirAccessGatewayImplTest {
     private final FakeTransport transport = new FakeTransport();
     private final FakeAccessPolicy policy = new FakeAccessPolicy();
     private final RecordingAudit audit = new RecordingAudit();
-    private final FhirAccessGatewayImpl gateway = new FhirAccessGatewayImpl(transport, policy, audit);
+    private final FhirAccessGatewayImpl gateway = new FhirAccessGatewayImpl(
+            transport,
+            policy,
+            (resourceType, patientId) -> { },
+            audit,
+            new FakeMutationJournal(),
+            new FakeEmergencyReviews());
 
     @Test
     void authorizedReadUsesTheTransportAndRecordsSuccess() {
@@ -101,6 +108,26 @@ class FhirAccessGatewayImplTest {
         }
 
         @Override
+        public Bundle search(String resourceType, java.util.Map<String, java.util.List<String>> parameters) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Bundle searchAll(String resourceType, java.util.Map<String, java.util.List<String>> parameters) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Bundle history(String resourceType, String id) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Bundle transaction(Bundle bundle) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
         public MethodOutcome create(IBaseResource resource) {
             throw new UnsupportedOperationException();
         }
@@ -118,6 +145,28 @@ class FhirAccessGatewayImplTest {
         @Override
         public String resourceName(Class<? extends IBaseResource> resourceType) {
             return "Patient";
+        }
+    }
+
+    private static final class FakeMutationJournal implements FhirMutationJournal {
+        @Override public java.util.UUID begin(FhirOperation operation, String resourceType,
+                                              String resourceId, String patientId) {
+            return java.util.UUID.randomUUID();
+        }
+        @Override public void remoteSucceeded(java.util.UUID id, String resolvedResourceId) { }
+        @Override public void audited(java.util.UUID id) { }
+        @Override public void remoteFailed(java.util.UUID id, Throwable failure) { }
+    }
+
+    private static final class FakeEmergencyReviews
+            implements com.zantrix.platform.security.EmergencyAccessReviewRecorder {
+        @Override public void record(String resourceType, String resourceId, String patientId) { }
+        @Override public java.util.List<com.zantrix.platform.security.EmergencyAccessReview> openReviews() {
+            return java.util.List.of();
+        }
+        @Override public com.zantrix.platform.security.EmergencyAccessReview review(
+                java.util.UUID id, String outcomeCode) {
+            throw new UnsupportedOperationException();
         }
     }
 }

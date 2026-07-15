@@ -1,71 +1,77 @@
 # Architecture Overview
 
-Zantrix is a FHIR native, modular monolith EHR. This document gives the high level shape of the system. Deeper topics have their own documents, linked below.
+Zantrix is a FHIR-native, modular-monolith EHR. This document gives the high-level shape of the implemented Milestone 1 system.
 
 ## Current implementation
 
-Milestone 0 is underway. The default branch currently provides the three local infrastructure services shown below, a Spring Boot backend with authenticated diagnostic endpoints and guarded FHIR CRUD access, a relational hash chained audit module, and a minimal React/OIDC application shell. No clinical capability module is implemented yet. The public FHIR facade, consent, break the glass, terminology, interoperability, analytics, feature flags, and the complete clinical workspace are target architecture.
+Milestone 0 is complete and the Milestone 1 outpatient core is beta complete. The system includes a clinical React workspace, a Java modular monolith, guarded application and FHIR APIs, HAPI FHIR as the canonical clinical store, Keycloak identity, a relational accountability store, Snowstorm terminology, and Elasticsearch terminology indexing.
 
 ## System context
 
 ```
                         +-----------------------------+
    Clinicians  ----->   |        Zantrix Frontend     |
-   Patients    ----->   |  React SPA, application UI  |
+                        | React clinical workspace    |
                         +--------------+--------------+
-                                       | HTTPS, OAuth2 / SMART on FHIR
+                                       | HTTPS, OIDC, SMART scopes
                                        v
                         +-----------------------------+
                         |       Zantrix Backend       |
-                        |   Spring Boot, modular      |
-                        |   monolith (Spring Modulith)|
-                        |   secured FHIR gateway      |
+                        | Spring Boot modular         |
+                        | monolith and FHIR gateway   |
                         +----+---------+---------+----+
                              |         |         |
               +--------------+   +-----+----+   +----------+
-              |  HAPI FHIR   |   | Keycloak |   |Postgres  |
-              |  JPA server  |   |  (OIDC)  |   |(Zantrix) |
-              | canonical    |   +----------+   +----------+
-              | FHIR API     |
+              | HAPI FHIR    |   | Keycloak |   |PostgreSQL|
+              | canonical R4 |   | OIDC/RBAC|   |audit,    |
+              | resource API |   +----------+   |journal,  |
+              +------+-------+                  |control   |
+                     |                          +----------+
               +------+-------+
-                     |
-              +------+-------+   +-------------------------------+
-              | Postgres     |   | External systems via          |
-              | (FHIR store) |   | Interoperability (HL7 v2,     |
-              +--------------+   | FHIR, regional adapter packs) |
-                                 +-------------------------------+
+              | PostgreSQL   |       +---------------------+
+              | FHIR schema  |       | Snowstorm FHIR     |
+              +--------------+       | terminology API    |
+                                     +----------+----------+
+                                                |
+                                     +----------+----------+
+                                     | Elasticsearch      |
+                                     | terminology index  |
+                                     +---------------------+
 ```
+
+External interoperability adapters, imaging, analytics, patient engagement, and regional packs remain later milestones.
 
 ## The three big ideas
 
-1. **FHIR native.** FHIR R4 is not an export format layered on top of a private schema. It is the schema. The HAPI FHIR JPA server is the canonical store and REST API for clinical data. Application modules read and write FHIR resources. See [FHIR strategy](fhir-strategy.md).
+1. **FHIR native.** FHIR R4 is the canonical clinical schema, not an export over private clinical tables. HAPI FHIR stores, versions, and searches resources. Application modules use the guarded gateway. See [FHIR strategy](fhir-strategy.md).
 
-2. **Modular monolith.** One deployable application, with strictly separated internal modules enforced by Spring Modulith. Modules communicate through published interfaces and domain events, never by reaching into each other's internals. A module can be extracted into its own service later if it needs independent scaling, without a rewrite. See [backend architecture](backend.md).
+2. **Modular monolith.** One backend deployment has strictly separated modules verified by Spring Modulith. Modules publish narrow APIs and can be extracted later if independent scaling becomes necessary. See [backend architecture](backend.md).
 
-3. **An application, not a website.** The frontend will be a focused clinical workspace with persistent patient context, keyboard driven navigation, a command palette, real workspace tabs, and dense, calm information design. The current UI is a placeholder while that foundation is built. See [frontend architecture](frontend.md).
+3. **A clinical application, not a website.** The frontend maintains explicit patient context and task-focused navigation across the patient chart, scheduling, worklists, administration, and privacy workflows. See [frontend architecture](frontend.md).
 
 ## Layers
 
-| Layer | Responsibility | Document |
+| Layer | Responsibility | Current boundary |
 |---|---|---|
-| Frontend | Clinical and administrative user experience | [frontend.md](frontend.md) |
-| Application modules | Domain logic and workflows over FHIR | [backend.md](backend.md), [modules](../modules/README.md) |
-| FHIR platform | Canonical resource store, validation, search, operations | [fhir-strategy.md](fhir-strategy.md) |
-| Identity | Authentication, authorization, SMART scopes | [security-and-privacy.md](security-and-privacy.md) |
-| Interoperability | External integration and regional adapters | [interoperability.md](interoperability.md) |
-| Data platform | PostgreSQL today; Elasticsearch and analytics export planned | [fhir-strategy.md](fhir-strategy.md) |
+| Frontend | Clinical and administrative experience | M1 outpatient workspace |
+| Application modules | Domain workflows over FHIR | M1 platform, patient administration, and clinical core |
+| FHIR platform | Canonical resources, validation, search, history, transactions | HAPI R4 behind guarded Java and HTTP facades |
+| Identity and privacy | Authentication, role/scope authorization, consent, emergency access | Keycloak plus central backend policy |
+| Terminology | Coded entry and validation | Snowstorm for licensed SNOMED; NLM RxNorm validation |
+| Accountability | Audit chain, operation journal, reviews, AuditEvent export | Zantrix PostgreSQL plus FHIR AuditEvent |
+| Interoperability | External systems and regional adapters | FHIR facade only; other adapters planned |
 
-## Cross cutting concerns
+## Cross-cutting concerns
 
-- **Security and privacy.** Authentication, role/scope conversion, guarded FHIR operations, and the audit chain are implemented foundations. Consent, break the glass, and broader contextual authorization are planned. See [security and privacy](security-and-privacy.md).
-- **Terminology** is planned as a shared service through which coded data resolves.
-- **Observability** currently consists of Spring Boot Actuator health and info endpoints plus standard application logging. Structured JSON logs, metrics export, tracing, and deployment-level readiness remain planned.
-- **Configuration** currently covers service URLs, database credentials, CORS, and OIDC settings through environment variables. Capability-level feature flags are planned.
+- **Security and privacy.** Central authentication, role and SMART scope conversion, patient context, consent, justified emergency access, review tasks, security headers, and audit reconciliation are implemented. Production relationship policy and infrastructure controls remain deployment work.
+- **Terminology.** Snowstorm search, expansion, and validation fail closed. Deployments supply their licensed SNOMED CT edition. RxNorm validation sends only system/code/display data and never patient context.
+- **Observability.** Actuator health/info and application logs are present. Metrics export, distributed tracing, and production SLOs remain future hardening.
+- **Configuration.** Service URLs, OIDC issuer/JWK endpoints, CORS, consent mode, intervals, and feature flags are configurable. Production secret management is external to the local stack.
 
-## What is deliberately not here yet
+## Deliberate boundary
 
-The [module vision](../modules/README.md) describes the full intended scope, and the [roadmap](../roadmap.md) states what is actually being built now. Unless a section explicitly says "current implementation," capability descriptions are target design.
+The M1 beta is a narrow outpatient EHR, not the complete [module vision](../modules/README.md). Inpatient ADT, comprehensive medication knowledge, specialty care, diagnostics integrations, revenue cycle, analytics, patient engagement, regional certification, and operational production controls are later work. The [roadmap](../roadmap.md) is authoritative.
 
 ## Key decisions
 
-The reasoning behind the major choices is recorded as [architecture decision records](decisions/). Start there if you want to understand why the system is shaped this way.
+The reasoning behind major choices is recorded in the [architecture decision records](decisions/).

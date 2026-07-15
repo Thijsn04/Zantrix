@@ -11,7 +11,7 @@ Each capability lists:
 - **Purpose.** What clinical or operational need it serves.
 - **Primary FHIR resources.** The canonical resources it reads and writes. Zantrix is FHIR native, so these resources are the real storage and API surface, not an export format.
 - **Depends on.** The platform or clinical capabilities it builds on.
-- **Status.** One of `Planned`, `In design`, `In progress`, `Beta`, or `Stable`. The platform foundations that have code today are marked `In progress`; everything else remains `Planned`. The [roadmap](../roadmap.md) is authoritative if this capability catalog ever differs.
+- **Status.** One of `Planned`, `In design`, `In progress`, `Beta`, or `Stable`. `Beta` can describe a delivered milestone slice even when the capability's longer-term purpose is broader; the note states that boundary. The [roadmap](../roadmap.md) is authoritative if this catalog ever differs.
 
 ## Status legend
 
@@ -42,37 +42,37 @@ The horizontal foundation. Everything else depends on this layer. This is where 
 - **Purpose.** The canonical clinical data store and REST API. Hosts the HAPI FHIR R4 JPA server, resource validation against profiles, search, history, transactions, and FHIR operations.
 - **Primary FHIR resources.** All resource types. CapabilityStatement, StructureDefinition, OperationDefinition.
 - **Depends on.** PostgreSQL, Elasticsearch.
-- **Status.** `In progress`. The dedicated R4 server and guarded CRUD client exist; profiles, gateway search/history/transactions, and the public FHIR surface do not.
+- **Status.** `Beta`. Dedicated R4 storage, guarded CRUD/search/history/transactions, base and declared-profile validation, a public M1 facade, consent, audit, and mutation reconciliation are implemented. Regional profile packs, patch/bulk/subscription behavior, and wider resource coverage remain later work.
 
 ### P2. Identity and Access Management
 - **Purpose.** Authentication, authorization, sessions, and the practitioner and organization directory. Role based and attribute based access, SMART on FHIR scopes, and single sign on.
 - **Primary FHIR resources.** Practitioner, PractitionerRole, Organization, Location, Group, Person.
 - **Depends on.** Keycloak, FHIR Data Platform.
-- **Status.** `In progress`. JWT validation, realm-role mapping, SMART scope authorities, and a current-user endpoint exist; directory resources and full SMART launch flows do not.
+- **Status.** `Beta`. JWT validation, realm-role mapping, SMART scope authorities, current-user lookup, and Organization/Location/Practitioner/PractitionerRole directories are implemented. Full third-party SMART launch context and production federation policy remain later work.
 
 ### P3. Consent and Privacy
 - **Purpose.** Patient consent, sensitive record flags, and GDPR data subject workflows including access, export, and erasure requests. Enforces consent aware filtering of clinical data.
 - **Primary FHIR resources.** Consent, Flag.
 - **Depends on.** IAM, Audit, FHIR Data Platform.
-- **Status.** `Planned`.
+- **Status.** `Beta`. The M1 slice creates/lists/revokes FHIR Consent, enforces effective permit/deny policy, and provides justified emergency access with audit and mandatory review. GDPR request workflows and sensitive-category policy remain planned.
 
 ### P4. Audit and Compliance
 - **Purpose.** A tamper evident record of every access and change, with FHIR AuditEvent export, a verifiable hash chain, and reporting for privacy officers. Includes break the glass review.
 - **Primary FHIR resources.** AuditEvent, Provenance.
 - **Depends on.** IAM.
-- **Status.** `In progress`. The relational hash chain and integrity verifier exist; FHIR export, review tooling, and break-glass review do not.
+- **Status.** `Beta`. Hash-chain recording and verification, privacy-officer filtering, emergency review, FHIR AuditEvent export, and durable FHIR mutation reconciliation are implemented. Clinical Provenance and production retention/export policy remain later work.
 
 ### P5. Terminology and Ontology
 - **Purpose.** Terminology services for SNOMED CT, LOINC, ICD-10 and ICD-11, RxNorm, and local value sets. Supports lookup, validate-code, translate, and value set expansion, backed by fast search.
 - **Primary FHIR resources.** CodeSystem, ValueSet, ConceptMap, NamingSystem.
 - **Depends on.** FHIR Data Platform, Elasticsearch.
-- **Status.** `Planned`.
+- **Status.** `Beta`. Snowstorm provides licensed SNOMED search/expansion/validation, RxNorm ingredients are validated through NLM, and the M1 vital set uses LOINC/UCUM. Operators supply licensed RF2 content. ICD and broader LOINC/translation management remain planned.
 
 ### P6. Workflow and Rules Engine
 - **Purpose.** Cross capability tasks, protocols, and automation. Drives worklists, handovers, and reminders. Hosts the CDS Hooks service used by clinical decision support.
 - **Primary FHIR resources.** Task, PlanDefinition, ActivityDefinition, CarePlan.
 - **Depends on.** FHIR Data Platform, IAM.
-- **Status.** `Planned`.
+- **Status.** `Beta`. The M1 Task worklist supports create, filter, claim, start, and complete. PlanDefinition automation, reminders, and CDS Hooks hosting remain planned.
 
 ### P7. Interoperability and Localization
 - **Purpose.** Inbound and outbound integration, and the home for regional adapter packs. Translates HL7 v2 and other formats to and from FHIR, hosts FHIR Subscriptions, and provides the plug points for country specific systems. The Dutch pack (BSN and SBV-Z verification, national exchange, VECOZO eligibility, DBC coding) is the first adapter pack and is disabled by default.
@@ -90,7 +90,7 @@ The horizontal foundation. Everything else depends on this layer. This is where 
 - **Purpose.** Tenant, organization, and location administration, feature flags for enabling capabilities, and system settings. The control plane for running Zantrix.
 - **Primary FHIR resources.** Organization, Location, HealthcareService, Endpoint.
 - **Depends on.** IAM.
-- **Status.** `Planned`.
+- **Status.** `Beta`. Organization, Location, Practitioner, PractitionerRole, and relational feature-flag administration are implemented. Multi-tenant control-plane and secret-management functions remain planned.
 
 ### P10. Analytics and Reporting Platform
 - **Purpose.** FHIR Bulk Data export, an analytics friendly data store, and the query layer that dashboards, population health, and research build on. Keeps analytics load off the operational store.
@@ -108,19 +108,19 @@ Who the patient is, where they are, and when they are seen.
 - **Purpose.** The single source of truth for patient demographics. Probabilistic duplicate detection, safe merge and unmerge that re-point every referencing resource, VIP and sensitive flags.
 - **Primary FHIR resources.** Patient, RelatedPerson, Person, Linkage.
 - **Depends on.** IAM, Consent, Terminology.
-- **Status.** `Planned`.
+- **Status.** `Beta`. Registration/search, deterministic duplicate scoring, review thresholds, and fingerprint/version-guarded merge/unmerge across M1 references are implemented. VIP/sensitive flags and enterprise probabilistic tuning remain planned.
 
 ### A2. Encounters and ADT
 - **Purpose.** The encounter lifecycle across outpatient, inpatient, and emergency. Admission, discharge, and transfer, with bed and census views for inpatient care.
 - **Primary FHIR resources.** Encounter, EpisodeOfCare, Location.
 - **Depends on.** Patient and MPI, Administration.
-- **Status.** `Planned`.
+- **Status.** `Beta`. Strict planned/in-progress/finished/cancelled outpatient encounter transitions are implemented. Inpatient admission/transfer/discharge, bed, and census workflows remain planned.
 
 ### A3. Scheduling and Resource Management
 - **Purpose.** Calendars for practitioners, rooms, and equipment. Appointment booking with conflict detection, waitlists, and slot management.
 - **Primary FHIR resources.** Appointment, Slot, Schedule, ServiceRequest.
 - **Depends on.** Patient and MPI, IAM, Encounters.
-- **Status.** `Planned`.
+- **Status.** `Beta`. Schedule and Slot creation, free-slot search, optimistic slot booking, Appointment conflict detection, and appointment status transitions are implemented. Waitlists and advanced recurrence/capacity remain planned.
 
 ### A4. Registration, Check-in, and Kiosk
 - **Purpose.** Front desk registration and patient self service check in, including identity capture and questionnaire completion.
@@ -144,43 +144,43 @@ The heart of the record. These capabilities are the narrow core that Zantrix mak
 - **Purpose.** The active and resolved problem list, coded to SNOMED CT and ICD.
 - **Primary FHIR resources.** Condition.
 - **Depends on.** Patient and MPI, Terminology.
-- **Status.** `Planned`.
+- **Status.** `Beta`. SNOMED-validated active and resolved Condition workflows are implemented.
 
 ### C2. Allergies and Intolerances
 - **Purpose.** Coded allergies and intolerances with substances, reactions, and criticality, feeding decision support.
 - **Primary FHIR resources.** AllergyIntolerance.
 - **Depends on.** Patient and MPI, Terminology.
-- **Status.** `Planned`.
+- **Status.** `Beta`. SNOMED-validated AllergyIntolerance creation, listing, inactivation, and entered-in-error workflows are implemented and feed medication safety.
 
 ### C3. Medications
 - **Purpose.** The full medication lifecycle. Reconciliation, prescribing through computerized provider order entry, the administration record, and dispensing.
 - **Primary FHIR resources.** MedicationRequest, MedicationStatement, MedicationAdministration, MedicationDispense, Medication.
 - **Depends on.** Patient and MPI, Terminology, Clinical Decision Support, Orders.
-- **Status.** `Planned`.
+- **Status.** `Beta`. Reconciliation, prescribing, stop, administration, and dispensing workflows are implemented with RxNorm validation, safety evaluation, DetectedIssue transactions, and documented clinical overrides.
 
 ### C4. Orders and Results
 - **Purpose.** Computerized provider order entry for labs, imaging, procedures, and referrals, and the results that come back, with acknowledgement and worklists.
 - **Primary FHIR resources.** ServiceRequest, DiagnosticReport, Observation, Specimen, Task.
 - **Depends on.** Patient and MPI, Terminology, Workflow.
-- **Status.** `Planned`.
+- **Status.** `Beta`. ServiceRequest and Task placement, Observation/DiagnosticReport result transactions, source-task completion, and review-task creation are implemented.
 
 ### C5. Clinical Documentation
 - **Purpose.** Structured and narrative notes, templates and smart phrases, addenda, co-signing, and full version history.
 - **Primary FHIR resources.** Composition, DocumentReference, ClinicalImpression.
 - **Depends on.** Patient and MPI, Encounters, Terminology.
-- **Status.** `Planned`.
+- **Status.** `Beta`. Draft/update/sign/addendum Composition workflows, escaped narrative, signer references, signed immutability, and FHIR version history are implemented. Templates and co-signing remain planned.
 
 ### C6. Vitals and Flowsheets
 - **Purpose.** Vital signs, intake and output, flowsheets, and early warning scores such as NEWS and MEWS.
 - **Primary FHIR resources.** Observation.
 - **Depends on.** Patient and MPI, Terminology.
-- **Status.** `Planned`.
+- **Status.** `Beta`. A bounded LOINC/UCUM vital set, transactional recording, and calculated BMI are implemented. General flowsheets and early-warning scores remain planned.
 
 ### C7. Clinical Decision Support
 - **Purpose.** Drug to drug and drug to allergy interaction checks, dose range checks, and protocol guidance, delivered through CDS Hooks so alerts fire at the point of ordering.
 - **Primary FHIR resources.** DetectedIssue, GuidanceResponse, PlanDefinition.
 - **Depends on.** Workflow, Medications, Allergies, Terminology.
-- **Status.** `Planned`.
+- **Status.** `Beta`. Medication-to-allergy checking and a transparent 15-class expert-consensus high-priority drug interaction pack are enforced during prescribing. It is explicitly non-comprehensive; dose ranges, protocol guidance, and CDS Hooks remain planned.
 
 ### C8. Care Plans and Goals
 - **Purpose.** Longitudinal care plans, goals, and care team coordination.

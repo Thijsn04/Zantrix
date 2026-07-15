@@ -58,6 +58,12 @@ class AuditEventEntity {
     @Column(nullable = false)
     private String hash;
 
+    @Column(name = "export_status", nullable = false)
+    private String exportStatus = "PENDING";
+
+    @Column(name = "fhir_audit_event_id")
+    private String fhirAuditEventId;
+
     protected AuditEventEntity() {
     }
 
@@ -129,4 +135,8 @@ class AuditEventEntity {
     String getHash() {
         return hash;
     }
+
+    String getExportStatus(){return exportStatus;}
+    String getFhirAuditEventId(){return fhirAuditEventId;}
+    void markExported(String id){exportStatus="EXPORTED";fhirAuditEventId=id;}
 }

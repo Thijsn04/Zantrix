@@ -11,7 +11,7 @@ Zantrix is a modern, transparent alternative to closed EHR platforms. It is buil
 [![Spring Boot 3](https://img.shields.io/badge/Spring%20Boot-3-6DB33F.svg?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg?logo=react&logoColor=black)](https://react.dev/)
 [![HL7 FHIR](https://img.shields.io/badge/HL7-FHIR%20R4-e6007e.svg)](https://hl7.org/fhir/)
-[![Status: early development](https://img.shields.io/badge/status-early%20development-yellow.svg)](docs/roadmap.md)
+[![Status: M1 beta](https://img.shields.io/badge/status-M1%20beta-yellow.svg)](docs/roadmap.md)
 
 </div>
 
@@ -19,7 +19,9 @@ Zantrix is a modern, transparent alternative to closed EHR platforms. It is buil
 
 ## Status
 
-Zantrix is in early development and is not production ready. The current repository contains the Milestone 0 foundation: local PostgreSQL, Keycloak, and HAPI FHIR infrastructure; an authenticated Spring Boot gateway with guarded FHIR CRUD access; a hash chained relational audit trail; a secure React workspace shell; and continuous integration. Clinical workflows, consent, break the glass, a public FHIR gateway, and patient data workflows are not implemented yet.
+Milestones 0 and 1 are feature complete at beta quality. The repository now provides a one-command local stack, a secured FHIR R4 facade, patient and outpatient encounter workflows, scheduling, problems, allergies, medications, orders and results, clinical notes, vitals, task worklists, consent, emergency access review, terminology integration, administration, and a usable clinical workspace. These paths are audited and covered by unit, architecture, real-infrastructure integration, and browser tests.
+
+Zantrix is not yet production ready, medically certified, or certified against NEN 7510, ISO 27001, or a national EHR program. A production deployment still needs jurisdiction-specific profiles and policy, infrastructure hardening, operational validation, and licensed terminology content. See the [roadmap](docs/roadmap.md) for the exact boundary.
 
 The [roadmap](docs/roadmap.md) is the source of truth for what is built and what comes next.
 
@@ -30,7 +32,7 @@ If you are looking for the design of the system, start with the [documentation](
 Electronic Health Records are typically locked behind proprietary vendors, with closed data models and hard vendor lock in. Zantrix takes the opposite position:
 
 - **Open source and transparent.** Control stays with the care provider, under the AGPLv3 license.
-- **Standards first.** HL7 FHIR R4 is the canonical data model. The internal HAPI service provides the FHIR API today; the target is secured external FHIR access with terminology and imaging standards layered on deliberately. There are no closed, proprietary formats.
+- **Standards first.** HL7 FHIR R4 is the canonical data model and the backend exposes a secured FHIR R4 facade. Snowstorm provides FHIR terminology operations over deployment-supplied SNOMED CT content. There are no private clinical storage formats.
 - **International first.** The core is region neutral. Country specific concerns, such as the Dutch BSN, national exchange networks, and reimbursement rules, live in optional adapter packs that are disabled by default.
 - **Modular.** Capabilities can be turned on or off, so the same platform fits an independent treatment centre or an academic hospital.
 - **Task driven.** The interface is designed to reduce the registration burden on clinical staff and to run like a real clinical application, not a marketing website.
@@ -46,17 +48,17 @@ Zantrix is a **modular monolith**: one deployable application with strictly sepa
 | **Frontend** | React 19, TypeScript 6, Vite 8, Tailwind CSS 4, i18next, PWA |
 | **Database** | PostgreSQL 16 |
 | **Identity** | Keycloak, OAuth2 and OpenID Connect, SMART scope enforcement in the backend |
-| **Search (planned)** | Elasticsearch for terminology and resource indexing |
+| **Terminology** | Snowstorm 10.11 backed by Elasticsearch 8.11; licensed SNOMED CT RF2 is operator supplied |
 | **Interoperability (planned)** | HL7 v2 and FHIR bridges via Apache Camel |
 
 For the reasoning behind these choices, see the [architecture decision records](docs/architecture/decisions/).
 
-### Security foundation and target
+### Security and privacy baseline
 
 Zantrix targets NEN 7510 and ISO 27001 as design goals. These are goals, not certifications.
 
-- **Implemented:** stateless JWT authentication, Keycloak realm-role mapping, SMART resource-scope checks on gateway operations, and a tamper evident relational audit chain.
-- **Planned:** attribute and relationship checks, consent enforcement, break the glass, privacy-officer workflows, FHIR AuditEvent export, and durable reconciliation between FHIR mutations and audit writes.
+- **Implemented:** stateless JWT authentication, Keycloak realm-role mapping, SMART resource-scope checks, patient-context checks, FHIR Consent enforcement, justified emergency access with review tasks, tamper-evident audit search and integrity reporting, FHIR AuditEvent export, security headers, and a durable FHIR mutation journal with reconciliation.
+- **Deployment work:** production MFA and session policy, TLS and secret management, encryption and backup policy, rate limiting, organization/relationship policy, jurisdiction-specific privacy rules, and independent security assessment.
 
 See [security and privacy](docs/architecture/security-and-privacy.md) for the full model.
 
@@ -88,7 +90,7 @@ npm ci
 npm run dev
 ```
 
-Keycloak imports test users from `realm-export.json` on first start. See [development](docs/development.md) for the full local setup, seed data, and test accounts.
+Keycloak imports synthetic test users from `realm-export.json` on first start. Snowstorm starts without terminology content: import an edition your organization is licensed to use before entering SNOMED-coded clinical data. See [development](docs/development.md) for setup, terminology loading, test accounts, and verification commands.
 
 ## Contributing
 

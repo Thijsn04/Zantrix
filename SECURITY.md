@@ -22,7 +22,7 @@ Please include:
 
 ## Scope
 
-Zantrix is in early development and is not production ready. Reports are still welcome, and they help shape a secure foundation. Most clinical and privacy capabilities are planned rather than implemented, as tracked in the [roadmap](docs/roadmap.md).
+Zantrix has a beta Milestone 1 clinical core but is not production ready or certified. Reports covering authentication, authorization, consent, emergency access, audit integrity, FHIR isolation, terminology validation, or clinical workflow safety are especially valuable. The exact implemented boundary is tracked in the [roadmap](docs/roadmap.md).
 
 ## Responsible disclosure
 

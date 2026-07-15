@@ -10,4 +10,14 @@ package com.zantrix.audit;
 public interface AuditRecorder {
 
     void record(AuditEntry entry);
+
+    /**
+     * Records an entry for a previously captured request context. This is used
+     * by durable reconciliation after a remote FHIR mutation committed but the
+     * synchronous audit write did not. Implementations must preserve the
+     * original actor and source rather than attributing the event to a worker.
+     */
+    default void record(AuditEntry entry, AuditContext context) {
+        record(entry);
+    }
 }

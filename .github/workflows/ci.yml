@@ -47,6 +47,46 @@ jobs:
         working-directory: frontend
         run: npm audit --omit=dev --audit-level=high
 
+  end-to-end:
+    name: Browser end to end
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install browser test dependencies
+        working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Start the complete stack
+        run: docker compose up --build -d
+      - name: Wait for application readiness
+        run: |
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent http://localhost:8080/actuator/health >/dev/null \
+              && curl --fail --silent http://localhost:8081/realms/zantrix/.well-known/openid-configuration >/dev/null \
+              && curl --fail --silent http://localhost:5173 >/dev/null; then
+              exit 0
+            fi
+            sleep 5
+          done
+          docker compose ps
+          docker compose logs --tail=200 backend keycloak hapi-fhir frontend
+          exit 1
+      - name: Run browser flow
+        working-directory: frontend
+        run: npm run test:e2e
+      - name: Capture service logs
+        if: failure()
+        run: docker compose logs --tail=300
+      - name: Stop stack
+        if: always()
+        run: docker compose down --volumes
+
   dependency-review:
     name: Dependency review
     if: github.event_name == 'pull_request'

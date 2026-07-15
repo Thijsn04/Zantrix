@@ -4,7 +4,7 @@ The backend is a Java 21, Spring Boot 3.3 modular monolith. It is an OAuth2 reso
 
 ## Run locally
 
-Start PostgreSQL, Keycloak, and HAPI FHIR from the repository root first:
+Start PostgreSQL, Keycloak, HAPI FHIR, Elasticsearch, and Snowstorm from the repository root first:
 
 ```bash
 docker compose up -d
@@ -24,6 +24,6 @@ On Windows use `.\mvnw.cmd spring-boot:run`. The API listens on port 8080.
 ./mvnw clean verify
 ```
 
-Docker must be running because integration tests use Testcontainers with PostgreSQL and the official HAPI FHIR image.
+Docker must be running because integration tests use Testcontainers with PostgreSQL and the official HAPI FHIR image. The suite covers the audit store, IAM boundary, FHIR transport, and the complete Milestone 1 clinical journey.
 
 See [development setup](../docs/development.md) for endpoints, test accounts, configuration, and troubleshooting, and [backend architecture](../docs/architecture/backend.md) for module rules and current limitations.

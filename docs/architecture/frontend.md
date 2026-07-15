@@ -4,9 +4,9 @@ The Zantrix frontend is a clinical workspace. It should feel like a focused desk
 
 ## Current implementation
 
-The frontend has React 19, TypeScript 6 strict mode, Vite 8, Tailwind CSS 4, i18next, PWA generation, environment-driven backend/OIDC configuration, and a top-level `react-oidc-context` provider. It presents an explicit sign-in state, loads the authenticated session from `/api/v1/iam/me` through the single typed API client, and renders a responsive workspace shell after authentication.
+The frontend has React 19, TypeScript 6 strict mode, Vite 8, Tailwind CSS 4, i18next, PWA generation, environment-driven backend/OIDC configuration, and a top-level `react-oidc-context` provider. It presents explicit sign-in/session states, loads `/api/v1/iam/me` through one typed API client, and renders role-aware workspace navigation after authentication.
 
-The shell has light and dark token themes, accessible Button and icon-button primitives, a visible patient-context region that starts empty, and a Ctrl/Cmd+K command palette with focus and Escape handling. React Query handles session caching and Lucide supplies icons. The first clinical routes, patient selection, workspace tabs, typed FHIR client, and Playwright tests remain future work because no clinical capability exists yet.
+The M1 workspace includes patient search and registration, persistent patient context, chart tabs for encounters/problems/allergies/medications/vitals/orders/results/notes, clinical quick-entry and lifecycle actions, scheduling, Task worklists, administration feature flags, and privacy/audit views. Light/dark tokens, responsive layouts, labelled forms, tab semantics, focus styles, explicit API errors, and Ctrl/Cmd+K command navigation are implemented. React Query owns server state and invalidation; Lucide supplies icons.
 
 ## An application, not a website
 
@@ -46,9 +46,9 @@ frontend/src
 
 ## Data layer
 
-- **One typed API client.** All network access will go through a single client. The base URL already comes from configuration, but the client itself has not been built. The previous code hardcoded a development host in many places and sometimes omitted authentication; the rebuild will not repeat that pattern.
-- **Auth is centralized.** A top-level OIDC provider is wired today. Login/logout controls, protected routing, token attachment, refresh behavior, and the current-session API integration remain to be built.
-- **FHIR aware.** A FHIR client wraps the platform's FHIR API with types generated from the resource definitions, so features work with typed resources rather than untyped JSON.
+- **One typed API client.** All application network access uses one bearer-token client with configurable base URL, GET/POST/PUT helpers, abort support, no-content handling, and problem-detail error extraction.
+- **Auth is centralized.** The top-level OIDC provider owns login, logout, token attachment, callback handling, renewal, and current-session loading. The development realm requests the `user/*.cruds` SMART scope.
+- **FHIR aware boundary.** The workspace uses task-oriented typed application DTOs while the backend owns FHIR transaction composition. External clients use the separate `/fhir/R4` facade. Generated resource typings remain a future improvement for direct FHIR-based frontend features.
 - **Server state via React Query.** Caching, background revalidation, and optimistic updates are handled by React Query. This is what makes navigation feel instant.
 - **Strict typing.** TypeScript strict mode is on and ESLint rejects explicit `any`.
 
@@ -63,5 +63,6 @@ The build currently generates a PWA manifest and service worker. Installability 
 ## Quality
 
 - **Component tests** with the Testing Library for behaviour.
-- **End to end tests** with Playwright are planned for critical clinical flows once those flows exist.
+- **End-to-end tests** with Playwright run against the real Compose stack and cover Keycloak login, patient registration, FHIR-backed selection, and chart opening.
 - **Linting and type checking** run in continuous integration and block merges on failure.
+- **Remaining hardening** includes broader component and browser coverage, formal WCAG 2.2 AA assessment, locale-aware date/unit presentation, richer non-blocking feedback, and a clinical offline-safety policy. The service worker does not authorize offline clinical mutation.

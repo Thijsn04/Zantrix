@@ -30,16 +30,31 @@ management:
         enabled: true
 
 zantrix:
+  medication:
+    rxnorm-base-url: ${ZANTRIX_RXNORM_BASE_URL:https://rxnav.nlm.nih.gov/REST}
   security:
     oauth2:
       # OpenID Connect issuer (Keycloak). Required in every non-test profile.
       issuer-uri: ${ZANTRIX_OIDC_ISSUER_URI:http://localhost:8081/realms/zantrix}
+      # May use a private service URL while issuer validation retains the
+      # externally visible URL embedded in tokens.
+      jwk-set-uri: ${ZANTRIX_OIDC_JWK_SET_URI:http://localhost:8081/realms/zantrix/protocol/openid-connect/certs}
   web:
     cors:
       allowed-origins: ${ZANTRIX_CORS_ALLOWED_ORIGINS:http://localhost:5173}
   fhir:
     # Base URL of the dedicated HAPI FHIR JPA server (see ADR 0006).
     base-url: ${ZANTRIX_FHIR_BASE_URL:http://localhost:8090/fhir}
+    audit-reconciliation-interval: ${ZANTRIX_FHIR_AUDIT_RECONCILIATION_INTERVAL:PT30S}
+    audit-export-interval: ${ZANTRIX_FHIR_AUDIT_EXPORT_INTERVAL:PT1M}
+  terminology:
+    # Snowstorm FHIR R4 terminology endpoint. Licensed content is imported by
+    # each deployment and is not distributed with Zantrix.
+    base-url: ${ZANTRIX_TERMINOLOGY_BASE_URL:http://localhost:8082/fhir}
+  privacy:
+    # deny-on-explicit is jurisdiction-neutral. Deployments that require a
+    # positive consent before every access can select require-active.
+    consent-mode: ${ZANTRIX_CONSENT_MODE:deny-on-explicit}
 
 logging:
   level:

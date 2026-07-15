@@ -4,7 +4,7 @@ Interoperability and country-specific behavior belong at explicit boundaries so 
 
 ## Current implementation
 
-No interoperability adapter, regional pack, Apache Camel route, HL7 v2 interface, FHIR Subscription integration, document exchange, DICOM integration, or national-system connector is implemented. The dedicated HAPI FHIR service and the backend's internal HAPI client establish the FHIR data-platform foundation only. They are not an external interoperability product surface yet.
+The backend exposes a secured FHIR R4 facade for the M0/M1 resource set with CapabilityStatement, CRUD, search, history, and transaction behavior. This is the first real external interoperability surface. No regional pack, Apache Camel route, HL7 v2 interface, FHIR Subscription integration, document exchange, DICOM integration, or national-system connector is implemented.
 
 The repository contains no Netherlands pack and performs no BSN verification, national exchange, insurance eligibility, or Dutch reimbursement operation. Zantrix never returns fabricated responses for those services.
 
@@ -18,12 +18,12 @@ The repository contains no Netherlands pack and performs no BSN verification, na
 ## Target integration surfaces
 
 - **HL7 v2:** Apache Camel routes for messages such as ADT, orders, and results.
-- **FHIR APIs:** secured inbound FHIR/SMART access through the Zantrix gateway and outbound clients for external servers.
+- **FHIR APIs:** secured inbound FHIR/SMART resource access through the Zantrix gateway is implemented for M1; broader resource coverage, SMART launch context, bulk data, and outbound connectors remain planned.
 - **FHIR Subscriptions:** event-driven internal and external notifications.
 - **Documents:** import and export of formats such as C-CDA, represented with DocumentReference and Composition.
 - **Imaging:** DICOM and DICOMweb integration with ImagingStudy references.
 
-These are planned surfaces, not current features.
+Except for the stated M1 FHIR facade, these are planned surfaces, not current features.
 
 ## Regional adapter packs
 

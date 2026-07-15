@@ -16,4 +16,7 @@ Each ADR has: a status, the context that forced a decision, the decision itself,
 | [0004](0004-frontend-application-shell.md) | Frontend as an application shell, not a website | Accepted |
 | [0005](0005-english-first-with-i18n.md) | English first with internationalization | Accepted |
 | [0006](0006-hapi-fhir-as-dedicated-service.md) | HAPI FHIR JPA server as a dedicated service | Accepted |
-| [0007](0007-guarded-fhir-access.md) | Guarded FHIR access boundary | Accepted |
+| [0007](0007-guarded-fhir-access.md) | Guarded FHIR access boundary | Accepted (accountability extended by 0010) |
+| [0008](0008-licensed-snomed-with-snowstorm.md) | Licensed SNOMED CT through Snowstorm | Accepted |
+| [0009](0009-transparent-medication-safety-floor.md) | Transparent medication safety floor | Accepted |
+| [0010](0010-durable-fhir-mutation-accountability.md) | Durable FHIR mutation accountability | Accepted |

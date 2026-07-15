@@ -6,19 +6,21 @@ This is the honest status of Zantrix. The [module vision](modules/README.md) des
 
 Zantrix is being rebuilt from the foundation up. An earlier prototype existed with partial modules, but it had significant issues: duplicated modules, a hybrid data model that was neither fully custom nor fully FHIR, schema managed by two tools at once, an audit mechanism that did not scale, fabricated integration responses, and a frontend with cosmetic chrome but no design system. The decision was made to rebuild the foundation properly rather than extend that base.
 
-The current phase is **foundation implementation**. The repository contains the first security, FHIR connectivity, audit, and frontend foundations, but Milestone 0 is not complete.
+The current phase is **Milestone 1 beta hardening**. Milestone 0 is complete and the Milestone 1 outpatient slice is feature complete and tested. `Beta` here means the documented workflow is implemented and under hardening; it does not mean the system is certified or ready for unsupervised production use.
 
 ### Implemented baseline
 
-The following is present on the default branch:
+The following is present in this repository:
 
-- Docker Compose starts PostgreSQL 16, Keycloak 24.0.4, and the official HAPI FHIR 8.10 image with separate application, identity, and FHIR databases.
-- The Java 21 / Spring Boot 3.3 backend is a stateless OAuth2 resource server. It maps Keycloak realm roles and OAuth2 or SMART scopes into Spring Security authorities.
-- `FhirAccessGateway` is the only supported application entry point to HAPI. It supports capabilities plus read, create, update, and delete, applies SMART resource-scope checks, and audits success and failure.
-- Patient-context scopes are deliberately limited to direct access to the token's own Patient resource. Search, compartment-aware authorization, batch, transactions, and custom operations are not implemented.
-- The Zantrix database contains a Flyway-managed, tamper evident relational audit chain. FHIR AuditEvent export, audit search UI, break-glass review, and cross-service mutation reconciliation are not implemented.
-- The frontend has strict TypeScript, Vite, Tailwind CSS, i18next, PWA support, runtime API/OIDC configuration, an OIDC provider, typed API client, authenticated session lookup, a responsive workspace shell, patient-context location, command palette, and light/dark design tokens. It intentionally contains no clinical screen or patient data yet.
-- CI builds and tests the backend, verifies Modulith boundaries, lints/tests/builds the frontend, audits production npm dependencies, reviews pull-request dependencies, and enforces the repository house style.
+- Docker Compose starts PostgreSQL 16, Keycloak 24.0.4, HAPI FHIR 8.10, Snowstorm 10.11.2, Elasticsearch 8.11.1, the backend, and the frontend. PostgreSQL provisions separate application, identity, and FHIR databases.
+- The Java 21 / Spring Boot 3.3 backend is a stateless OAuth2 resource server. It maps Keycloak realm roles and SMART scopes, separates the externally validated issuer from private JWK retrieval, and applies central authorization.
+- `FhirAccessGateway` is the only application path to HAPI. It supports capabilities, CRUD, search with bounded pagination, history, and transaction bundles. The public `/fhir/R4` facade provides these operations for the supported M0/M1 resources.
+- Base R4 resources and every declared profile are validated before mutation. Clinical requests are scope checked, patient-context checked, consent evaluated, and audited.
+- The Flyway-owned audit chain supports filtered privacy-officer queries, integrity verification, emergency-access review, and scheduled FHIR AuditEvent export. A durable operation journal reconciles the cross-service FHIR/audit failure window.
+- Snowstorm provides SNOMED CT search, expansion, and validation. Licensed RF2 content is loaded by each operator and is never distributed by Zantrix. RxNorm ingredient codes are validated against the NLM API without sending patient data.
+- The Milestone 1 modules cover patient/MPI merge and unmerge, outpatient encounters, schedules/slots/appointments, problems, allergies, medication reconciliation/prescribing/administration/dispensing, orders/results, signed notes/addenda, vitals/BMI, high-priority medication safety, Task worklists, consent/privacy, and administration directories/feature flags.
+- The React workspace exposes the delivered clinical paths with patient context, role-aware navigation, internationalized copy, responsive themes, explicit error states, and browser-tested OIDC login and patient registration.
+- CI builds and tests the backend, verifies Modulith boundaries, runs real PostgreSQL and HAPI integration tests, lints/tests/builds the frontend, runs the complete Compose browser flow, audits production npm dependencies, reviews pull-request dependencies, and enforces house style.
 
 ## Milestones
 
@@ -37,6 +39,8 @@ Goal: a clean, correct base that every later capability depends on.
 
 Acceptance: the system builds and deploys with one command, continuous integration is green, module boundaries are enforced, and there are no fabricated clinical responses in the codebase.
 
+Status: **complete**.
+
 ### Milestone 1: The narrow excellent core
 
 Goal: a usable outpatient EHR built to a production grade standard.
@@ -48,6 +52,8 @@ Patient Administration: Patient and Master Patient Index with real merge and unm
 Clinical Core: Problems, Allergies, Medications, Orders and Results, Clinical Documentation, Vitals, Clinical Decision Support.
 
 Acceptance: a clinician can register a patient, schedule and hold an encounter, maintain problems and allergies, place and result orders, prescribe with interaction checking, document a note with sign off, and record vitals, all as FHIR resources, all audited, all covered by tests including end to end flows.
+
+Status: **beta complete**. The interaction checker intentionally supplies a transparent, versioned safety floor based on 15 expert-consensus high-priority interaction classes. It is not a comprehensive commercial interaction database. Deployments must retain this limitation in user training and may add a separately licensed provider through the CDS boundary later.
 
 ### Milestone 2: Diagnostics and engagement
 
@@ -68,27 +74,27 @@ This table is the single source of truth for status and is updated as work lands
 | Repository hygiene | 0 | Done |
 | Continuous integration | 0 | Done |
 | Platform security foundation (OAuth2 resource server) | 0 | Done |
-| FHIR Data Platform (dedicated HAPI FHIR server) | 0 | In progress |
-| Identity and Access Management (roles, SMART scopes) | 0 | In progress |
-| Audit and Compliance (hash chained trail) | 0 | In progress |
-| Frontend shell and design system | 0 | In progress |
-| Terminology and Ontology | 1 | Planned |
-| Consent and Privacy | 1 | Planned |
-| Workflow and Rules Engine | 1 | Planned |
-| Administration and Configuration | 1 | Planned |
-| Patient and Master Patient Index | 1 | Planned |
-| Encounters and ADT | 1 | Planned |
-| Scheduling and Resource Management | 1 | Planned |
-| Problems and Diagnoses | 1 | Planned |
-| Allergies and Intolerances | 1 | Planned |
-| Medications | 1 | Planned |
-| Orders and Results | 1 | Planned |
-| Clinical Documentation | 1 | Planned |
-| Vitals and Flowsheets | 1 | Planned |
-| Clinical Decision Support | 1 | Planned |
+| FHIR Data Platform (dedicated HAPI FHIR server) | 0 | Done |
+| Identity and Access Management (roles, SMART scopes) | 0 | Done |
+| Audit and Compliance (hash chained trail) | 0 | Done |
+| Frontend shell and design system | 0 | Done |
+| Terminology and Ontology, M1 SNOMED/RxNorm slice | 1 | Beta |
+| Consent and Privacy, consent/emergency-review slice | 1 | Beta |
+| Workflow and Rules Engine, Task worklist slice | 1 | Beta |
+| Administration and Configuration, directory/feature-flag slice | 1 | Beta |
+| Patient and Master Patient Index | 1 | Beta |
+| Encounters and ADT, outpatient slice | 1 | Beta |
+| Scheduling and Resource Management | 1 | Beta |
+| Problems and Diagnoses | 1 | Beta |
+| Allergies and Intolerances | 1 | Beta |
+| Medications | 1 | Beta |
+| Orders and Results | 1 | Beta |
+| Clinical Documentation | 1 | Beta |
+| Vitals and Flowsheets, outpatient vital-set slice | 1 | Beta |
+| Clinical Decision Support, allergy/high-priority DDI slice | 1 | Beta |
 | Everything else | 2+ | Planned |
 
-The deployment smoke flow and frontend end-to-end suite remain Milestone 0 acceptance work. They are tracked separately from the completed continuous-integration pipeline because the current frontend has no clinical flow to exercise yet.
+No M0/M1 capability is marked `Stable`. Reaching that status requires production deployment guidance, jurisdictional profiles and policy, performance and disaster-recovery evidence, accessibility assessment, security review, terminology edition governance, clinical safety governance, and certification where applicable.
 
 ## How status is kept honest
 

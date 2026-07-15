@@ -36,7 +36,7 @@ Zantrix is a modular monolith with strict internal boundaries and a FHIR native 
 
 - Add unit tests for logic, mappers, and calculators.
 - Add integration tests with Testcontainers for anything touching persistence or the API. Do not use in memory databases.
-- Add or update end-to-end tests for critical clinical flows once the Playwright harness lands. Until then, add Testing Library coverage for frontend behavior and do not claim an unimplemented end-to-end flow is covered.
+- Add or update Playwright tests for critical cross-service clinical flows and Testing Library coverage for focused frontend behavior.
 - Continuous integration must be green before a pull request can merge. This includes build, lint, type check, tests, and module boundary verification.
 
 ## Commit messages

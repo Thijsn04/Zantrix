@@ -6,6 +6,8 @@ import { ApiClient } from '../lib/api/client';
 import { Button } from '../design/Button';
 import { CommandPalette } from './CommandPalette';
 import { PatientContext } from './PatientContext';
+import { ClinicalWorkspace, type WorkspacePage } from './ClinicalWorkspace';
+import type { PatientSummary } from '../lib/api/types';
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1, staleTime: 60_000 } } });
 
@@ -17,6 +19,8 @@ function Workspace({ accessToken, onSignOut }: { accessToken: string; onSignOut:
   const { t } = useTranslation();
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [dark, setDark] = useState(() => localStorage.getItem('zantrix-theme') === 'dark');
+  const [page, setPage] = useState<WorkspacePage>('home');
+  const [patient, setPatient] = useState<PatientSummary>();
   const client = useMemo(() => new ApiClient(accessToken), [accessToken]);
   const session = useQuery({ queryKey: ['current-user'], queryFn: ({ signal }) => client.currentUser(signal) });
 
@@ -53,14 +57,15 @@ function Workspace({ accessToken, onSignOut }: { accessToken: string; onSignOut:
       <div className="workspace-layout">
         <nav className="sidebar" aria-label={t('navigation.label')}>
           <p className="eyebrow">{t('navigation.workspace')}</p>
-          <a href="#workspace">{t('navigation.home')}</a>
+          {(['home', 'patients', 'schedule', 'tasks'] as WorkspacePage[]).map(item =>
+            <button key={item} className={page === item ? 'active' : ''} onClick={() => setPage(item)}>{t(`navigation.${item}`)}</button>)}
+          {session.data?.roles.includes('ADMIN') && <button className={page === 'admin' ? 'active' : ''} onClick={() => setPage('admin')}>{t('navigation.admin')}</button>}
+          {session.data?.roles.includes('PRIVACY_OFFICER') && <button className={page === 'privacy' ? 'active' : ''} onClick={() => setPage('privacy')}>{t('navigation.privacy')}</button>}
         </nav>
         <main id="workspace" className="workspace">
-          <PatientContext />
-          <section className="empty-workspace" aria-labelledby="workspace-title">
-            <h1 id="workspace-title">{t('workspace.title')}</h1>
-            <p>{t('workspace.empty')}</p>
-          </section>
+          <PatientContext patient={patient} />
+          <ClinicalWorkspace client={client} user={session.data} page={page} selected={patient}
+            onSelect={value => { setPatient(value); if (value) setPage('patients'); }} />
         </main>
       </div>
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} onSignOut={onSignOut} />

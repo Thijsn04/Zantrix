@@ -2,7 +2,7 @@
 
 Welcome to the Zantrix documentation. Zantrix is an open source, FHIR native Electronic Health Record. This is the entry point for understanding what the project is, how it is designed, and how to contribute.
 
-Zantrix is in early development and is rebuilding its foundation. Architecture and module documents describe the target design, but each architecture page also states the relevant current implementation and remaining gaps. The [roadmap](roadmap.md) is the single source of truth for delivery status.
+Milestones 0 and 1 are implemented at beta quality. Architecture and module documents distinguish the delivered outpatient core from the broader target design and remaining production-hardening work. The [roadmap](roadmap.md) is the single source of truth for delivery status.
 
 ## Start here
 

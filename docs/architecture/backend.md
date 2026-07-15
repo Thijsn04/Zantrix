@@ -4,9 +4,9 @@ The backend is a modular monolith built with Java 21 and Spring Boot 3, using Sp
 
 ## Current implementation
 
-The backend currently contains the `audit` module and a `platform` module with FHIR, IAM, security, and system-web packages. Spring Modulith verification enforces the present boundaries. There are no patient, encounter, scheduling, or clinical modules yet.
+The backend contains platform modules for FHIR, IAM/security, audit, terminology, consent/privacy, workflow, and administration; patient-administration modules for the MPI, encounters, and scheduling; and clinical modules for problems, allergies, medications/CDS, orders/results, documentation, and vitals. Spring Modulith verification enforces their boundaries across 168 production classes.
 
-Implemented HTTP endpoints are limited to public Actuator health/info, authenticated system and current-user information, and authenticated FHIR connectivity status. The backend does not yet expose a public FHIR REST proxy or OpenAPI description.
+Application endpoints live under `/api/v1`. A secured R4 facade under `/fhir/R4` publishes metadata plus supported-resource CRUD, search, history, and transaction behavior. A generated OpenAPI document is not yet published.
 
 ## Why a modular monolith
 
@@ -45,21 +45,22 @@ The target backend exposes two kinds of HTTP API:
 - The **FHIR REST API**, for standards based access and for external clients and SMART apps.
 - A small set of **application endpoints** for the frontend, where a task oriented, aggregated call is clearer than a series of raw FHIR calls. These endpoints are thin. They compose FHIR operations and module interfaces, and they never become a parallel data model.
 
-The internal HAPI service already publishes its own CapabilityStatement. Publishing the Zantrix gateway CapabilityStatement and application OpenAPI description remains planned.
+The Zantrix gateway publishes its own CapabilityStatement at `/fhir/R4/metadata`; it does not expose the internal HAPI metadata as its contract. An application OpenAPI description remains planned.
 
 ## Cross cutting infrastructure
 
-- **Security.** The implemented layer validates Keycloak-issued JWTs, maps realm roles and OAuth2/SMART scopes, and requires authentication except for health/info probes. The FHIR gateway applies resource-scope and limited patient-self checks. Consent, break the glass, relationship checks, and stronger policy decisions are planned.
-- **Audit.** The implemented audit module writes append-only relational entries linked by a concurrency-safe, verifiable hash chain. It records successful and failed guarded FHIR operations. FHIR AuditEvent export and privacy-officer tooling are planned.
-- **Error handling.** Spring Security and framework defaults are currently used. A consistent domain-error and FHIR OperationOutcome mapping layer is planned.
+- **Security.** Keycloak JWTs, realm roles, SMART scopes, patient context, Consent, and justified emergency access are evaluated centrally. Emergency use creates a mandatory privacy review Task. Treatment-relationship and sensitive-category policy remain future extensions.
+- **Audit.** A concurrency-safe hash chain records successful, denied, and failed operations without resource bodies. Filtered search, integrity reports, emergency review, FHIR AuditEvent export, and a durable mutation journal/reconciler are implemented.
+- **Error handling.** Application endpoints use RFC 9457-style problem details for domain and validation failures. The FHIR facade uses FHIR JSON and validation failures map to unprocessable-entity responses.
 - **Observability.** Actuator health and info endpoints are implemented. Structured JSON logging, metrics export, distributed tracing, and deployment readiness integration are planned.
-- **Configuration.** Database, FHIR, OIDC, and CORS values are environment configurable. Capability feature flags and production secret-manager integration are planned.
+- **Configuration.** Database, FHIR, Snowstorm, RxNorm, OIDC issuer/JWK, CORS, consent mode, scheduler intervals, and capability feature flags are configurable. Production secret-manager integration remains deployment work.
 
 ## Testing strategy
 
 - **Unit tests** for domain logic, mappers, and calculators.
-- **Integration tests** with Testcontainers against real infrastructure. PostgreSQL and HAPI FHIR are covered today. Keycloak and Elasticsearch suites are added with the capabilities that require them. No in memory database substitutes are used for implemented persistence paths, to avoid dialect false positives.
+- **Integration tests** with Testcontainers against PostgreSQL and HAPI FHIR. They verify application boot, audit persistence/integrity, IAM policy, raw FHIR transport, and the complete M1 clinician journey. There are no in-memory database substitutes for implemented persistence paths.
 - **Modulith verification tests** that fail the build if module boundaries are violated.
-- **Contract and conformance tests** against the FHIR CapabilityStatement and active profiles are planned with profile enforcement.
+- **FHIR validation tests** exercise base R4 validation and declared-profile rejection. Broader published conformance fixtures remain future work.
+- **Browser tests** exercise the real Compose topology, Keycloak login, backend authorization, patient registration, FHIR persistence, and chart navigation.
 
 See [development](../development.md) for how to run these locally.

@@ -72,19 +72,32 @@ class SmartScopeAccessPolicy implements FhirAccessPolicy {
 
     private boolean grants(String permission, FhirOperation operation) {
         if (permission.equals("read")) {
-            return operation == FhirOperation.READ;
+            return isRead(operation);
         }
         if (permission.equals("write")) {
-            return operation != FhirOperation.READ;
+            return isWrite(operation);
         }
         if (!permission.matches("[cruds]+")) {
             return false;
         }
         return switch (operation) {
-            case READ -> permission.indexOf('r') >= 0;
+            case READ, SEARCH, HISTORY -> permission.indexOf('r') >= 0;
             case CREATE -> permission.indexOf('c') >= 0;
             case UPDATE -> permission.indexOf('u') >= 0;
             case DELETE -> permission.indexOf('d') >= 0;
+            case TRANSACTION -> false;
         };
+    }
+
+    private static boolean isRead(FhirOperation operation) {
+        return operation == FhirOperation.READ
+                || operation == FhirOperation.SEARCH
+                || operation == FhirOperation.HISTORY;
+    }
+
+    private static boolean isWrite(FhirOperation operation) {
+        return operation == FhirOperation.CREATE
+                || operation == FhirOperation.UPDATE
+                || operation == FhirOperation.DELETE;
     }
 }
