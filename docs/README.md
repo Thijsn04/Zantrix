@@ -17,6 +17,7 @@ Milestones 0 and 1 are implemented at beta quality. Architecture and module docu
 - [FHIR strategy](architecture/fhir-strategy.md)
 - [Backend architecture](architecture/backend.md)
 - [Frontend architecture](architecture/frontend.md)
+- [Frontend delivery plan](architecture/frontend-plan.md)
 - [Security and privacy](architecture/security-and-privacy.md)
 - [Interoperability and localization](architecture/interoperability.md)
 - [Architecture decision records](architecture/decisions/)

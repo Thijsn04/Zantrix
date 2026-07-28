@@ -1,6 +1,8 @@
 # Frontend Architecture
 
-The Zantrix frontend is a clinical workspace. It should feel like a focused desktop grade application that clinicians work in all day, not like a website they visit. This document defines what that means and how the frontend is built.
+The Zantrix frontend is a clinical workspace. It should feel like a focused desktop grade application that clinicians work in all day, not like a website they visit. This document defines what that means and how the frontend is built today.
+
+The intended shape of the complete frontend, covering the patient portal, the contract pipeline, and the sequence from here to the full module vision, is in the [frontend delivery plan](frontend-plan.md).
 
 ## Current implementation
 
