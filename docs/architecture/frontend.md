@@ -6,7 +6,11 @@ The Zantrix frontend is a clinical workspace. It should feel like a focused desk
 
 The frontend has React 19, TypeScript 6 strict mode, Vite 8, Tailwind CSS 4, i18next, PWA generation, environment-driven backend/OIDC configuration, and a top-level `react-oidc-context` provider. It presents explicit sign-in/session states, loads `/api/v1/iam/me` through one typed API client, and renders role-aware workspace navigation after authentication.
 
-The M1 workspace includes patient search and registration, persistent patient context, chart tabs for encounters/problems/allergies/medications/vitals/orders/results/notes, clinical quick-entry and lifecycle actions, scheduling, Task worklists, administration feature flags, and privacy/audit views. Light/dark tokens, responsive layouts, labelled forms, tab semantics, focus styles, explicit API errors, and Ctrl/Cmd+K command navigation are implemented. React Query owns server state and invalidation; Lucide supplies icons.
+The workspace is role-shaped. `lib/roles.ts` holds a capability model that mirrors each backend `@PreAuthorize` rule, and navigation, landing page, chart tabs, and individual actions are derived from it. A physician lands on their own work queue, a privacy officer on outstanding emergency-access reviews, and a pharmacist on their task queue, because the pharmacist role cannot read the patient directory at all. When a backend rule changes, the capability model changes in the same commit.
+
+The M1 workspace includes patient search, two-stage registration with duplicate review, a persistent patient storyboard carrying identity plus active allergies and problems, a snapshot overview of the active record, chart tabs for encounters/problems/allergies/medications/vitals/orders/results/notes, a front-desk appointment view with the arrival lifecycle and availability search, Task worklists scoped to assigned/unclaimed/all, administration directories and feature flags, and the privacy office with emergency-access review, a filtered audit trail, and hash-chain verification. Prescribing runs and displays the interaction assessment before the prescription is written and requires a documented override for a critical issue.
+
+Light/dark tokens, responsive layouts, labelled forms, ARIA tab and table semantics, focus styles, explicit API errors, and a searchable Ctrl/Cmd+K command palette are implemented. React Query owns server state and invalidation; Lucide supplies icons.
 
 ## An application, not a website
 
@@ -34,15 +38,15 @@ The design system lives in its own layer with documented components, so contribu
 
 ```
 frontend/src
-  app          application shell, routing, providers, context
+  app          application shell, navigation, providers
   design       design system: primitives, tokens, theming
-  lib          api client, auth, fhir client, i18n, utilities
-  features     one folder per capability (patients, scheduling, orders, ...)
-  pages        route level compositions of features
+  lib          api client, capability model, formatting, i18n, utilities
+  features     one folder per capability (patients, chart, schedule, worklist, admin, privacy, terminology)
 ```
 
 - **Feature folders** mirror the capabilities in the [module vision](../modules/README.md). A feature owns its components, hooks, and data access for one domain.
-- **The shell** owns global concerns: the top bar, patient context, workspace tabs, command palette, navigation, notifications, and session handling.
+- **The shell** owns global concerns: the top bar, role-aware navigation, patient context, command palette, and session handling.
+- **Route level pages** are not a separate layer yet. The shell selects the active workspace directly, because the workspace is a small fixed set of destinations rather than a deep URL hierarchy. A router becomes worthwhile when deep linking into a chart is added.
 
 ## Data layer
 
@@ -62,7 +66,7 @@ The build currently generates a PWA manifest and service worker. Installability 
 
 ## Quality
 
-- **Component tests** with the Testing Library for behaviour.
+- **Component tests** with the Testing Library for behaviour, covering the capability model, patient registry and duplicate review, the appointment arrival lifecycle, and medication safety including the critical-issue override path.
 - **End-to-end tests** with Playwright run against the real Compose stack and cover Keycloak login, patient registration, FHIR-backed selection, and chart opening.
 - **Linting and type checking** run in continuous integration and block merges on failure.
 - **Remaining hardening** includes broader component and browser coverage, formal WCAG 2.2 AA assessment, locale-aware date/unit presentation, richer non-blocking feedback, and a clinical offline-safety policy. The service worker does not authorize offline clinical mutation.
