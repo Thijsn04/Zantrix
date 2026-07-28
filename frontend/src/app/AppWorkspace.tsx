@@ -168,7 +168,7 @@ function WorkspacePageView({
   }
   if (page === 'admin') {
     if (!can(user, 'administration')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
-    return <Administration client={client} />;
+    return <Administration client={client} canVerifyAudit={can(user, 'privacy')} />;
   }
   if (page === 'privacy') {
     if (!can(user, 'privacy')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;

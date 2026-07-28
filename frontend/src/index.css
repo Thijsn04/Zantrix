@@ -111,6 +111,27 @@
   }
   .workspace { padding: .85rem; overflow: auto; }
 
+  /* ---------- merge confirmation and platform status ---------- */
+  .merge-confirm { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--border); display: grid; gap: .6rem; }
+  .identity-card { padding: .7rem .8rem; border: 1px solid var(--border); border-left-width: 3px; border-radius: var(--radius); background: var(--surface); }
+  .identity-card.danger { border-left-color: var(--danger); }
+  .identity-card.success { border-left-color: var(--success); }
+  .identity-card strong { display: block; margin: .15rem 0 .5rem; font-size: 1rem; }
+  .identity-card dl { display: grid; gap: .25rem; margin: 0; }
+  .identity-card dl > div { display: flex; justify-content: space-between; gap: 1rem; font-size: .8125rem; }
+  .identity-card dt { color: var(--muted); }
+  .identity-card dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+  .status-grid { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .status-list { display: grid; gap: .3rem; margin: 0; }
+  .status-list > div { display: flex; justify-content: space-between; gap: 1rem; font-size: .8125rem; }
+  .status-list dt { color: var(--muted); }
+  .status-list dd { margin: 0; text-align: right; word-break: break-all; }
+
+  .checkbox-set { margin: .6rem 0 0; padding: .6rem .7rem; border: 1px solid var(--border); border-radius: var(--radius); }
+  .checkbox-set legend { padding: 0 .35rem; color: var(--muted); font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .checkbox-row { display: inline-flex; align-items: center; gap: .35rem; margin: .2rem .8rem .2rem 0; font-size: .8125rem; }
+
   /* ---------- open patient charts ---------- */
   .patient-workspace { display: grid; gap: .6rem; }
   .patient-tabs { display: flex; flex-wrap: wrap; gap: .3rem; align-items: stretch; }

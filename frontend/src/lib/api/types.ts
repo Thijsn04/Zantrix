@@ -279,6 +279,26 @@ export interface TermConcept {
   inactive: boolean;
 }
 
+export interface SystemInfo {
+  application: string;
+  status: string;
+}
+
+/** FhirServerController returns a map; `fhirVersion` and `software` are absent when unreachable. */
+export interface FhirServerStatus {
+  baseUrl: string;
+  reachable: boolean;
+  fhirVersion?: string;
+  software?: string;
+}
+
+export interface TerminologyStatus {
+  reachable: boolean;
+  fhirVersion: string;
+  software: string;
+  version: string;
+}
+
 export interface Page<T> {
   content: T[];
   totalElements: number;

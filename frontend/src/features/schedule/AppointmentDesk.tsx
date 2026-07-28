@@ -10,6 +10,7 @@ import { Field } from '../../design/Field';
 import { Panel } from '../../design/Panel';
 import { StatusBadge } from '../../design/Badge';
 import { ErrorNotice, Notice } from '../../design/Feedback';
+import { ScheduleManager } from './ScheduleManager';
 
 /**
  * Front-desk appointment workflow.
@@ -162,9 +163,10 @@ export function AppointmentDesk({ client, patient, canManageSchedules }: {
             </div>
           </form>
           <ErrorNotice error={book.error} />
-          {canManageSchedules ? <p className="field-hint">{t('schedule.adminHint')}</p> : null}
         </Panel>
       </div>
+
+      {canManageSchedules ? <ScheduleManager client={client} /> : null}
     </div>
   );
 }

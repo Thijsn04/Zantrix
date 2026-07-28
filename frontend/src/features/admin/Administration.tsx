@@ -11,11 +11,14 @@ import { Panel } from '../../design/Panel';
 import { Badge } from '../../design/Badge';
 import { ErrorNotice } from '../../design/Feedback';
 import { Tabs } from '../../design/Tabs';
+import { PlatformStatus } from './PlatformStatus';
 
-type AdminTab = 'directory' | 'practitioners' | 'features';
+type AdminTab = 'directory' | 'practitioners' | 'features' | 'platform';
 
 /** The administrative control plane: directories, staff, and capability flags. */
-export function Administration({ client }: { client: ApiClient }) {
+export function Administration({ client, canVerifyAudit = false }: {
+  client: ApiClient; canVerifyAudit?: boolean;
+}) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<AdminTab>('directory');
   return (
@@ -25,10 +28,12 @@ export function Administration({ client }: { client: ApiClient }) {
           { id: 'directory', label: t('admin.directory') },
           { id: 'practitioners', label: t('admin.practitioners') },
           { id: 'features', label: t('admin.features') },
+          { id: 'platform', label: t('admin.platform') },
         ]}>
         {tab === 'directory' ? <Directory client={client} /> : null}
         {tab === 'practitioners' ? <Practitioners client={client} /> : null}
         {tab === 'features' ? <FeatureFlags client={client} /> : null}
+        {tab === 'platform' ? <PlatformStatus client={client} canVerifyAudit={canVerifyAudit} /> : null}
       </Tabs>
     </Panel>
   );

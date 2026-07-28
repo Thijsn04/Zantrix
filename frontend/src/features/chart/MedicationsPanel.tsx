@@ -61,6 +61,10 @@ export function MedicationsPanel({ client, patientId, canPrescribe, canDispense 
     onSuccess: invalidate,
   });
 
+  const reconcile = useMutation({
+    mutationFn: (body: unknown) => client.post('/api/v1/medications/reconciliation', body),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['medications'] }),
+  });
   const dispense = useMutation({
     mutationFn: (body: unknown) => client.post('/api/v1/medications/dispenses', body),
     onSuccess: invalidate,
@@ -183,6 +187,45 @@ export function MedicationsPanel({ client, patientId, canPrescribe, canDispense 
           ) : null}
         </Panel>
       ) : null}
+
+      <Panel title={t('medications.reconcileTitle')} subtitle={t('medications.reconcileSubtitle')}>
+        <form onSubmit={event => {
+          event.preventDefault();
+          const form = new FormData(event.currentTarget);
+          reconcile.mutate({
+            patientId, encounterId, performerId: practitionerId,
+            rxNormIngredientCode: String(form.get('rxNormIngredientCode') ?? ''),
+            medicationDisplay: String(form.get('medicationDisplay') ?? ''),
+            status: String(form.get('status') ?? 'active'),
+            dosageText: String(form.get('dosageText') ?? '') || null,
+            informationSource: String(form.get('informationSource') ?? '') || null,
+          });
+          event.currentTarget.reset();
+        }}>
+          <div className="form-grid">
+            <Field label={t('medications.rxNormCode')} required hint={t('medications.rxNormHint')}>
+              {(id, describedBy) => <input id={id} name="rxNormIngredientCode" required aria-describedby={describedBy} />}
+            </Field>
+            <Field label={t('medications.name')} required>{id => <input id={id} name="medicationDisplay" required />}</Field>
+            <Field label={t('medications.dosageText')}>{id => <input id={id} name="dosageText" />}</Field>
+            <Field label={t('table.status')} required>
+              {id => <select id={id} name="status" defaultValue="active">
+                <option value="active">{t('medications.takingNow')}</option>
+                <option value="completed">{t('medications.takenPreviously')}</option>
+                <option value="stopped">{t('medications.stopped')}</option>
+              </select>}
+            </Field>
+            <Field label={t('medications.informationSource')} hint={t('medications.informationSourceHint')}>
+              {(id, describedBy) => <input id={id} name="informationSource" aria-describedby={describedBy} />}
+            </Field>
+          </div>
+          <div className="form-actions">
+            <Button type="submit" disabled={!ready || reconcile.isPending}>{t('medications.recordReported')}</Button>
+          </div>
+          {!ready ? <p className="field-hint">{t('clinical.contextRequired')}</p> : null}
+        </form>
+        <ErrorNotice error={reconcile.error} />
+      </Panel>
     </div>
   );
 }

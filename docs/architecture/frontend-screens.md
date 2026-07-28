@@ -45,7 +45,7 @@ Screens whose subject is a queue, a day or a department rather than one patient.
 | Patient search | The entry point to clinical work | `/patients` | A1 | Delivered |
 | Patient registration | Two stage registration with duplicate review before creation | `/patients/new` | A1 | Delivered |
 | Duplicate review queue | Work the possible duplicates the index has flagged, merge or dismiss | `/patients/duplicates` | A1 | F1 |
-| Merge and unmerge | Perform and reverse a merge, with the manifest of what moved | `/patients/:id/merges` | A1 | F1 |
+| Merge and unmerge | Perform and reverse a merge, with the manifest of what moved | in the identity section | A1 | Delivered |
 | Worklist | Tasks assigned to me, unclaimed, and all | `/worklist` | P6 | Delivered |
 | Results to review | Results awaiting clinician acknowledgement | `/worklist/results` | C4, C10 | F2 |
 | Notes to co-sign | Documentation awaiting a second signature | `/worklist/cosign` | C5 | F2 |
@@ -53,7 +53,7 @@ Screens whose subject is a queue, a day or a department rather than one patient.
 | Staff messages | Secure messaging between staff | `/worklist/messages` | P8 | F3 |
 | Prescription requests | Refill and renewal requests awaiting a decision | `/worklist/prescriptions` | C3, E1 | F3 |
 | Department schedule | The front desk day view across all patients for a clinic, practitioner or location | `/schedule` | A3, plus an endpoint that lists appointments by date and practitioner or location | F1 |
-| Schedule management | Create practitioner schedules and slots, manage templates | `/schedule/manage` | A3 | F1 |
+| Schedule management | Create practitioner schedules and slots | in the appointments section | A3 | Delivered |
 | Check in desk | Arrival, waiting list and rooming status for today | `/schedule/checkin` | A3, A4 | F2 |
 | Ward list | Patients on a ward, with status at a glance | `/wards/:wardId` | A2 inpatient, O1 | F4 |
 | Bed board | Bed occupancy, cleaning and capacity | `/wards/beds` | O1 | F4 |
@@ -88,11 +88,13 @@ Route shape is `/patients/:patientId/:section`. The storyboard, carrying identit
 | Encounters | Encounter list and lifecycle, and selecting the encounter clinical entry belongs to | A2 |
 | Problems | Active and resolved problem list, SNOMED coded entry, resolve | C1 |
 | Allergies | Allergy and intolerance list, coded entry, inactivate and entered in error | C2 |
-| Medications | Active list, prescribing with a safety check, stop, administration, dispensing | C3, C7 |
+| Medications | Active list, prescribing with a safety check, stop, administration, dispensing, reported medication reconciliation | C3, C7 |
 | Vitals | The Milestone 1 vital set as a rooming form, with calculated body mass index | C6 |
 | Orders | Order entry and the order list | C4 |
 | Results | Results, and filing a result against the order that requested it | C4 |
 | Notes | Draft, sign and addendum, with version history | C5 |
+| Consent | Recording, listing and revoking this patient's consents | P3 |
+| Identity | Merge history, merging a duplicate, and reversing a merge | A1 |
 
 ### C2. Planned sections
 
@@ -105,7 +107,7 @@ Route shape is `/patients/:patientId/:section`. The storyboard, carrying identit
 | Care team | Who is involved in this patient's care, and in what role | C8, P2 | F5 |
 | Immunizations | Vaccination history and forecast | C9 | F5 |
 | Coverage | Insurance, eligibility and financial context | A5 | F5 |
-| Consent and privacy | This patient's consents, restrictions and sensitivity flags | P3 | F1 |
+| Consent and privacy | This patient's consents, restrictions and sensitivity flags | P3 | Delivered |
 | Authorized representatives | Granting, scoping, expiring and revoking proxy access after staff verify entitlement | P3, E1, [ADR 0018](decisions/0018-proxy-access.md) | F3 |
 | Access log | Who accessed this record and why, including emergency access | P4 | F2 |
 | Record history | Version history for a resource, from FHIR history | P1 | F2 |
@@ -145,7 +147,7 @@ For operators, administrators and privacy officers rather than clinicians.
 | Practitioners | Staff directory and the link to their login identity | `/admin/practitioners` | P9, P2 | Delivered |
 | Practitioner roles | Which role a person holds, where, and for how long | `/admin/roles` | P2 | F1 |
 | Feature flags | Enabling capabilities per deployment | `/admin/features` | P9 | Delivered |
-| Terminology status | Which editions are loaded and whether the service is reachable | `/admin/terminology` | P5 | F1 |
+| Platform status | Whether the application, FHIR server, terminology service and audit chain are reachable | in administration | P5, P1, P4 | Delivered |
 | Value set browser | Inspect and search the value sets clinical entry binds to | `/admin/terminology/valuesets` | P5 | F2 |
 | Portal release policy | Choose gated, immediate or delayed release, per result category | `/admin/portal` | E1, [ADR 0017](decisions/0017-results-release-policy.md) | F3 |
 | Proxy access policy | The age at which proxy access narrows or ends, which is jurisdictional | `/admin/portal/proxy` | E1, [ADR 0018](decisions/0018-proxy-access.md) | F3 |

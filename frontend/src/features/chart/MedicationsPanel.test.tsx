@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { MedicationsPanel } from './MedicationsPanel';
@@ -36,7 +36,9 @@ const critical: SafetyAssessment = {
 };
 
 async function fillPrescription(user: ReturnType<typeof userEvent.setup>) {
-  const field = (name: string) => screen.getByLabelText(/./, { selector: `[name="${name}"]` });
+  // Reported medication reuses these field names, so scope to the prescribing panel.
+  const form = within(screen.getByRole('region', { name: 'Prescribe' }));
+  const field = (name: string) => form.getByLabelText(/./, { selector: `[name="${name}"]` });
   await user.type(field('rxNormIngredientCode'), '6809');
   await user.type(field('medicationDisplay'), 'Metformin');
   await user.type(field('dosageText'), '500 mg twice daily');
