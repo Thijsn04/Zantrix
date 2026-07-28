@@ -27,6 +27,23 @@ The [roadmap](docs/roadmap.md) is the source of truth for what is built and what
 
 If you are looking for the design of the system, start with the [documentation](docs/README.md).
 
+## Regulatory position and who is responsible for what
+
+**Zantrix is delivered as source code. It is not a certified medical device and it is not placed on any market as one.**
+
+The project supplies software. It does not supply a CE marking, an MDR or FDA conformity assessment, a NEN 7510 or ISO 27001 certificate, a clinical safety case, or an approval under any national EHR programme. No such certification is planned, and the maintainers do not obtain one on a deployment's behalf.
+
+An organization that deploys Zantrix to deliver care takes on the obligations that come with that. Depending on the jurisdiction, that includes at least:
+
+- Determining whether the deployed system is regulated software in that jurisdiction, and completing whatever classification and conformity assessment follows. In the European Union, a health institution that manufactures and uses software within its own organization may fall under the in-house exemption of the Medical Device Regulation, which carries its own conditions. Whether that applies is the deploying organization's assessment to make.
+- Clinical risk management, clinical safety governance, and validation of the system for its intended use.
+- Information security certification, data protection obligations, and a lawful basis for processing.
+- Terminology licensing, jurisdictional profiles, infrastructure hardening, and operational controls.
+
+This is a description of the project's position, not legal advice. Any organization intending to use Zantrix in real care should obtain its own regulatory and legal assessment.
+
+The AGPLv3 licence text governs warranty and liability, and it disclaims both. See [LICENSE](LICENSE).
+
 ## Why Zantrix
 
 Electronic Health Records are typically locked behind proprietary vendors, with closed data models and hard vendor lock in. Zantrix takes the opposite position:

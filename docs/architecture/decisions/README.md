@@ -24,3 +24,5 @@ Each ADR has: a status, the context that forced a decision, the decision itself,
 | [0012](0012-two-frontend-surfaces.md) | Two frontend surfaces sharing one foundation | Accepted, portal not yet started |
 | [0013](0013-hand-built-design-system.md) | Hand built design system with an accessibility test gate | Accepted |
 | [0014](0014-read-only-offline.md) | Read only offline with explicit staleness | Accepted, not yet implemented |
+| [0015](0015-multi-window-workspace.md) | Multi window clinical workspace | Accepted, not yet implemented |
+| [0016](0016-smart-application-hosting.md) | SMART on FHIR application hosting | Accepted in principle, not yet implemented |

@@ -12,6 +12,10 @@ It is a plan. Nothing here should be read as delivered. The [roadmap](../roadmap
 | Two surfaces, one foundation: clinician workspace and patient portal | [ADR 0012](decisions/0012-two-frontend-surfaces.md) |
 | The design system is hand built, with accessibility as a build gate | [ADR 0013](decisions/0013-hand-built-design-system.md) |
 | Offline is read only, with writes blocked and staleness always visible | [ADR 0014](decisions/0014-read-only-offline.md) |
+| A clinical view can be opened in a second window, with per window patient context | [ADR 0015](decisions/0015-multi-window-workspace.md) |
+| Third party SMART on FHIR applications may be hosted, under strict isolation | [ADR 0016](decisions/0016-smart-application-hosting.md) |
+
+The complete inventory of screens both surfaces will contain is in [frontend screens](frontend-screens.md).
 
 Earlier decisions that continue to bind this plan are [ADR 0004](decisions/0004-frontend-application-shell.md) on the application shell and [ADR 0005](decisions/0005-english-first-with-i18n.md) on English first internationalization.
 
@@ -94,6 +98,8 @@ A screen the user may not reach is not rendered and its code is not loaded. A sc
 Top level destinations stay few and stable: the role dashboard, patient search, the worklist, and the administrative and privacy areas for the roles that own them.
 
 **Routing.** The workspace currently selects screens from shell state. It moves to real URLs, because a clinical application needs deep links into a chart section, working browser history, and the ability to open a chart in a second window. The route shape follows the navigation model: `/patients/:patientId/:section`. Open charts are shell state rather than URL state, because a URL identifies one patient.
+
+**Multi window.** A clinical view can be opened in a second browser window, per [ADR 0015](decisions/0015-multi-window-workspace.md). Patient context belongs to the window and is resolved from its URL, so nothing done in one window changes what another window is showing. Only session, lock and theme are shared across windows, so signing out or locking applies everywhere at once. Each window always shows the identity of the patient it is displaying.
 
 **Open charts.** Two patient charts may be open at once, each staying mounted so switching preserves state. Opening a third is refused rather than silently closing one. The reasoning is in [frontend architecture](frontend.md) and it is a safety rule, not a resource limit: the classic wrong patient error is losing track of which record is in front of you.
 
@@ -258,12 +264,28 @@ Mirroring the honesty rules in the [roadmap](../roadmap.md), a capability moves 
 - User facing wording reviewed, and clinically reviewed where it presents clinical information.
 - Documented, including what it deliberately does not do.
 
-## Open questions
+## Hosting third party applications
 
-These are recorded rather than assumed. Each needs a decision before the phase that depends on it.
+The workspace can embed registered SMART on FHIR applications, per [ADR 0016](decisions/0016-smart-application-hosting.md). A hosted application runs sandboxed on its own origin, receives its own scoped short lived token rather than the clinician's, is given its patient context and cannot navigate away from it, ends when that context ends, and is visibly identified as third party. Only applications an operator has registered may launch, and launches are audited.
 
-1. **Multi window.** Should a chart be openable in a second browser window, as clinicians expect from established systems? This affects state ownership and would need to be decided in F0 to avoid rework.
-2. **SMART application hosting.** Should the workspace embed third party SMART on FHIR applications, and if so with what launch context and isolation? Needed before F2, since diagnostics vendors commonly ship this way.
-3. **Native mobile.** The portal is a mobile first web application. Whether native applications are ever required, and for which capabilities, is unresolved and would introduce a second technology stack.
-4. **Regulatory posture.** If Zantrix is placed on the market as a medical device in a jurisdiction that classifies EHR software as such, interface changes fall under clinical risk management and usability engineering obligations. This changes process, not architecture, but it changes it substantially and should be settled before F3.
-5. **Visual regression tooling.** Choice of tooling and where the baseline images live is unresolved and blocks part of F0.
+This matters most for diagnostics, where imaging viewers and vendor tools are commonly delivered this way, which is why it is required before phase F2 rather than left until the specialty phases.
+
+## Resolved questions
+
+Decisions that were open when this plan was first written, and how they were settled.
+
+| Question | Resolution |
+|---|---|
+| Multi window support | Yes. Per window patient context, shared session and lock. [ADR 0015](decisions/0015-multi-window-workspace.md) |
+| SMART application hosting | Yes, for registered applications under strict isolation. [ADR 0016](decisions/0016-smart-application-hosting.md) |
+| Native mobile applications | No. Patient facing mobile use is served by the portal as a mobile first web application. No second technology stack. |
+| Regulatory posture | Zantrix supplies software and does not obtain certification. Regulatory classification, conformity assessment, clinical risk management and validation are the responsibility of the deploying organization. Stated in the [README](../../README.md). |
+| Visual regression tooling | Playwright's own screenshot comparison, since Playwright is already used for browser testing. Baselines are committed and generated in the continuous integration container so they are deterministic across contributor machines. |
+
+Because the project does not carry a conformity assessment, the interface must not imply one. No screen states or suggests regulatory approval, certification, or fitness for a regulated purpose.
+
+## Remaining open questions
+
+1. **Cross patient department schedule.** Patient level appointments belong in the chart, which is where they now are. A front desk also needs a day view across every patient for a clinic, practitioner or location, and that is a different screen with a different user. It is proposed as a work area in [frontend screens](frontend-screens.md) and needs a backend endpoint that lists appointments by date, practitioner or location rather than only by patient.
+2. **Results release policy for the portal.** Whether results reach a patient immediately, after clinician review, or on a delay that depends on the result, is a clinical governance decision that shapes the portal's most sensitive screen. Needed before F3.
+3. **Proxy and caregiver access.** Whether a parent, guardian or authorized representative can access another person's record through the portal, and how that relationship is established and revoked. It affects the portal's identity model, so it is needed before F3 rather than after.
