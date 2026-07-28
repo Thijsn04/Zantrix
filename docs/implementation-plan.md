@@ -49,15 +49,20 @@ Every later package is cheaper with this in place and more expensive without it.
 
 | Work | Side |
 |---|---|
-| springdoc-openapi generating the specification from the controllers, committed | Backend |
-| Type generation from that specification, plus FHIR R4 types from StructureDefinitions | Frontend |
-| Drift gate: continuous integration regenerates and fails on any difference | Both |
+| springdoc-openapi generating the specification from the controllers, committed | Backend, **done** |
+| Type generation from that specification | Frontend, **done** |
+| Drift gate: continuous integration regenerates and fails on any difference | Both, **done** |
+| Nullability annotations on response records, so the generated schema stops reporting every field as optional | Backend |
+| Replace the hand written transport types with the generated ones, once the schema is accurate enough to carry them | Frontend |
+| FHIR R4 types from StructureDefinitions | Frontend |
 | Repository split into `packages/` and `apps/` as the plan describes | Frontend |
 | Cross feature import lint rule | Frontend |
 | Accessibility gate, component workbench, bundle budgets, visual regression baselines | Frontend |
 | Runtime response validation in development and tests | Frontend |
 
 Acceptance: a backend contract change fails the frontend build; every existing primitive passes the accessibility gate; every route has a budget.
+
+The contract half of this is in place. A renamed or removed field now fails the frontend build, which was verified by reintroducing one of the three transcription errors that motivated [ADR 0011](architecture/decisions/0011-generated-api-contract.md). The remaining work is nullability on the backend records, without which the generated types cannot replace the hand written ones outright.
 
 ## Capability packages
 

@@ -81,7 +81,9 @@ This is the mechanism that makes "the frontend matches the backend" checkable ra
 
 **Error contract.** The backend uses RFC 9457 problem details for application endpoints and `OperationOutcome` for the FHIR facade. The contract layer normalizes both into one internal error type carrying status, a safe message, and a machine readable code where present, so features never parse error shapes themselves.
 
-**Prerequisite.** None of this exists yet on the backend side. Publishing the OpenAPI document is a backend task and a blocking dependency for phase F0.
+**Delivered so far.** The backend generates and commits `openapi.json` from its controllers, and a test fails the build when it drifts. The frontend generates types from that document and a compile time conformance file asserts that every field its hand written transport types name exists in the published contract, so a backend rename or removal breaks the frontend build.
+
+**Not yet.** The transport types are not aliased directly onto the generated schema. springdoc has no nullability information for Java records, so it reports almost every response field as optional, and adopting that verbatim would make the workspace's types weaker than they are now. Annotating nullable record components on the backend is the next step, after which the hand written types can be replaced entirely.
 
 ## Capability, role and deployment gating
 

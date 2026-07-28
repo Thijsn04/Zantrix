@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:api": "openapi-typescript ../backend/openapi.json -o src/lib/api/generated/schema.d.ts",
+    "verify:api": "npm run generate:api && git diff --exit-code -- src/lib/api/generated"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.0",
@@ -46,6 +48,12 @@
     "typescript-eslint": "^8.64.0",
     "vite": "^8.1.4",
     "vite-plugin-pwa": "^1.3.0",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "openapi-typescript": "^7.13.0"
+  },
+  "overrides": {
+    "openapi-typescript": {
+      "typescript": "$typescript"
+    }
   }
 }
