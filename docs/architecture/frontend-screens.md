@@ -49,9 +49,10 @@ Screens whose subject is a queue, a day or a department rather than one patient.
 | Worklist | Tasks assigned to me, unclaimed, and all | `/worklist` | P6 | Delivered |
 | Results to review | Results awaiting clinician acknowledgement | `/worklist/results` | C4, C10 | F2 |
 | Notes to co-sign | Documentation awaiting a second signature | `/worklist/cosign` | C5 | F2 |
+| Results awaiting release | Results the patient cannot see yet, with ageing so none is forgotten | `/worklist/release` | C4, E1, [ADR 0017](decisions/0017-results-release-policy.md) | F3 |
 | Staff messages | Secure messaging between staff | `/worklist/messages` | P8 | F3 |
 | Prescription requests | Refill and renewal requests awaiting a decision | `/worklist/prescriptions` | C3, E1 | F3 |
-| Department schedule | The front desk day view across all patients for a clinic, practitioner or location | `/schedule` | A3, plus an endpoint that lists appointments by date and practitioner or location | F1, see open question |
+| Department schedule | The front desk day view across all patients for a clinic, practitioner or location | `/schedule` | A3, plus an endpoint that lists appointments by date and practitioner or location | F1 |
 | Schedule management | Create practitioner schedules and slots, manage templates | `/schedule/manage` | A3 | F1 |
 | Check in desk | Arrival, waiting list and rooming status for today | `/schedule/checkin` | A3, A4 | F2 |
 | Ward list | Patients on a ward, with status at a glance | `/wards/:wardId` | A2 inpatient, O1 | F4 |
@@ -105,6 +106,7 @@ Route shape is `/patients/:patientId/:section`. The storyboard, carrying identit
 | Immunizations | Vaccination history and forecast | C9 | F5 |
 | Coverage | Insurance, eligibility and financial context | A5 | F5 |
 | Consent and privacy | This patient's consents, restrictions and sensitivity flags | P3 | F1 |
+| Authorized representatives | Granting, scoping, expiring and revoking proxy access after staff verify entitlement | P3, E1, [ADR 0018](decisions/0018-proxy-access.md) | F3 |
 | Access log | Who accessed this record and why, including emergency access | P4 | F2 |
 | Record history | Version history for a resource, from FHIR history | P1 | F2 |
 | Questionnaires | Assigned questionnaires and completed responses | E3 | F3 |
@@ -124,7 +126,7 @@ Sections are not single views. The significant sub screens:
 |---|---|
 | Medications | Active list, prescribe with safety review, override with documented reason, stop with reason, administration record, dispense, reconciliation on admission and discharge |
 | Orders | Order list, single order entry, order sets, order details with status history |
-| Results | Result list, result detail with reference ranges and interpretation, trend over time, acknowledgement |
+| Results | Result list, result detail with reference ranges and interpretation, trend over time, acknowledgement, release to the patient or withhold with a documented reason |
 | Notes | Note list, editor with templates and smart phrases, sign, addendum, co-sign request, version comparison |
 | Vitals | Rooming form, flowsheet grid, single measurement detail, trend |
 | Imaging | Study list, viewer, report, comparison with prior |
@@ -145,6 +147,8 @@ For operators, administrators and privacy officers rather than clinicians.
 | Feature flags | Enabling capabilities per deployment | `/admin/features` | P9 | Delivered |
 | Terminology status | Which editions are loaded and whether the service is reachable | `/admin/terminology` | P5 | F1 |
 | Value set browser | Inspect and search the value sets clinical entry binds to | `/admin/terminology/valuesets` | P5 | F2 |
+| Portal release policy | Choose gated, immediate or delayed release, per result category | `/admin/portal` | E1, [ADR 0017](decisions/0017-results-release-policy.md) | F3 |
+| Proxy access policy | The age at which proxy access narrows or ends, which is jurisdictional | `/admin/portal/proxy` | E1, [ADR 0018](decisions/0018-proxy-access.md) | F3 |
 | Order set editor | Maintain reusable order sets | `/admin/ordersets` | C4, P6 | F5 |
 | Note template editor | Maintain documentation templates and smart phrases | `/admin/templates` | C5 | F5 |
 | SMART application registry | Register, enable and review third party applications | `/admin/apps` | P2, [ADR 0016](decisions/0016-smart-application-hosting.md) | F2 |
@@ -182,7 +186,9 @@ The second surface. Mobile first, public facing, deliberately narrow. It is not 
 | Profile | Contact details and communication preferences | `/profile` | A1 | F3 |
 | Consent and sharing | What the patient has consented to, and withdrawing it | `/privacy` | P3 | F3 |
 | Access log | Who has accessed this patient's record | `/privacy/access` | P4 | F3 |
-| Proxy access | Acting for a child or a person one is authorized to represent | `/proxy` | E1, A1 | F3, see open question |
+| Acting for someone else | Choosing whose record to view, with the subject named at all times | `/proxy` | E1, A1, [ADR 0018](decisions/0018-proxy-access.md) | F3 |
+| My representatives | Who holds access to this patient's own record, and requesting revocation | `/privacy/representatives` | P3, E1 | F3 |
+| Request proxy access | Submitting a request for staff to verify, never a self granted permission | `/proxy/request` | E1 | F3 |
 | Export my data | Downloading the record in a standard format | `/export` | P1, P10 | F5 |
 
 The patient facing access log is a direct benefit of the tamper evident audit chain, and it is the kind of transparency the [product vision](../vision.md) argues for: the patient can see who looked at their record.
@@ -198,7 +204,7 @@ The patient facing access log is a direct benefit of the tamper evident audit ch
 | F0 | Foundation: routing, contract, error boundary, capability states | 3 |
 | F1 | Outpatient core completion, duplicate and merge review, consent, schedule management, idle lock | 10 |
 | F2 | Diagnostics, results review, imaging, pharmacy and laboratory queues, access log, SMART registry | 16 |
-| F3 | The patient portal, staff messaging, questionnaires, prescription requests | 20 |
+| F3 | The patient portal, proxy access, results release, staff messaging, questionnaires | 26 |
 | F4 | Inpatient and acute: wards, beds, census, trackboard, flowsheets, episodes | 8 |
 | F5 | Revenue cycle, operations, care plans, immunizations, coverage, templates and order sets | 16 |
 | F6 | Analytics and dashboards | 3 |

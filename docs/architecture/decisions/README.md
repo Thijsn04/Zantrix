@@ -26,3 +26,5 @@ Each ADR has: a status, the context that forced a decision, the decision itself,
 | [0014](0014-read-only-offline.md) | Read only offline with explicit staleness | Accepted, not yet implemented |
 | [0015](0015-multi-window-workspace.md) | Multi window clinical workspace | Accepted, not yet implemented |
 | [0016](0016-smart-application-hosting.md) | SMART on FHIR application hosting | Accepted in principle, not yet implemented |
+| [0017](0017-results-release-policy.md) | Clinician gated results release, configurable per deployment | Accepted, not yet implemented |
+| [0018](0018-proxy-access.md) | Proxy access in the patient portal | Accepted, not yet implemented |

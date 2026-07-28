@@ -14,6 +14,8 @@ It is a plan. Nothing here should be read as delivered. The [roadmap](../roadmap
 | Offline is read only, with writes blocked and staleness always visible | [ADR 0014](decisions/0014-read-only-offline.md) |
 | A clinical view can be opened in a second window, with per window patient context | [ADR 0015](decisions/0015-multi-window-workspace.md) |
 | Third party SMART on FHIR applications may be hosted, under strict isolation | [ADR 0016](decisions/0016-smart-application-hosting.md) |
+| Results reach the patient after clinician review by default, configurable per deployment | [ADR 0017](decisions/0017-results-release-policy.md) |
+| A portal user may act for another person under a provider established relationship | [ADR 0018](decisions/0018-proxy-access.md) |
 
 The complete inventory of screens both surfaces will contain is in [frontend screens](frontend-screens.md).
 
@@ -281,11 +283,30 @@ Decisions that were open when this plan was first written, and how they were set
 | Native mobile applications | No. Patient facing mobile use is served by the portal as a mobile first web application. No second technology stack. |
 | Regulatory posture | Zantrix supplies software and does not obtain certification. Regulatory classification, conformity assessment, clinical risk management and validation are the responsibility of the deploying organization. Stated in the [README](../../README.md). |
 | Visual regression tooling | Playwright's own screenshot comparison, since Playwright is already used for browser testing. Baselines are committed and generated in the continuous integration container so they are deterministic across contributor machines. |
+| Cross patient department schedule | Yes. A front desk day view across every patient, separate from the chart. It needs a backend endpoint listing appointments by date, practitioner or location, which does not exist yet. |
+| Results release to the portal | Configurable per deployment, defaulting to release after clinician review. [ADR 0017](decisions/0017-results-release-policy.md) |
+| Proxy and caregiver access | Yes, under a provider established relationship with explicit scope, expiry and immediate revocation. [ADR 0018](decisions/0018-proxy-access.md) |
 
 Because the project does not carry a conformity assessment, the interface must not imply one. No screen states or suggests regulatory approval, certification, or fitness for a regulated purpose.
 
+## Backend capability this plan depends on
+
+The plan assumes backend work that does not exist yet. Listing it here keeps the dependency visible rather than discovered mid phase.
+
+| Needed for | Backend capability |
+|---|---|
+| F0 contract pipeline | A published OpenAPI document generated from the controllers |
+| F1 department schedule | Listing appointments by date, practitioner or location rather than only by patient |
+| F2 SMART hosting | Launch context, application registration, and tokens scoped to a launch |
+| F3 results release | A release state on results, the configured policy, and withholding with a reason |
+| F3 proxy access | RelatedPerson and Consent modelling, tokens carrying a subject distinct from the authenticated person, and dual attribution in audit |
+| F3 portal identity | Patient authentication separate from staff identity, and enrolment identity verification |
+
 ## Remaining open questions
 
-1. **Cross patient department schedule.** Patient level appointments belong in the chart, which is where they now are. A front desk also needs a day view across every patient for a clinic, practitioner or location, and that is a different screen with a different user. It is proposed as a work area in [frontend screens](frontend-screens.md) and needs a backend endpoint that lists appointments by date, practitioner or location rather than only by patient.
-2. **Results release policy for the portal.** Whether results reach a patient immediately, after clinician review, or on a delay that depends on the result, is a clinical governance decision that shapes the portal's most sensitive screen. Needed before F3.
-3. **Proxy and caregiver access.** Whether a parent, guardian or authorized representative can access another person's record through the portal, and how that relationship is established and revoked. It affects the portal's identity model, so it is needed before F3 rather than after.
+None outstanding. New questions are recorded here as they arise rather than settled silently.
+
+Two items are decided in principle but need content and policy work before the screens they belong to can ship, and neither is engineering work:
+
+1. **Plain language result content.** [ADR 0017](decisions/0017-results-release-policy.md) requires released results to carry explanation and guidance rather than a bare value. That content does not exist and must be written and clinically reviewed.
+2. **Age based narrowing of proxy access.** [ADR 0018](decisions/0018-proxy-access.md) makes this deployment configuration because the correct answer is jurisdictional. The shipped default must be chosen conservatively and documented.
