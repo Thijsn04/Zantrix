@@ -25,7 +25,7 @@
     <properties>
         <java.version>21</java.version>
         <spring-modulith.version>1.2.0</spring-modulith.version>
-        <hapi-fhir.version>8.10.0</hapi-fhir.version>
+        <hapi-fhir.version>8.10.1</hapi-fhir.version>
         <testcontainers.version>1.21.4</testcontainers.version>
     </properties>
 
