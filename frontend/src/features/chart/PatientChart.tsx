@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 import type { ApiClient } from '../../lib/api/client';
 import type { CurrentUser, PatientSummary } from '../../lib/api/types';
 import { can } from '../../lib/roles';
@@ -37,7 +37,8 @@ export function PatientChart({ client, patient, user, onClear }: {
   client: ApiClient; patient: PatientSummary; user?: CurrentUser; onClear: () => void;
 }) {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<ChartTab>('snapshot');
+  const { section } = useParams();
+  const navigate = useNavigate();
 
   const canChart = can(user, 'chart');
   const canOrders = can(user, 'orders');
@@ -66,8 +67,14 @@ export function PatientChart({ client, patient, user, onClear }: {
     ...(canMerge || canUnmerge ? [{ id: 'identity' as const, label: t('chart.identity') }] : []),
   ];
 
-  // A role change can remove the selected section; fall back to the snapshot.
-  const active = tabs.some(definition => definition.id === tab) ? tab : 'snapshot';
+  // The section comes from the URL so a chart is deep linkable and can be
+  // opened in a second window. An unknown or unpermitted section falls back to
+  // the snapshot rather than rendering nothing.
+  const active: ChartTab = tabs.some(definition => definition.id === section)
+    ? section as ChartTab : 'snapshot';
+
+  const setTab = (next: ChartTab) =>
+    navigate(`/patients/${encodeURIComponent(patient.id)}/${next}`, { replace: true });
 
   return (
     <ClinicalContextProvider>

@@ -2,14 +2,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { Command, LogOut, Moon, Search, Sun } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { ApiClient } from '../lib/api/client';
 import { Button } from '../design/Button';
 import { CommandPalette } from './CommandPalette';
-import { landingPage, navigationFor, type WorkspacePage } from './navigation';
+import { IdleLock } from './IdleLock';
+import { activePage, landingPath, navigationFor } from './navigation';
 import { can, primaryRole } from '../lib/roles';
-import type { CurrentUser, PatientSummary } from '../lib/api/types';
+import type { CurrentUser } from '../lib/api/types';
 import { RoleDashboard } from '../features/home/RoleDashboard';
-import { MAX_OPEN_PATIENTS, PatientWorkspace } from '../features/patients/PatientWorkspace';
+import { PatientWorkspace } from '../features/patients/PatientWorkspace';
+import { DepartmentSchedule } from '../features/schedule/DepartmentSchedule';
 import { Worklist } from '../features/worklist/Worklist';
 import { Administration } from '../features/admin/Administration';
 import { PrivacyOffice } from '../features/privacy/PrivacyOffice';
@@ -24,12 +27,10 @@ export function AppWorkspace(props: { accessToken: string; onSignOut: () => void
 
 function Workspace({ accessToken, onSignOut }: { accessToken: string; onSignOut: () => void }) {
   const { t } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [dark, setDark] = useState(() => localStorage.getItem('zantrix-theme') === 'dark');
-  const [page, setPage] = useState<WorkspacePage>();
-  const [openPatients, setOpenPatients] = useState<PatientSummary[]>([]);
-  const [activePatientId, setActivePatientId] = useState<string>();
-  const [limitReached, setLimitReached] = useState(false);
   const client = useMemo(() => new ApiClient(accessToken), [accessToken]);
   const session = useQuery({ queryKey: ['current-user'], queryFn: ({ signal }) => client.currentUser(signal) });
   const user = session.data;
@@ -51,38 +52,7 @@ function Workspace({ accessToken, onSignOut }: { accessToken: string; onSignOut:
   }, []);
 
   const navigation = navigationFor(user);
-  // Until the user explicitly navigates, the page is derived from their role
-  // rather than stored, so no effect has to synchronize it after the session loads.
-  const current = page ?? landingPage(user);
-
-  /**
-   * Opening a third chart is refused rather than silently closing one. Losing
-   * track of which patient is in context is the classic wrong-patient error,
-   * so the clinician has to decide what to close.
-   */
-  function openPatient(patient: PatientSummary) {
-    setPage('patients');
-    if (openPatients.some(candidate => candidate.id === patient.id)) {
-      setActivePatientId(patient.id);
-      setLimitReached(false);
-      return;
-    }
-    if (openPatients.length >= MAX_OPEN_PATIENTS) {
-      setActivePatientId(undefined);
-      setLimitReached(true);
-      return;
-    }
-    setOpenPatients([...openPatients, patient]);
-    setActivePatientId(patient.id);
-    setLimitReached(false);
-  }
-
-  function closePatient(id: string) {
-    const remaining = openPatients.filter(candidate => candidate.id !== id);
-    setOpenPatients(remaining);
-    setLimitReached(false);
-    if (activePatientId === id) setActivePatientId(remaining[0]?.id);
-  }
+  const current = activePage(location.pathname);
 
   return (
     <div className="app-shell">
@@ -108,71 +78,76 @@ function Workspace({ accessToken, onSignOut }: { accessToken: string; onSignOut:
           {navigation.map(item => (
             <button key={item.page} className={current === item.page ? 'active' : ''}
               aria-current={current === item.page ? 'page' : undefined}
-              onClick={() => setPage(item.page)}>{t(item.labelKey)}</button>
+              onClick={() => navigate(item.path)}>{t(item.labelKey)}</button>
           ))}
         </nav>
 
         <main id="workspace" className="workspace">
           {session.isLoading ? <Panel title={t('common.loading')} level={1}><span /></Panel> : null}
           {session.isError ? <Notice tone="danger">{t('session.profileUnavailable')}</Notice> : null}
-          {user ? (
-            <WorkspacePageView client={client} user={user} page={current}
-              openPatients={openPatients} activePatientId={activePatientId} limitReached={limitReached}
-              onNavigate={setPage} onOpenPatient={openPatient} onActivatePatient={setActivePatientId}
-              onClosePatient={closePatient} onSearchPatients={() => { setActivePatientId(undefined); setLimitReached(false); }} />
-          ) : null}
+          {user ? <WorkspaceRoutes client={client} user={user} /> : null}
         </main>
       </div>
 
       {paletteOpen ? (
         <CommandPalette onClose={() => setPaletteOpen(false)} onSignOut={onSignOut}
-          destinations={navigation} onNavigate={destination => setPage(destination)}
-          openPatients={openPatients} activePatientId={activePatientId}
-          onActivatePatient={id => { setPage('patients'); setActivePatientId(id); }}
-          onClosePatient={closePatient} />
+          destinations={navigation} onNavigate={path => navigate(path)} />
       ) : null}
+
+      {user ? <IdleLock user={user.displayName ?? user.username ?? ''} onSignOut={onSignOut} /> : null}
     </div>
   );
 }
 
-function WorkspacePageView({
-  client, user, page, openPatients, activePatientId, limitReached,
-  onNavigate, onOpenPatient, onActivatePatient, onClosePatient, onSearchPatients,
-}: {
-  client: ApiClient;
-  user: CurrentUser;
-  page: WorkspacePage;
-  openPatients: PatientSummary[];
-  activePatientId?: string;
-  limitReached: boolean;
-  onNavigate: (page: WorkspacePage) => void;
-  onOpenPatient: (patient: PatientSummary) => void;
-  onActivatePatient: (id: string) => void;
-  onClosePatient: (id: string) => void;
-  onSearchPatients: () => void;
+/** Every clinical view is addressable, so a second window can be opened at one. */
+function WorkspaceRoutes({ client, user }: { client: ApiClient; user: CurrentUser }) {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to={landingPath(user)} replace />} />
+      <Route path="/home" element={<RoleDashboard client={client} user={user} />} />
+      <Route path="/patients/:patientId/:section?" element={<Guarded user={user} capability="patients">
+        <PatientWorkspace client={client} user={user} />
+      </Guarded>} />
+      <Route path="/patients" element={<Guarded user={user} capability="patients">
+        <PatientWorkspace client={client} user={user} />
+      </Guarded>} />
+      <Route path="/schedule" element={<Guarded user={user} capability="scheduling">
+        <DepartmentSchedule client={client} canAdmit={can(user, 'scheduling')} />
+      </Guarded>} />
+      <Route path="/worklist" element={<Guarded user={user} capability="tasks">
+        <Worklist client={client} user={user} />
+      </Guarded>} />
+      <Route path="/admin" element={<Guarded user={user} capability="administration">
+        <Administration client={client} canVerifyAudit={can(user, 'privacy')} />
+      </Guarded>} />
+      <Route path="/privacy" element={<Guarded user={user} capability="privacy">
+        <PrivacyOffice client={client} />
+      </Guarded>} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
+
+/**
+ * A destination the user's role does not cover explains itself rather than
+ * rendering a blank area. The server remains the thing that enforces.
+ */
+function Guarded({ user, capability, children }: {
+  user: CurrentUser; capability: Parameters<typeof can>[1]; children: React.ReactNode;
 }) {
   const { t } = useTranslation();
-  const activePatient = openPatients.find(candidate => candidate.id === activePatientId);
+  if (!can(user, capability)) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
+  return <>{children}</>;
+}
 
-  if (page === 'patients') {
-    if (!can(user, 'patients')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
-    return (
-      <PatientWorkspace client={client} user={user} openPatients={openPatients} activeId={activePatientId}
-        limitReached={limitReached} onOpen={onOpenPatient} onActivate={onActivatePatient}
-        onClose={onClosePatient} onSearch={onSearchPatients} />
-    );
-  }
-  if (page === 'tasks') {
-    if (!can(user, 'tasks')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
-    return <Worklist client={client} user={user} patient={activePatient} />;
-  }
-  if (page === 'admin') {
-    if (!can(user, 'administration')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
-    return <Administration client={client} canVerifyAudit={can(user, 'privacy')} />;
-  }
-  if (page === 'privacy') {
-    if (!can(user, 'privacy')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
-    return <PrivacyOffice client={client} />;
-  }
-  return <RoleDashboard client={client} user={user} patient={activePatient} onNavigate={onNavigate} />;
+function NotFound() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  return (
+    <Panel title={t('notFound.title')} level={1} subtitle={t('notFound.description')}>
+      <div className="form-actions">
+        <Button onClick={() => navigate('/')}>{t('notFound.back')}</Button>
+      </div>
+    </Panel>
+  );
 }

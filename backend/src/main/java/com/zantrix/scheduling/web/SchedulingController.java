@@ -56,6 +56,17 @@ public class SchedulingController {
         return scheduling.listForPatient(patientId);
     }
 
+    /**
+     * The department day view, across every patient. The caller supplies the
+     * window as instants so no clinic timezone is assumed here.
+     */
+    @GetMapping("/day")
+    public List<AppointmentSummary> day(@RequestParam Instant from, @RequestParam Instant to,
+                                        @RequestParam(required = false) String practitionerId,
+                                        @RequestParam(required = false) String locationId) {
+        return scheduling.daySchedule(from, to, practitionerId, locationId);
+    }
+
     @PostMapping("/{id}/arrive")
     public AppointmentSummary arrive(@PathVariable String id, @RequestParam String patientId) {
         return scheduling.changeStatus(id, patientId, Appointment.AppointmentStatus.ARRIVED);

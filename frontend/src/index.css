@@ -111,6 +111,20 @@
   }
   .workspace { padding: .85rem; overflow: auto; }
 
+  /* ---------- idle lock ---------- */
+  .idle-lock {
+    position: fixed; inset: 0; z-index: 60; display: grid; place-items: center;
+    background: rgb(8 15 26 / .82); backdrop-filter: blur(6px);
+  }
+  .idle-lock section {
+    display: grid; justify-items: center; gap: .4rem; max-width: 22rem; padding: 1.6rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: 0 20px 50px rgb(0 0 0 / .35); text-align: center;
+  }
+  .idle-lock h2 { font-size: 1.1rem; }
+  .idle-lock p { margin: 0; color: var(--muted); font-size: .8125rem; }
+  .idle-lock .lock-user { color: var(--text); font-weight: 700; }
+
   /* ---------- merge confirmation and platform status ---------- */
   .merge-confirm { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--border); display: grid; gap: .6rem; }
   .identity-card { padding: .7rem .8rem; border: 1px solid var(--border); border-left-width: 3px; border-radius: var(--radius); background: var(--surface); }

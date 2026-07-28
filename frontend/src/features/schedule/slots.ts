@@ -29,3 +29,17 @@ export function buildSlots(date: string, from: string, to: string, minutes: numb
   }
   return slots;
 }
+
+/**
+ * The local day, expressed as the instants a server should search between.
+ *
+ * The window is resolved here rather than server side, because only the client
+ * knows which timezone the user means by "today".
+ */
+export function dayWindow(date: string): { from: string; to: string } | null {
+  const start = new Date(`${date}T00:00`);
+  if (Number.isNaN(start.getTime())) return null;
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+  return { from: start.toISOString(), to: end.toISOString() };
+}

@@ -25,12 +25,12 @@ The frame every other screen sits in. Owned by the shell, not by a feature.
 | Sign in | Explicit unauthenticated state and OIDC entry | `/signin` | P2 | Delivered |
 | Session loading | Honest state while the session resolves | overlay | P2 | Delivered |
 | Session error | Identity provider unreachable, recoverable | overlay | P2 | Delivered |
-| Idle lock | Locks a shared workstation without losing work, unlocks in place | overlay | P2 | F1 |
+| Idle lock | Covers the record on a shared workstation without losing work | overlay | P2 | Delivered |
 | Role dashboard | Where each role starts their day | `/` | varies by role | Delivered |
 | Command palette | Keyboard access to navigation, actions and open charts | overlay | none | Delivered |
 | Notification centre | Cross capability alerts and messages | `/notifications` | P8 | F3 |
-| Not found and error boundary | Honest failure rather than a blank screen | `/*` | none | F0 |
-| Capability unavailable | Explains why an area is not present, rather than hiding it silently | inline | P9 | F1 |
+| Not found | Honest failure rather than a blank screen | `/*` | none | Delivered |
+| Capability unavailable | Explains why an area is not permitted, rather than rendering nothing | inline | P9 | Delivered |
 
 The role dashboard is one screen with role shaped content, not several. A physician sees their work queue, a privacy officer sees outstanding reviews, an administrator sees the control plane.
 
@@ -52,7 +52,7 @@ Screens whose subject is a queue, a day or a department rather than one patient.
 | Results awaiting release | Results the patient cannot see yet, with ageing so none is forgotten | `/worklist/release` | C4, E1, [ADR 0017](decisions/0017-results-release-policy.md) | F3 |
 | Staff messages | Secure messaging between staff | `/worklist/messages` | P8 | F3 |
 | Prescription requests | Refill and renewal requests awaiting a decision | `/worklist/prescriptions` | C3, E1 | F3 |
-| Department schedule | The front desk day view across all patients for a clinic, practitioner or location | `/schedule` | A3, plus an endpoint that lists appointments by date and practitioner or location | F1 |
+| Department schedule | The front desk day view across all patients for a clinic, practitioner or location | `/schedule` | A3 | Delivered |
 | Schedule management | Create practitioner schedules and slots | in the appointments section | A3 | Delivered |
 | Check in desk | Arrival, waiting list and rooming status for today | `/schedule/checkin` | A3, A4 | F2 |
 | Ward list | Patients on a ward, with status at a glance | `/wards/:wardId` | A2 inpatient, O1 | F4 |
@@ -69,7 +69,7 @@ Screens whose subject is a queue, a day or a department rather than one patient.
 | Claims worklist | Claims, rejections and resubmission | `/claims` | R3 | F5 |
 | Transport and services | Patient transport, cleaning and turnover tasks | `/operations` | O2, O3 | F5 |
 
-**The department schedule is deliberately separate from the chart.** A patient's own appointments belong in their chart, which is where they are. A front desk works a day across every patient, which is a different question asked by a different user, and folding it into the chart would force them to pick a patient before they know who is coming. The backend currently lists appointments by patient only, so this screen needs an endpoint that does not exist yet.
+**The department schedule is deliberately separate from the chart.** A patient's own appointments belong in their chart, which is where they are. A front desk works a day across every patient, which is a different question asked by a different user, and folding it into the chart would force them to pick a patient before they know who is coming. It is served by `GET /api/v1/appointments/day`, which takes the day as explicit instants so no clinic timezone is assumed on the server.
 
 ---
 

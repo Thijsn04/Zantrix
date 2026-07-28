@@ -1,55 +1,46 @@
 import { useTranslation } from 'react-i18next';
 import type { ApiClient } from '../../lib/api/client';
-import type { CurrentUser, PatientSummary } from '../../lib/api/types';
+import type { CurrentUser } from '../../lib/api/types';
+import { MAX_OPEN_PATIENTS, useOpenCharts } from '../../app/useOpenCharts';
 import { PatientTabs } from './PatientTabs';
 import { PatientRegistry } from './PatientRegistry';
 import { PatientChart } from '../chart/PatientChart';
 import { Notice } from '../../design/Feedback';
+import { Panel } from '../../design/Panel';
 
-/** Two charts is the working limit: enough to compare or hand over, few enough to stay unambiguous. */
-export const MAX_OPEN_PATIENTS = 2;
-
-export function PatientWorkspace({
-  client, user, openPatients, activeId, limitReached,
-  onOpen, onActivate, onClose, onSearch,
-}: {
-  client: ApiClient;
-  user: CurrentUser;
-  openPatients: PatientSummary[];
-  activeId?: string;
-  limitReached: boolean;
-  onOpen: (patient: PatientSummary) => void;
-  onActivate: (id: string) => void;
-  onClose: (id: string) => void;
-  onSearch: () => void;
-}) {
+export function PatientWorkspace({ client, user }: { client: ApiClient; user: CurrentUser }) {
   const { t } = useTranslation();
+  const charts = useOpenCharts(client);
 
   return (
     <div className="patient-workspace">
-      {openPatients.length > 0 ? (
-        <PatientTabs patients={openPatients} activeId={activeId}
-          onActivate={onActivate} onClose={onClose} onSearch={onSearch} />
+      {charts.open.length > 0 ? (
+        <PatientTabs patients={charts.open} activeId={charts.activeId}
+          onActivate={charts.activate} onClose={charts.close} onSearch={charts.search} />
       ) : null}
 
       {/*
         Every open chart stays mounted and is hidden rather than unmounted, so
-        switching patients keeps query caches, the selected chart section, and
+        switching patients keeps query caches, the selected section, and
         anything already typed into a form. `hidden` also removes the inactive
         chart from the accessibility tree.
       */}
-      {openPatients.map(patient => (
-        <div key={patient.id} hidden={patient.id !== activeId}>
-          <PatientChart client={client} patient={patient} user={user} onClear={() => onClose(patient.id)} />
+      {charts.open.map(patient => (
+        <div key={patient.id} hidden={patient.id !== charts.activeId}>
+          <PatientChart client={client} patient={patient} user={user}
+            onClear={() => charts.close(patient.id)} />
         </div>
       ))}
 
-      {!activeId ? (
+      {charts.loading && !charts.activeId
+        ? <Panel title={t('common.loading')} level={1}><span /></Panel> : null}
+
+      {!charts.activeId && !charts.loading ? (
         <>
-          {limitReached ? (
+          {charts.limitReached ? (
             <Notice tone="warning">{t('patients.limitReached', { count: MAX_OPEN_PATIENTS })}</Notice>
           ) : null}
-          <PatientRegistry client={client} onSelect={onOpen} />
+          <PatientRegistry client={client} onSelect={charts.openPatient} />
         </>
       ) : null}
     </div>

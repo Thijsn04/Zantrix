@@ -10,13 +10,13 @@ The frontend has React 19, TypeScript 6 strict mode, Vite 8, Tailwind CSS 4, i18
 
 The workspace is role-shaped. `lib/roles.ts` holds a capability model that mirrors each backend `@PreAuthorize` rule, and navigation, landing page, chart tabs, and individual actions are derived from it. A physician lands on their own work queue, a privacy officer on outstanding emergency-access reviews, and a pharmacist on their task queue, because the pharmacist role cannot read the patient directory at all. When a backend rule changes, the capability model changes in the same commit.
 
-Patient search is the entry point to clinical work, and everything about one patient is a section of their chart: appointments, encounters, problems, allergies, medications, vitals, orders, results, and notes. There is no separate scheduling destination, because an appointment only means something once a patient is in context.
+Patient search is the entry point to clinical work, and everything about one patient is a section of their chart: appointments, encounters, problems, allergies, medications, vitals, orders, results, notes, consent, and identity. The one scheduling view that is not a chart section is the department day schedule, because a front desk works a day across every patient and cannot pick one first.
 
 Up to two charts can be open at once. Each stays mounted while hidden, so switching preserves query caches, the selected section, and anything already typed. Opening a third is refused with an explicit message rather than silently closing one, because losing track of which patient is in context is the classic wrong-patient error. Each tab repeats name, age, sex, and MRN so a mistaken switch is visible.
 
-The M1 workspace includes patient search, two-stage registration with duplicate review, a persistent patient storyboard carrying identity plus active allergies and problems, a snapshot overview of the active record, the appointment arrival lifecycle and availability search, Task worklists scoped to assigned/unclaimed/all, administration directories, feature flags and platform status, and the privacy office with emergency-access review, a filtered audit trail, and hash-chain verification. Prescribing runs and displays the interaction assessment before the prescription is written and requires a documented override for a critical issue.
+The M1 workspace includes patient search, two-stage registration with duplicate review, a persistent patient storyboard carrying identity plus active allergies and problems, a snapshot overview of the active record, the appointment arrival lifecycle and availability search, Task worklists scoped to assigned/unclaimed/all, the department day schedule, administration directories, feature flags and platform status, and the privacy office with emergency-access review, a filtered audit trail, and hash-chain verification. Prescribing runs and displays the interaction assessment before the prescription is written and requires a documented override for a critical issue.
 
-Light/dark tokens, responsive layouts, labelled forms, ARIA tab and table semantics, focus styles, explicit API errors, and a searchable Ctrl/Cmd+K command palette are implemented. React Query owns server state and invalidation; Lucide supplies icons.
+Light/dark tokens, responsive layouts, labelled forms, ARIA tab and table semantics, named panel landmarks, focus styles, explicit API errors, an idle lock for shared workstations, and a searchable Ctrl/Cmd+K command palette are implemented. A test asserts that every translation key the source uses is actually defined, because a missing key renders as the raw key and type checking cannot catch it. React Query owns server state and invalidation; Lucide supplies icons.
 
 ## An application, not a website
 
@@ -52,7 +52,7 @@ frontend/src
 
 - **Feature folders** mirror the capabilities in the [module vision](../modules/README.md). A feature owns its components, hooks, and data access for one domain.
 - **The shell** owns global concerns: the top bar, role-aware navigation, patient context, command palette, and session handling.
-- **Route level pages** are not a separate layer yet. The shell selects the active workspace directly, because the workspace is a small fixed set of destinations rather than a deep URL hierarchy. A router becomes worthwhile when deep linking into a chart is added.
+- **Routes** address every clinical view. A chart section is `/patients/:patientId/:section`, so it can be linked to, reloaded, and opened in a second window. Patient context is resolved from the URL and belongs to the window, per [ADR 0015](decisions/0015-multi-window-workspace.md), so nothing done in one window changes what another is showing. The open chart set is window state, because a URL names one patient.
 
 ## Data layer
 

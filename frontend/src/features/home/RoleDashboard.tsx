@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import type { ApiClient } from '../../lib/api/client';
-import type { CurrentUser, EmergencyAccessReview, PatientSummary, TaskSummary } from '../../lib/api/types';
+import type { CurrentUser, EmergencyAccessReview, TaskSummary } from '../../lib/api/types';
 import { can, primaryRole } from '../../lib/roles';
 import { formatDateTime } from '../../lib/format';
 import { Panel } from '../../design/Panel';
 import { DataTable } from '../../design/DataTable';
 import { StatusBadge } from '../../design/Badge';
 import { ErrorNotice, Notice } from '../../design/Feedback';
-import type { WorkspacePage } from '../../app/navigation';
 
 /**
  * The landing view, shaped by what the signed-in role actually does.
@@ -18,13 +18,12 @@ import type { WorkspacePage } from '../../app/navigation';
  * here is decorative: every number is a real count from the backend, and every
  * panel links to the work it describes.
  */
-export function RoleDashboard({ client, user, patient, onNavigate }: {
+export function RoleDashboard({ client, user }: {
   client: ApiClient;
   user?: CurrentUser;
-  patient?: PatientSummary;
-  onNavigate: (page: WorkspacePage) => void;
 }) {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const role = primaryRole(user);
   const owner = user ? `Practitioner/${user.subject}` : '';
 
@@ -53,28 +52,23 @@ export function RoleDashboard({ client, user, patient, onNavigate }: {
         subtitle={t(`dashboard.role.${role}`, { defaultValue: role })}>
         <div className="metric-grid">
           {can(user, 'tasks') ? (
-            <button className="metric metric-button" onClick={() => onNavigate('tasks')}>
+            <button className="metric metric-button" onClick={() => navigate('/worklist')}>
               <strong>{myTasks.data?.filter(task => task.status !== 'completed').length ?? 0}</strong>
               <span>{t('dashboard.myOpenTasks')}</span>
             </button>
           ) : null}
           {can(user, 'tasks') ? (
-            <button className="metric metric-button" onClick={() => onNavigate('tasks')}>
+            <button className="metric metric-button" onClick={() => navigate('/worklist')}>
               <strong>{queue.length}</strong><span>{t('dashboard.unclaimed')}</span>
             </button>
           ) : null}
           {can(user, 'privacy') ? (
-            <button className="metric metric-button" onClick={() => onNavigate('privacy')}>
+            <button className="metric metric-button" onClick={() => navigate('/privacy')}>
               <strong>{openReviews.length}</strong><span>{t('dashboard.openReviews')}</span>
             </button>
           ) : null}
-          {patient ? (
-            <button className="metric metric-button" onClick={() => onNavigate('patients')}>
-              <strong>1</strong><span>{t('dashboard.patientInContext')}</span>
-            </button>
-          ) : null}
         </div>
-        {!patient && can(user, 'patients')
+        {can(user, 'patients')
           ? <Notice tone="info">{t('dashboard.selectPatientHint')}</Notice> : null}
       </Panel>
 

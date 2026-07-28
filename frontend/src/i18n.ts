@@ -15,7 +15,7 @@ const resources = {
       },
       navigation: {
         label: 'Workspace navigation', workspace: 'Workspace', home: 'Home', patients: 'Patients',
-        tasks: 'Worklist', admin: 'Administration', privacy: 'Privacy and audit',
+        schedule: 'Schedule', tasks: 'Worklist', admin: 'Administration', privacy: 'Privacy and audit',
       },
       command: {
         open: 'Search commands', title: 'Command palette', filter: 'Type a command',
@@ -23,6 +23,17 @@ const resources = {
         noMatches: 'No matching commands.', enter: 'Enter',
       },
       theme: { toggle: 'Toggle color theme' },
+      actions: {
+        start: 'Start', finish: 'Finish', resolve: 'Resolve', sign: 'Sign',
+      },
+      lock: {
+        title: 'Workspace locked', resume: 'Resume',
+        description: 'The record was covered because this workstation was left unattended. Your work is still open.',
+      },
+      notFound: {
+        title: 'This page does not exist', back: 'Back to the workspace',
+        description: 'The address may be mistyped, or the area may not be part of this deployment.',
+      },
       common: {
         failed: 'The operation could not be completed.', loading: 'Loading...', add: 'Add', save: 'Save',
         cancel: 'Cancel', enabled: 'Enabled', disabled: 'Disabled', toggle: 'Toggle', change: 'Change',
@@ -42,6 +53,7 @@ const resources = {
           ADMIN: 'Administrator', PRIVACY_OFFICER: 'Privacy officer', PATIENT: 'Patient',
         },
       },
+      patientContext: { label: 'Patient in context' },
       patient: {
         ageYears: '{{count}} yr', born: 'Born', mrn: 'MRN', inactive: 'Inactive record',
         noKnownAllergies: 'No known allergies recorded.', activeProblems: 'Active problems',
@@ -185,7 +197,17 @@ const resources = {
         bookTitle: 'Book an appointment', book: 'Book appointment', location: 'Location ID',
         start: 'Start', end: 'End', service: 'Service', serviceCodeHint: 'SNOMED CT procedure code.',
         checkIn: 'Check in', complete: 'Mark complete',
-        adminHint: 'Administrators can create practitioner schedules and slots.',
+        manageTitle: 'Create bookable time',
+        manageSubtitle: 'Divides a practitioner day into slots patients can be booked into.',
+        from: 'From', to: 'To', slotMinutes: 'Minutes per slot',
+        previewCount: 'This creates {{count}} slots, from {{first}} to {{last}}.',
+        previewEmpty: 'Choose a day and a time range that produces at least one slot.',
+        createSlots: 'Create slots', createdTitle: 'Slots created',
+        serviceRequired: 'Select the service these slots are for.',
+        departmentTitle: 'Department schedule', departmentSubtitle: 'Everyone booked into this clinic today.',
+        filterHint: 'Filter by practitioner, or leave empty for the whole department.',
+        daySummary: '{{total}} appointments, {{waiting}} waiting.',
+        openChart: 'Open chart',
       },
       tasks: {
         title: 'Worklist', scopeLabel: 'Worklist scope', mine: 'Assigned to me', unassigned: 'Unclaimed',

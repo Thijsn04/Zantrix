@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -126,6 +127,32 @@ public class SchedulingService {
                         "start", List.of("ge" + DateTimeFormatter.ISO_INSTANT.format(start),
                                 "lt" + DateTimeFormatter.ISO_INSTANT.format(end)), "_count", List.of("500")), null),
                 Slot.class).stream().map(slot -> summary(slot, schedule))).toList();
+    }
+
+    /**
+     * The appointments a department is working, across every patient.
+     *
+     * The window is supplied as explicit instants rather than a date, because
+     * the server has no reliable way to know which timezone a clinic day means.
+     * The caller resolves its own local day boundaries.
+     */
+    public List<AppointmentSummary> daySchedule(Instant from, Instant to,
+                                                String practitionerId, String locationId) {
+        if (!to.isAfter(from)) {
+            throw new IllegalArgumentException("to must be after from");
+        }
+        Map<String, List<String>> parameters = new LinkedHashMap<>();
+        parameters.put("date", List.of("ge" + DateTimeFormatter.ISO_INSTANT.format(from),
+                "lt" + DateTimeFormatter.ISO_INSTANT.format(to)));
+        if (practitionerId != null && !practitionerId.isBlank()) {
+            parameters.put("actor", List.of("Practitioner/" + practitionerId));
+        } else if (locationId != null && !locationId.isBlank()) {
+            parameters.put("actor", List.of("Location/" + locationId));
+        }
+        parameters.put("_sort", List.of("date"));
+        parameters.put("_count", List.of("200"));
+        return FhirBundles.resources(fhir.search("Appointment", parameters, null), Appointment.class).stream()
+                .map(SchedulingService::summary).toList();
     }
 
     public List<AppointmentSummary> listForPatient(String patientId) {
