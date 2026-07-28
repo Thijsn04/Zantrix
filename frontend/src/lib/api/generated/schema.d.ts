@@ -91,7 +91,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_9"];
+        get: operations["list_10"];
         put?: never;
         post: operations["add_1"];
         delete?: never;
@@ -123,7 +123,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_8"];
+        get: operations["list_9"];
         put?: never;
         post: operations["book"];
         delete?: never;
@@ -267,9 +267,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_7"];
+        get: operations["list_8"];
         put?: never;
-        post: operations["create_2"];
+        post: operations["create_3"];
         delete?: never;
         options?: never;
         head?: never;
@@ -299,9 +299,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_6"];
+        get: operations["list_7"];
         put?: never;
-        post: operations["create_1"];
+        post: operations["create_2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -398,6 +398,38 @@ export interface paths {
         get: operations["me"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/immunizations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_6"];
+        put?: never;
+        post: operations["record_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/immunizations/{id}/entered-in-error": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["markEnteredInError"];
         delete?: never;
         options?: never;
         head?: never;
@@ -524,7 +556,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put: operations["update"];
+        put: operations["update_1"];
         post?: never;
         delete?: never;
         options?: never;
@@ -619,7 +651,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["search"];
+        get: operations["search_1"];
         put?: never;
         post: operations["register"];
         delete?: never;
@@ -797,7 +829,7 @@ export interface paths {
         };
         get: operations["list_1"];
         put?: never;
-        post: operations["create"];
+        post: operations["create_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -926,6 +958,86 @@ export interface paths {
         get: operations["list"];
         put?: never;
         post: operations["record"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fhir/R4": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["transaction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fhir/R4/metadata": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["metadata"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fhir/R4/{type}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["search"];
+        put?: never;
+        post: operations["create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fhir/R4/{type}/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["read"];
+        put: operations["update"];
+        post?: never;
+        delete: operations["delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/fhir/R4/{type}/{id}/_history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["history"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1094,6 +1206,37 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
+        ImmunizationRequest: {
+            /** Format: int32 */
+            doseNumber?: number;
+            encounterId?: string;
+            lotNumber?: string;
+            note?: string;
+            /** Format: date */
+            occurrenceDate: string;
+            patientId: string;
+            performerId: string;
+            route?: string;
+            site?: string;
+            vaccineCode: string;
+            vaccineDisplay: string;
+            vaccineSystem: string;
+        };
+        ImmunizationSummary: {
+            /** Format: int32 */
+            doseNumber?: number;
+            id?: string;
+            lotNumber?: string;
+            /** Format: date */
+            occurrenceDate?: string;
+            patientId?: string;
+            site?: string;
+            status?: string;
+            statusReason?: string;
+            vaccine?: string;
+            vaccineCode?: string;
+            vaccineSystem?: string;
+        };
         Jwt: {
             audience?: string[];
             claims?: {
@@ -1153,6 +1296,14 @@ export interface components {
             performerId: string;
             rxNormIngredientCode: string;
             status: string;
+        };
+        MultiValueMapStringString: {
+            all?: {
+                [key: string]: string;
+            };
+            empty?: boolean;
+        } & {
+            [key: string]: string[];
         };
         NoteRequest: {
             authorId: string;
@@ -1662,7 +1813,7 @@ export interface operations {
             };
         };
     };
-    list_9: {
+    list_10: {
         parameters: {
             query: {
                 patientId: string;
@@ -1734,7 +1885,7 @@ export interface operations {
             };
         };
     };
-    list_8: {
+    list_9: {
         parameters: {
             query: {
                 patientId: string;
@@ -1974,7 +2125,7 @@ export interface operations {
             };
         };
     };
-    list_7: {
+    list_8: {
         parameters: {
             query: {
                 patientId: string;
@@ -1996,7 +2147,7 @@ export interface operations {
             };
         };
     };
-    create_2: {
+    create_3: {
         parameters: {
             query?: never;
             header?: never;
@@ -2044,7 +2195,7 @@ export interface operations {
             };
         };
     };
-    list_6: {
+    list_7: {
         parameters: {
             query: {
                 patientId: string;
@@ -2066,7 +2217,7 @@ export interface operations {
             };
         };
     };
-    create_1: {
+    create_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -2226,6 +2377,78 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["CurrentUser"];
+                };
+            };
+        };
+    };
+    list_6: {
+        parameters: {
+            query: {
+                patientId: string;
+                includeEnteredInError?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ImmunizationSummary"][];
+                };
+            };
+        };
+    };
+    record_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImmunizationRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ImmunizationSummary"];
+                };
+            };
+        };
+    };
+    markEnteredInError: {
+        parameters: {
+            query: {
+                patientId: string;
+                reason: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ImmunizationSummary"];
                 };
             };
         };
@@ -2444,7 +2667,7 @@ export interface operations {
             };
         };
     };
-    update: {
+    update_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -2619,7 +2842,7 @@ export interface operations {
             };
         };
     };
-    search: {
+    search_1: {
         parameters: {
             query?: {
                 query?: string;
@@ -2942,7 +3165,7 @@ export interface operations {
             };
         };
     };
-    create: {
+    create_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -3179,6 +3402,208 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["VitalSummary"][];
+                };
+            };
+        };
+    };
+    transaction: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Patient-Context": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/fhir+json": string;
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/fhir+json": string;
+                };
+            };
+        };
+    };
+    metadata: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/fhir+json": string;
+                };
+            };
+        };
+    };
+    search: {
+        parameters: {
+            query: {
+                parameters: components["schemas"]["MultiValueMapStringString"];
+            };
+            header?: {
+                "X-Patient-Context"?: string;
+            };
+            path: {
+                type: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/fhir+json": string;
+                };
+            };
+        };
+    };
+    create: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Patient-Context"?: string;
+            };
+            path: {
+                type: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/fhir+json": string;
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/fhir+json": string;
+                };
+            };
+        };
+    };
+    read: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Patient-Context"?: string;
+            };
+            path: {
+                type: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/fhir+json": string;
+                };
+            };
+        };
+    };
+    update: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Patient-Context"?: string;
+            };
+            path: {
+                type: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/fhir+json": string;
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/fhir+json": string;
+                };
+            };
+        };
+    };
+    delete: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Patient-Context"?: string;
+            };
+            path: {
+                type: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    history: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Patient-Context"?: string;
+            };
+            path: {
+                type: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/fhir+json": string;
                 };
             };
         };

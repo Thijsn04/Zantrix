@@ -93,6 +93,7 @@ Route shape is `/patients/:patientId/:section`. The storyboard, carrying identit
 | Orders | Order entry and the order list | C4 |
 | Results | Results, and filing a result against the order that requested it | C4 |
 | Notes | Draft, sign and addendum, with version history | C5 |
+| Immunizations | Vaccination history, recording a dose, and correcting an entry without removing it | C9 |
 | Consent | Recording, listing and revoking this patient's consents | P3 |
 | Identity | Merge history, merging a duplicate, and reversing a merge | A1 |
 
@@ -105,7 +106,7 @@ Route shape is `/patients/:patientId/:section`. The storyboard, carrying identit
 | Flowsheets | Full flowsheet grid, intake and output, early warning scores | C6 | F4 |
 | Care plan and goals | Longitudinal plan, goals and progress | C8 | F5 |
 | Care team | Who is involved in this patient's care, and in what role | C8, P2 | F5 |
-| Immunizations | Vaccination history and forecast | C9 | F5 |
+| Immunizations | Vaccination history, with corrections kept visible rather than deleted | C9 | Delivered |
 | Coverage | Insurance, eligibility and financial context | A5 | F5 |
 | Consent and privacy | This patient's consents, restrictions and sensitivity flags | P3 | Delivered |
 | Authorized representatives | Granting, scoping, expiring and revoking proxy access after staff verify entitlement | P3, E1, [ADR 0018](decisions/0018-proxy-access.md) | F3 |

@@ -96,6 +96,7 @@
   }
 
   .workspace-layout { display: grid; grid-template-columns: 12.5rem 1fr; flex: 1; min-height: 0; }
+  .workspace-layout > * { min-width: 0; }
   .sidebar { padding: .6rem .5rem; border-right: 1px solid var(--border); background: var(--surface); }
   .sidebar .eyebrow { padding: .35rem .5rem; }
   .sidebar button {
@@ -175,6 +176,7 @@
 
   /* ---------- patient storyboard ---------- */
   .chart-layout { display: grid; grid-template-columns: 16rem 1fr; gap: .85rem; align-items: start; }
+  .chart-layout > * { min-width: 0; }
   .storyboard {
     position: sticky; top: 0; display: grid; gap: .6rem; padding: .75rem;
     border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);

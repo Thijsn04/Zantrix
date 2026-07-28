@@ -78,7 +78,7 @@ const resources = {
       chart: {
         snapshot: 'Snapshot', appointments: 'Appointments', encounters: 'Encounters', problems: 'Problems', allergies: 'Allergies',
         medications: 'Medications', vitals: 'Vitals', orders: 'Orders', results: 'Results', notes: 'Notes',
-        consent: 'Consent', identity: 'Identity',
+        immunizations: 'Immunizations', consent: 'Consent', identity: 'Identity',
         empty: 'No records found.', tablist: 'Patient chart sections',
         showResolved: 'Show resolved', hideResolved: 'Hide resolved',
       },
@@ -148,6 +148,14 @@ const resources = {
         awaitingTitle: 'Awaiting a result', awaitingSubtitle: 'Orders that have not been resulted yet.',
         noneAwaiting: 'No orders are awaiting a result.',
         filedAgainstOrder: 'This result is filed against order code {{code}}.',
+      },
+      immunizations: {
+        none: 'No vaccinations recorded.', vaccine: 'Vaccine', given: 'Given', dose: 'Dose', lot: 'Lot number',
+        site: 'Site', route: 'Route', record: 'Record vaccination',
+        recordTitle: 'Record a vaccination', recordSubtitle: 'A recorded dose becomes part of the permanent record.',
+        permanentNote: 'A recorded vaccination is never deleted. A mistake is corrected by marking it entered in error.',
+        markError: 'Entered in error', correctionPrompt: 'Why is this vaccination being marked entered in error?',
+        showCorrected: 'Show corrected', hideCorrected: 'Hide corrected',
       },
       consent: {
         title: 'Consent', subtitle: 'Consent is enforced at the data boundary, so this changes what clinicians can read.',

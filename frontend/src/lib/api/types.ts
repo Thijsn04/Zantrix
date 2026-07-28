@@ -188,6 +188,20 @@ export interface NoteSummary {
   version: number;
 }
 
+export interface ImmunizationSummary {
+  id: string;
+  patientId: string;
+  vaccineSystem: string;
+  vaccineCode: string;
+  vaccine: string;
+  status: string | null;
+  occurrenceDate: string | null;
+  lotNumber: string | null;
+  site: string | null;
+  doseNumber: number | null;
+  statusReason: string | null;
+}
+
 export interface TaskSummary {
   id: string;
   patientId: string;

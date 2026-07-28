@@ -192,7 +192,7 @@ The heart of the record. These capabilities are the narrow core that Zantrix mak
 - **Purpose.** Vaccination history and forecasting.
 - **Primary FHIR resources.** Immunization, ImmunizationRecommendation.
 - **Depends on.** Patient and MPI, Terminology.
-- **Status.** `Planned`.
+- **Status.** `Beta`. Recording a dose, the vaccination history, and correcting a mistaken entry without removing it are implemented. Forecasting and ImmunizationRecommendation remain planned.
 
 ### C10. Results Review and Clinician Inbox
 - **Purpose.** The clinician facing worklist and inbox that unifies results, tasks, messages, and items needing sign off.

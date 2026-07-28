@@ -16,12 +16,13 @@ import { VitalsPanel } from './VitalsPanel';
 import { OrdersPanel } from './OrdersPanel';
 import { ResultsPanel } from './ResultsPanel';
 import { NotesPanel } from './NotesPanel';
+import { ImmunizationsPanel } from './ImmunizationsPanel';
 import { ConsentPanel } from './ConsentPanel';
 import { IdentityPanel } from './IdentityPanel';
 
 type ChartTab =
   | 'snapshot' | 'appointments' | 'encounters' | 'problems' | 'allergies'
-  | 'medications' | 'vitals' | 'orders' | 'results' | 'notes' | 'consent' | 'identity';
+  | 'medications' | 'immunizations' | 'vitals' | 'orders' | 'results' | 'notes' | 'consent' | 'identity';
 
 /**
  * The patient chart: a persistent storyboard beside the patient's sections.
@@ -57,7 +58,10 @@ export function PatientChart({ client, patient, user, onClear }: {
       { id: 'allergies' as const, label: t('chart.allergies') },
     ] : []),
     ...(canMedications ? [{ id: 'medications' as const, label: t('chart.medications') }] : []),
-    ...(canChart ? [{ id: 'vitals' as const, label: t('chart.vitals') }] : []),
+    ...(canChart ? [
+      { id: 'immunizations' as const, label: t('chart.immunizations') },
+      { id: 'vitals' as const, label: t('chart.vitals') },
+    ] : []),
     ...(canOrders ? [
       { id: 'orders' as const, label: t('chart.orders') },
       { id: 'results' as const, label: t('chart.results') },
@@ -95,6 +99,7 @@ export function PatientChart({ client, patient, user, onClear }: {
               <MedicationsPanel client={client} patientId={patient.id}
                 canPrescribe={can(user, 'prescribe')} canDispense={can(user, 'dispense')} />
             ) : null}
+            {active === 'immunizations' ? <ImmunizationsPanel client={client} patientId={patient.id} /> : null}
             {active === 'vitals' ? <VitalsPanel client={client} patientId={patient.id} /> : null}
             {active === 'orders' ? <OrdersPanel client={client} patientId={patient.id} /> : null}
             {active === 'results' ? <ResultsPanel client={client} patientId={patient.id} /> : null}

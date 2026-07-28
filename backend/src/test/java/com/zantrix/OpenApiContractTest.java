@@ -6,42 +6,25 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.zantrix.administration.internal.AdministrationService;
-import com.zantrix.administration.web.AdministrationController;
 import com.zantrix.allergies.internal.AllergyService;
-import com.zantrix.allergies.web.AllergyController;
 import com.zantrix.audit.AuditQuery;
 import com.zantrix.audit.AuditTrailVerifier;
-import com.zantrix.audit.web.AuditController;
 import com.zantrix.documentation.internal.DocumentationService;
-import com.zantrix.documentation.web.DocumentationController;
 import com.zantrix.encounter.internal.EncounterService;
-import com.zantrix.encounter.web.EncounterController;
+import com.zantrix.immunizations.internal.ImmunizationService;
 import com.zantrix.medications.internal.MedicationService;
-import com.zantrix.medications.web.MedicationController;
 import com.zantrix.orders.internal.OrderService;
-import com.zantrix.orders.web.OrderController;
 import com.zantrix.patient.internal.PatientMergeService;
 import com.zantrix.patient.internal.PatientService;
-import com.zantrix.patient.web.PatientController;
 import com.zantrix.platform.OpenApiConfiguration;
 import com.zantrix.platform.fhir.FhirAccessGateway;
-import com.zantrix.platform.fhir.FhirServerController;
-import com.zantrix.platform.iam.IamController;
-import com.zantrix.platform.web.SystemController;
 import com.zantrix.privacy.internal.ConsentService;
-import com.zantrix.privacy.web.ConsentController;
-import com.zantrix.privacy.web.EmergencyAccessReviewController;
 import com.zantrix.platform.security.EmergencyAccessReviewRecorder;
 import com.zantrix.problems.internal.ProblemService;
-import com.zantrix.problems.web.ProblemController;
 import com.zantrix.scheduling.internal.SchedulingService;
-import com.zantrix.scheduling.web.SchedulingController;
 import com.zantrix.terminology.internal.TerminologyService;
-import com.zantrix.terminology.web.TerminologyController;
 import com.zantrix.vitals.internal.VitalsService;
-import com.zantrix.vitals.web.VitalsController;
 import com.zantrix.workflow.internal.WorkflowService;
-import com.zantrix.workflow.web.WorkflowController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springdoc.core.configuration.SpringDocConfiguration;
@@ -53,6 +36,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import ca.uhn.fhir.context.FhirContext;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -78,18 +64,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * not require a database. Services are mocked because their behaviour is
  * irrelevant to the shape of the contract.
  *
+ * <p>Every controller is scanned rather than listed, so a new one cannot stay
+ * out of the published contract by omission. A missing collaborator then fails
+ * the context loudly instead.
+ *
  * <p>Run with {@code -Dopenapi.write=true} to accept an intended change.
  */
-@WebMvcTest(controllers = {
-        AdministrationController.class, AllergyController.class, AuditController.class,
-        ConsentController.class, DocumentationController.class, EmergencyAccessReviewController.class,
-        EncounterController.class, FhirServerController.class, IamController.class,
-        MedicationController.class, OrderController.class, PatientController.class,
-        ProblemController.class, SchedulingController.class, SystemController.class,
-        TerminologyController.class, VitalsController.class, WorkflowController.class,
-})
+@WebMvcTest
 @AutoConfigureMockMvc(addFilters = false)
-@Import({ OpenApiConfiguration.class, SpringDocConfiguration.class, SpringDocWebMvcConfiguration.class,
+@Import({ OpenApiConfiguration.class, OpenApiContractTest.FhirContextForDocumentation.class, SpringDocConfiguration.class, SpringDocWebMvcConfiguration.class,
         SpringDocConfigProperties.class, JacksonAutoConfiguration.class })
 class OpenApiContractTest {
 
@@ -108,6 +91,7 @@ class OpenApiContractTest {
     @MockBean private EmergencyAccessReviewRecorder emergencyReviews;
     @MockBean private EncounterService encounters;
     @MockBean private FhirAccessGateway fhir;
+    @MockBean private ImmunizationService immunizations;
     @MockBean private MedicationService medications;
     @MockBean private OrderService orders;
     @MockBean private PatientService patients;
@@ -117,6 +101,13 @@ class OpenApiContractTest {
     @MockBean private TerminologyService terminology;
     @MockBean private VitalsService vitals;
     @MockBean private WorkflowService workflow;
+
+    /** The FHIR facade is part of the published surface, so it is described too. */
+    @TestConfiguration
+    static class FhirContextForDocumentation {
+        @Bean
+        FhirContext fhirContext() { return FhirContext.forR4(); }
+    }
 
     @Test
     void publishedContractMatchesTheControllers() throws Exception {

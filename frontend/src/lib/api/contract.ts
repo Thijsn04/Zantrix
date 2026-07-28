@@ -21,6 +21,7 @@ import type { components } from './generated/schema';
 import type {
   AllergySummary, AppointmentSummary, AuditRecord, AuditVerificationResult, ConsentSummary,
   CurrentUser, DirectorySummary, EmergencyAccessReview, EncounterSummary, FeatureFlagView,
+  ImmunizationSummary,
   MedicationEventSummary, NoteSummary, OrderSummary, PatientMergeSummary, PatientRegistration,
   PatientSummary, PractitionerSummary, PrescriptionSummary, ProblemSummary, ResultSummary,
   SafetyAssessment, SafetyIssue, SlotSummary, TaskSummary, TermConcept, VitalSummary,
@@ -52,6 +53,7 @@ export type ContractConformance = [
   Assert<FieldsExist<ResultSummary, Schemas['ResultSummary']>>,
   Assert<FieldsExist<VitalSummary, Schemas['VitalSummary']>>,
   Assert<FieldsExist<NoteSummary, Schemas['NoteSummary']>>,
+  Assert<FieldsExist<ImmunizationSummary, Schemas['ImmunizationSummary']>>,
   Assert<FieldsExist<TaskSummary, Schemas['TaskSummary']>>,
   Assert<FieldsExist<ConsentSummary, Schemas['ConsentSummary']>>,
   Assert<FieldsExist<EmergencyAccessReview, Schemas['EmergencyAccessReview']>>,

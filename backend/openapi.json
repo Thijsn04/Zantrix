@@ -438,6 +438,90 @@
         },
         "type" : "object"
       },
+      "ImmunizationRequest" : {
+        "properties" : {
+          "doseNumber" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "lotNumber" : {
+            "type" : "string"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "occurrenceDate" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "performerId" : {
+            "type" : "string"
+          },
+          "route" : {
+            "type" : "string"
+          },
+          "site" : {
+            "type" : "string"
+          },
+          "vaccineCode" : {
+            "type" : "string"
+          },
+          "vaccineDisplay" : {
+            "type" : "string"
+          },
+          "vaccineSystem" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "occurrenceDate", "patientId", "performerId", "vaccineCode", "vaccineDisplay", "vaccineSystem" ],
+        "type" : "object"
+      },
+      "ImmunizationSummary" : {
+        "properties" : {
+          "doseNumber" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "lotNumber" : {
+            "type" : "string"
+          },
+          "occurrenceDate" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "site" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "statusReason" : {
+            "type" : "string"
+          },
+          "vaccine" : {
+            "type" : "string"
+          },
+          "vaccineCode" : {
+            "type" : "string"
+          },
+          "vaccineSystem" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "Jwt" : {
         "properties" : {
           "audience" : {
@@ -601,6 +685,27 @@
           }
         },
         "required" : [ "medicationDisplay", "patientId", "performerId", "rxNormIngredientCode", "status" ],
+        "type" : "object"
+      },
+      "MultiValueMapStringString" : {
+        "additionalProperties" : {
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "properties" : {
+          "all" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object",
+            "writeOnly" : true
+          },
+          "empty" : {
+            "type" : "boolean"
+          }
+        },
         "type" : "object"
       },
       "NoteRequest" : {
@@ -1745,7 +1850,7 @@
     },
     "/api/v1/allergies" : {
       "get" : {
-        "operationId" : "list_9",
+        "operationId" : "list_10",
         "parameters" : [ {
           "in" : "query",
           "name" : "patientId",
@@ -1849,7 +1954,7 @@
     },
     "/api/v1/appointments" : {
       "get" : {
-        "operationId" : "list_8",
+        "operationId" : "list_9",
         "parameters" : [ {
           "in" : "query",
           "name" : "patientId",
@@ -2230,7 +2335,7 @@
     },
     "/api/v1/consents" : {
       "get" : {
-        "operationId" : "list_7",
+        "operationId" : "list_8",
         "parameters" : [ {
           "in" : "query",
           "name" : "patientId",
@@ -2257,7 +2362,7 @@
         "tags" : [ "consent-controller" ]
       },
       "post" : {
-        "operationId" : "create_2",
+        "operationId" : "create_3",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -2318,7 +2423,7 @@
     },
     "/api/v1/encounters" : {
       "get" : {
-        "operationId" : "list_6",
+        "operationId" : "list_7",
         "parameters" : [ {
           "in" : "query",
           "name" : "patientId",
@@ -2345,7 +2450,7 @@
         "tags" : [ "encounter-controller" ]
       },
       "post" : {
-        "operationId" : "create_1",
+        "operationId" : "create_2",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -2548,6 +2653,109 @@
           }
         },
         "tags" : [ "iam-controller" ]
+      }
+    },
+    "/api/v1/immunizations" : {
+      "get" : {
+        "operationId" : "list_6",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeEnteredInError",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/ImmunizationSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "immunization-controller" ]
+      },
+      "post" : {
+        "operationId" : "record_1",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ImmunizationRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ImmunizationSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "immunization-controller" ]
+      }
+    },
+    "/api/v1/immunizations/{id}/entered-in-error" : {
+      "post" : {
+        "operationId" : "markEnteredInError",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "reason",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ImmunizationSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "immunization-controller" ]
       }
     },
     "/api/v1/medications" : {
@@ -2834,7 +3042,7 @@
     },
     "/api/v1/notes/{id}" : {
       "put" : {
-        "operationId" : "update",
+        "operationId" : "update_1",
         "parameters" : [ {
           "in" : "path",
           "name" : "id",
@@ -3088,7 +3296,7 @@
     },
     "/api/v1/patients" : {
       "get" : {
-        "operationId" : "search",
+        "operationId" : "search_1",
         "parameters" : [ {
           "in" : "query",
           "name" : "query",
@@ -3525,7 +3733,7 @@
         "tags" : [ "workflow-controller" ]
       },
       "post" : {
-        "operationId" : "create",
+        "operationId" : "create_1",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -3896,6 +4104,300 @@
           }
         },
         "tags" : [ "vitals-controller" ]
+      }
+    },
+    "/fhir/R4" : {
+      "post" : {
+        "operationId" : "transaction",
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/fhir+json" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      }
+    },
+    "/fhir/R4/metadata" : {
+      "get" : {
+        "operationId" : "metadata",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      }
+    },
+    "/fhir/R4/{type}" : {
+      "get" : {
+        "operationId" : "search",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "parameters",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/MultiValueMapStringString"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      },
+      "post" : {
+        "operationId" : "create",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/fhir+json" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      }
+    },
+    "/fhir/R4/{type}/{id}" : {
+      "delete" : {
+        "operationId" : "delete",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      },
+      "get" : {
+        "operationId" : "read",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      },
+      "put" : {
+        "operationId" : "update",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/fhir+json" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      }
+    },
+    "/fhir/R4/{type}/{id}/_history" : {
+      "get" : {
+        "operationId" : "history",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
       }
     }
   },
