@@ -15,11 +15,11 @@ const resources = {
       },
       navigation: {
         label: 'Workspace navigation', workspace: 'Workspace', home: 'Home', patients: 'Patients',
-        schedule: 'Appointments', tasks: 'Worklist', admin: 'Administration', privacy: 'Privacy and audit',
+        tasks: 'Worklist', admin: 'Administration', privacy: 'Privacy and audit',
       },
       command: {
         open: 'Search commands', title: 'Command palette', filter: 'Type a command',
-        goTo: 'Go to {{target}}', clearPatient: 'Close chart for {{name}}',
+        goTo: 'Go to {{target}}', switchPatient: 'Switch to {{name}}', clearPatient: 'Close chart for {{name}}',
         noMatches: 'No matching commands.', enter: 'Enter',
       },
       theme: { toggle: 'Toggle color theme' },
@@ -58,10 +58,13 @@ const resources = {
         duplicateWarning: 'Found {{count}} possible existing record(s). Review before registering.',
         noDuplicates: 'No likely duplicates found.', matchScore: 'Match {{score}}',
         possibleDuplicate: 'Possible duplicate', noMatches: 'No patients match this search.',
-        change: 'Change patient',
+        change: 'Close chart',
+        openCharts: 'Open patient charts', findPatient: 'Find patient',
+        closeChart: 'Close chart for {{name}}',
+        limitReached: 'You can have {{count}} charts open at once. Close one to open another.',
       },
       chart: {
-        snapshot: 'Snapshot', encounters: 'Encounters', problems: 'Problems', allergies: 'Allergies',
+        snapshot: 'Snapshot', appointments: 'Appointments', encounters: 'Encounters', problems: 'Problems', allergies: 'Allergies',
         medications: 'Medications', vitals: 'Vitals', orders: 'Orders', results: 'Results', notes: 'Notes',
         empty: 'No records found.', tablist: 'Patient chart sections',
         showResolved: 'Show resolved', hideResolved: 'Hide resolved',
@@ -123,6 +126,11 @@ const resources = {
         categoryLaboratory: 'Laboratory', categoryImaging: 'Imaging', categoryProcedure: 'Procedure',
         categoryReferral: 'Referral', priorityRoutine: 'Routine', priorityUrgent: 'Urgent',
         priorityAsap: 'ASAP', priorityStat: 'Stat',
+      },
+      results: {
+        awaitingTitle: 'Awaiting a result', awaitingSubtitle: 'Orders that have not been resulted yet.',
+        noneAwaiting: 'No orders are awaiting a result.',
+        filedAgainstOrder: 'This result is filed against order code {{code}}.',
       },
       notes: {
         draftTitle: 'New note', title: 'Title', assessment: 'Assessment and plan', saveDraft: 'Save draft',

@@ -23,12 +23,6 @@ function appointment(overrides: Partial<AppointmentSummary> = {}): AppointmentSu
 }
 
 describe('appointment desk', () => {
-  it('asks for a patient before showing any appointments', () => {
-    const { client } = fakeClient();
-    renderWithQuery(<AppointmentDesk client={client} canManageSchedules={false} />);
-    expect(screen.getByText(/Select a patient/)).toBeInTheDocument();
-  });
-
   it('checks in a booked appointment', async () => {
     const user = userEvent.setup();
     const post = vi.fn().mockResolvedValue({});

@@ -10,8 +10,10 @@ interface Props {
   onSignOut: () => void;
   destinations: Destination[];
   onNavigate: (page: WorkspacePage) => void;
-  patient?: PatientSummary;
-  onClearPatient: () => void;
+  openPatients: PatientSummary[];
+  activePatientId?: string;
+  onActivatePatient: (id: string) => void;
+  onClosePatient: (id: string) => void;
 }
 
 /**
@@ -23,7 +25,10 @@ interface Props {
  * The component is mounted only while the palette is open, so its filter and
  * selection start fresh every time without an effect resetting them.
  */
-export function CommandPalette({ onClose, onSignOut, destinations, onNavigate, patient, onClearPatient }: Props) {
+export function CommandPalette({
+  onClose, onSignOut, destinations, onNavigate,
+  openPatients, activePatientId, onActivatePatient, onClosePatient,
+}: Props) {
   const { t } = useTranslation();
   const headingId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,13 +41,26 @@ export function CommandPalette({ onClose, onSignOut, destinations, onNavigate, p
       label: t('command.goTo', { target: t(destination.labelKey) }),
       run: () => onNavigate(destination.page),
     }));
-    if (patient) {
-      entries.push({ id: 'clear-patient', label: t('command.clearPatient', { name: patient.displayName }), run: onClearPatient });
+    // Switching between the open charts is the most frequent action once more
+    // than one patient is open, so it belongs in the palette.
+    for (const patient of openPatients) {
+      if (patient.id !== activePatientId) {
+        entries.push({
+          id: `switch-${patient.id}`,
+          label: t('command.switchPatient', { name: patient.displayName }),
+          run: () => onActivatePatient(patient.id),
+        });
+      }
+      entries.push({
+        id: `close-${patient.id}`,
+        label: t('command.clearPatient', { name: patient.displayName }),
+        run: () => onClosePatient(patient.id),
+      });
     }
     entries.push({ id: 'sign-out', label: t('session.signOut'), run: onSignOut });
     const needle = filter.trim().toLowerCase();
     return needle ? entries.filter(entry => entry.label.toLowerCase().includes(needle)) : entries;
-  }, [destinations, filter, onClearPatient, onNavigate, onSignOut, patient, t]);
+  }, [activePatientId, destinations, filter, onActivatePatient, onClosePatient, onNavigate, onSignOut, openPatients, t]);
 
   // Focusing the input is a DOM side effect, not state, so it belongs in an effect.
   useEffect(() => { inputRef.current?.focus(); }, []);

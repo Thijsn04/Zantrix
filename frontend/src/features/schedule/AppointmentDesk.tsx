@@ -20,7 +20,7 @@ import { ErrorNotice, Notice } from '../../design/Feedback';
  * transition that is actually valid for the current status.
  */
 export function AppointmentDesk({ client, patient, canManageSchedules }: {
-  client: ApiClient; patient?: PatientSummary; canManageSchedules: boolean;
+  client: ApiClient; patient: PatientSummary; canManageSchedules: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
@@ -28,17 +28,16 @@ export function AppointmentDesk({ client, patient, canManageSchedules }: {
   const [selectedSlot, setSelectedSlot] = useState<SlotSummary>();
 
   const appointments = useQuery({
-    enabled: Boolean(patient),
-    queryKey: ['appointments', patient?.id],
+    queryKey: ['appointments', patient.id],
     queryFn: ({ signal }) => client.get<AppointmentSummary[]>(
-      `/api/v1/appointments?patientId=${encodeURIComponent(patient!.id)}`, signal),
+      `/api/v1/appointments?patientId=${encodeURIComponent(patient.id)}`, signal),
   });
 
   const invalidate = () => void queryClient.invalidateQueries({ queryKey: ['appointments'] });
 
   const transition = useMutation({
     mutationFn: ({ id, verb }: { id: string; verb: 'arrive' | 'fulfill' | 'cancel' }) =>
-      client.post(`/api/v1/appointments/${encodeURIComponent(id)}/${verb}?patientId=${encodeURIComponent(patient!.id)}`),
+      client.post(`/api/v1/appointments/${encodeURIComponent(id)}/${verb}?patientId=${encodeURIComponent(patient.id)}`),
     onSuccess: invalidate,
   });
 
@@ -68,7 +67,6 @@ export function AppointmentDesk({ client, patient, canManageSchedules }: {
 
   function bookAppointment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!patient) return;
     const form = new FormData(event.currentTarget);
     book.mutate({
       patientId: patient.id,
@@ -81,10 +79,6 @@ export function AppointmentDesk({ client, patient, canManageSchedules }: {
       serviceDisplay: String(form.get('serviceDisplay') ?? ''),
       comment: String(form.get('comment') ?? '') || null,
     });
-  }
-
-  if (!patient) {
-    return <Panel title={t('schedule.title')} level={1}><Notice tone="info">{t('schedule.selectPatient')}</Notice></Panel>;
   }
 
   const today = (appointments.data ?? []).filter(appointment => isToday(appointment.start));

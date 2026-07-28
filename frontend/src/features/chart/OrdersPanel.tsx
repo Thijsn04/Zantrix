@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import type { ApiClient } from '../../lib/api/client';
-import type { OrderSummary, ResultSummary } from '../../lib/api/types';
+import type { OrderSummary } from '../../lib/api/types';
 import { formatDateTime } from '../../lib/format';
 import { Button } from '../../design/Button';
 import { DataTable } from '../../design/DataTable';
@@ -14,11 +14,11 @@ import { useClinicalContext } from './clinicalContext';
 
 const LOINC = 'http://loinc.org';
 
+/** Order entry. Results are filed from the results tab, against the order they answer. */
 export function OrdersPanel({ client, patientId }: { client: ApiClient; patientId: string }) {
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const { encounterId, practitionerId, ready } = useClinicalContext();
-  const [resultFor, setResultFor] = useState<OrderSummary>();
   const [includeCompleted, setIncludeCompleted] = useState(false);
 
   const orders = useQuery({
@@ -26,25 +26,13 @@ export function OrdersPanel({ client, patientId }: { client: ApiClient; patientI
     queryFn: ({ signal }) => client.get<OrderSummary[]>(
       `/api/v1/orders?patientId=${encodeURIComponent(patientId)}&includeCompleted=${includeCompleted}`, signal),
   });
-  const results = useQuery({
-    queryKey: ['results', patientId],
-    queryFn: ({ signal }) => client.get<ResultSummary[]>(
-      `/api/v1/orders/results?patientId=${encodeURIComponent(patientId)}`, signal),
+
+  const place = useMutation({
+    mutationFn: (body: unknown) => client.post('/api/v1/orders', body),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['orders'] }),
   });
 
-  const invalidate = () => {
-    void queryClient.invalidateQueries({ queryKey: ['orders'] });
-    void queryClient.invalidateQueries({ queryKey: ['results'] });
-  };
-
-  const place = useMutation({ mutationFn: (body: unknown) => client.post('/api/v1/orders', body), onSuccess: invalidate });
-  const fileResult = useMutation({
-    mutationFn: ({ orderId, body }: { orderId: string; body: unknown }) =>
-      client.post(`/api/v1/orders/${encodeURIComponent(orderId)}/results`, body),
-    onSuccess: () => { invalidate(); setResultFor(undefined); },
-  });
-
-  function submitOrder(event: FormEvent<HTMLFormElement>) {
+  function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     place.mutate({
@@ -55,26 +43,6 @@ export function OrdersPanel({ client, patientId }: { client: ApiClient; patientI
       clinicalNote: String(form.get('clinicalNote') ?? '') || null,
     });
     event.currentTarget.reset();
-  }
-
-  function submitResult(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!resultFor) return;
-    const form = new FormData(event.currentTarget);
-    const numeric = String(form.get('numericValue') ?? '').trim();
-    fileResult.mutate({
-      orderId: resultFor.id,
-      body: {
-        patientId, performerId: practitionerId, issuedAt: new Date().toISOString(),
-        measurements: [{
-          codeSystem: LOINC, code: resultFor.code, display: resultFor.display,
-          numericValue: numeric === '' ? null : Number(numeric),
-          unit: String(form.get('unit') ?? '') || null,
-          textValue: String(form.get('textValue') ?? '') || null,
-        }],
-        conclusion: String(form.get('conclusion') ?? '') || null,
-      },
-    });
   }
 
   return (
@@ -88,43 +56,13 @@ export function OrdersPanel({ client, patientId }: { client: ApiClient; patientI
             { header: t('table.order'), cell: row => <span className="primary-cell">{row.display}</span> },
             { header: t('table.category'), cell: row => row.category },
             { header: t('table.priority'), cell: row => <StatusBadge status={row.priority} /> },
-            { header: t('table.status'), cell: row => <StatusBadge status={row.status} /> },
-            { header: t('table.actions'), align: 'end', cell: row => row.status === 'completed' ? null
-              : <Button className="quiet-button" onClick={() => setResultFor(row)}>{t('orders.fileResult')}</Button> },
-          ]} />
-      </Panel>
-
-      {resultFor ? (
-        <Panel title={t('orders.resultTitle', { order: resultFor.display })}>
-          <form onSubmit={submitResult}>
-            <div className="form-grid">
-              <Field label={t('clinical.value')}>{id => <input id={id} name="numericValue" type="number" step="any" />}</Field>
-              <Field label={t('clinical.unit')}>{id => <input id={id} name="unit" />}</Field>
-              <Field label={t('orders.textValue')}>{id => <input id={id} name="textValue" />}</Field>
-              <Field label={t('orders.conclusion')}>{id => <input id={id} name="conclusion" />}</Field>
-            </div>
-            <div className="form-actions">
-              <Button type="submit" disabled={!ready || fileResult.isPending}>{t('common.save')}</Button>
-              <Button className="quiet-button" onClick={() => setResultFor(undefined)}>{t('common.cancel')}</Button>
-            </div>
-          </form>
-          <ErrorNotice error={fileResult.error} />
-        </Panel>
-      ) : null}
-
-      <Panel title={t('chart.results')}>
-        <ErrorNotice error={results.error} />
-        <DataTable caption={t('chart.results')} rows={results.data ?? []} rowKey={row => row.id} empty={t('chart.empty')}
-          columns={[
-            { header: t('table.result'), cell: row => <span className="primary-cell">{row.conclusion ?? row.id}</span> },
-            { header: t('table.observations'), align: 'end', cell: row => row.observationIds.length },
-            { header: t('table.issued'), cell: row => formatDateTime(row.issuedAt, i18n.language) },
+            { header: t('table.authored'), cell: row => formatDateTime(row.authoredOn, i18n.language) },
             { header: t('table.status'), cell: row => <StatusBadge status={row.status} /> },
           ]} />
       </Panel>
 
       <Panel title={t('orders.placeTitle')}>
-        <form onSubmit={submitOrder}>
+        <form onSubmit={submit}>
           <div className="form-grid">
             <Field label={t('orders.category')} required>
               {id => <select id={id} name="category" defaultValue="laboratory">

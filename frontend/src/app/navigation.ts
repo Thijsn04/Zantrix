@@ -1,7 +1,7 @@
 import type { CurrentUser } from '../lib/api/types';
 import { can, type Capability } from '../lib/roles';
 
-export type WorkspacePage = 'home' | 'patients' | 'schedule' | 'tasks' | 'admin' | 'privacy';
+export type WorkspacePage = 'home' | 'patients' | 'tasks' | 'admin' | 'privacy';
 
 interface NavigationItem {
   page: WorkspacePage;
@@ -10,10 +10,11 @@ interface NavigationItem {
   capability?: Capability;
 }
 
+// Appointments, notes, results and the rest are sections of a patient's chart,
+// not separate destinations: they only make sense once a patient is in context.
 const ITEMS: NavigationItem[] = [
   { page: 'home', labelKey: 'navigation.home' },
   { page: 'patients', labelKey: 'navigation.patients', capability: 'patients' },
-  { page: 'schedule', labelKey: 'navigation.schedule', capability: 'scheduling' },
   { page: 'tasks', labelKey: 'navigation.tasks', capability: 'tasks' },
   { page: 'admin', labelKey: 'navigation.admin', capability: 'administration' },
   { page: 'privacy', labelKey: 'navigation.privacy', capability: 'privacy' },

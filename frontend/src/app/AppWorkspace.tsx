@@ -9,9 +9,7 @@ import { landingPage, navigationFor, type WorkspacePage } from './navigation';
 import { can, primaryRole } from '../lib/roles';
 import type { CurrentUser, PatientSummary } from '../lib/api/types';
 import { RoleDashboard } from '../features/home/RoleDashboard';
-import { PatientRegistry } from '../features/patients/PatientRegistry';
-import { PatientChart } from '../features/chart/PatientChart';
-import { AppointmentDesk } from '../features/schedule/AppointmentDesk';
+import { MAX_OPEN_PATIENTS, PatientWorkspace } from '../features/patients/PatientWorkspace';
 import { Worklist } from '../features/worklist/Worklist';
 import { Administration } from '../features/admin/Administration';
 import { PrivacyOffice } from '../features/privacy/PrivacyOffice';
@@ -29,7 +27,9 @@ function Workspace({ accessToken, onSignOut }: { accessToken: string; onSignOut:
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [dark, setDark] = useState(() => localStorage.getItem('zantrix-theme') === 'dark');
   const [page, setPage] = useState<WorkspacePage>();
-  const [patient, setPatient] = useState<PatientSummary>();
+  const [openPatients, setOpenPatients] = useState<PatientSummary[]>([]);
+  const [activePatientId, setActivePatientId] = useState<string>();
+  const [limitReached, setLimitReached] = useState(false);
   const client = useMemo(() => new ApiClient(accessToken), [accessToken]);
   const session = useQuery({ queryKey: ['current-user'], queryFn: ({ signal }) => client.currentUser(signal) });
   const user = session.data;
@@ -54,6 +54,35 @@ function Workspace({ accessToken, onSignOut }: { accessToken: string; onSignOut:
   // Until the user explicitly navigates, the page is derived from their role
   // rather than stored, so no effect has to synchronize it after the session loads.
   const current = page ?? landingPage(user);
+
+  /**
+   * Opening a third chart is refused rather than silently closing one. Losing
+   * track of which patient is in context is the classic wrong-patient error,
+   * so the clinician has to decide what to close.
+   */
+  function openPatient(patient: PatientSummary) {
+    setPage('patients');
+    if (openPatients.some(candidate => candidate.id === patient.id)) {
+      setActivePatientId(patient.id);
+      setLimitReached(false);
+      return;
+    }
+    if (openPatients.length >= MAX_OPEN_PATIENTS) {
+      setActivePatientId(undefined);
+      setLimitReached(true);
+      return;
+    }
+    setOpenPatients([...openPatients, patient]);
+    setActivePatientId(patient.id);
+    setLimitReached(false);
+  }
+
+  function closePatient(id: string) {
+    const remaining = openPatients.filter(candidate => candidate.id !== id);
+    setOpenPatients(remaining);
+    setLimitReached(false);
+    if (activePatientId === id) setActivePatientId(remaining[0]?.id);
+  }
 
   return (
     <div className="app-shell">
@@ -87,8 +116,10 @@ function Workspace({ accessToken, onSignOut }: { accessToken: string; onSignOut:
           {session.isLoading ? <Panel title={t('common.loading')} level={1}><span /></Panel> : null}
           {session.isError ? <Notice tone="danger">{t('session.profileUnavailable')}</Notice> : null}
           {user ? (
-            <WorkspacePageView client={client} user={user} page={current} patient={patient}
-              onNavigate={setPage} onSelectPatient={setPatient} />
+            <WorkspacePageView client={client} user={user} page={current}
+              openPatients={openPatients} activePatientId={activePatientId} limitReached={limitReached}
+              onNavigate={setPage} onOpenPatient={openPatient} onActivatePatient={setActivePatientId}
+              onClosePatient={closePatient} onSearchPatients={() => { setActivePatientId(undefined); setLimitReached(false); }} />
           ) : null}
         </main>
       </div>
@@ -96,35 +127,44 @@ function Workspace({ accessToken, onSignOut }: { accessToken: string; onSignOut:
       {paletteOpen ? (
         <CommandPalette onClose={() => setPaletteOpen(false)} onSignOut={onSignOut}
           destinations={navigation} onNavigate={destination => setPage(destination)}
-          patient={patient} onClearPatient={() => setPatient(undefined)} />
+          openPatients={openPatients} activePatientId={activePatientId}
+          onActivatePatient={id => { setPage('patients'); setActivePatientId(id); }}
+          onClosePatient={closePatient} />
       ) : null}
     </div>
   );
 }
 
-function WorkspacePageView({ client, user, page, patient, onNavigate, onSelectPatient }: {
+function WorkspacePageView({
+  client, user, page, openPatients, activePatientId, limitReached,
+  onNavigate, onOpenPatient, onActivatePatient, onClosePatient, onSearchPatients,
+}: {
   client: ApiClient;
   user: CurrentUser;
   page: WorkspacePage;
-  patient?: PatientSummary;
+  openPatients: PatientSummary[];
+  activePatientId?: string;
+  limitReached: boolean;
   onNavigate: (page: WorkspacePage) => void;
-  onSelectPatient: (patient?: PatientSummary) => void;
+  onOpenPatient: (patient: PatientSummary) => void;
+  onActivatePatient: (id: string) => void;
+  onClosePatient: (id: string) => void;
+  onSearchPatients: () => void;
 }) {
   const { t } = useTranslation();
+  const activePatient = openPatients.find(candidate => candidate.id === activePatientId);
 
   if (page === 'patients') {
     if (!can(user, 'patients')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
-    return patient
-      ? <PatientChart client={client} patient={patient} user={user} onClear={() => onSelectPatient(undefined)} />
-      : <PatientRegistry client={client} onSelect={onSelectPatient} />;
-  }
-  if (page === 'schedule') {
-    if (!can(user, 'scheduling')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
-    return <AppointmentDesk client={client} patient={patient} canManageSchedules={can(user, 'manageSchedules')} />;
+    return (
+      <PatientWorkspace client={client} user={user} openPatients={openPatients} activeId={activePatientId}
+        limitReached={limitReached} onOpen={onOpenPatient} onActivate={onActivatePatient}
+        onClose={onClosePatient} onSearch={onSearchPatients} />
+    );
   }
   if (page === 'tasks') {
     if (!can(user, 'tasks')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
-    return <Worklist client={client} user={user} patient={patient} />;
+    return <Worklist client={client} user={user} patient={activePatient} />;
   }
   if (page === 'admin') {
     if (!can(user, 'administration')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
@@ -134,5 +174,5 @@ function WorkspacePageView({ client, user, page, patient, onNavigate, onSelectPa
     if (!can(user, 'privacy')) return <Notice tone="warning">{t('common.notPermitted')}</Notice>;
     return <PrivacyOffice client={client} />;
   }
-  return <RoleDashboard client={client} user={user} patient={patient} onNavigate={onNavigate} />;
+  return <RoleDashboard client={client} user={user} patient={activePatient} onNavigate={onNavigate} />;
 }

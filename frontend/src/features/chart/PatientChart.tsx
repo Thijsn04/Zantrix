@@ -6,6 +6,7 @@ import { can } from '../../lib/roles';
 import { Tabs, type TabDefinition } from '../../design/Tabs';
 import { Storyboard } from '../patients/Storyboard';
 import { Snapshot } from '../patients/Snapshot';
+import { AppointmentDesk } from '../schedule/AppointmentDesk';
 import { ClinicalContextBar, ClinicalContextProvider } from './ClinicalContext';
 import { EncountersPanel } from './EncountersPanel';
 import { ProblemsPanel } from './ProblemsPanel';
@@ -13,16 +14,22 @@ import { AllergiesPanel } from './AllergiesPanel';
 import { MedicationsPanel } from './MedicationsPanel';
 import { VitalsPanel } from './VitalsPanel';
 import { OrdersPanel } from './OrdersPanel';
+import { ResultsPanel } from './ResultsPanel';
 import { NotesPanel } from './NotesPanel';
 
-type ChartTab = 'snapshot' | 'encounters' | 'problems' | 'allergies' | 'medications' | 'vitals' | 'orders' | 'notes';
+type ChartTab =
+  | 'snapshot' | 'appointments' | 'encounters' | 'problems' | 'allergies'
+  | 'medications' | 'vitals' | 'orders' | 'results' | 'notes';
 
 /**
- * The patient chart: a persistent storyboard beside the active workspace.
+ * The patient chart: a persistent storyboard beside the patient's sections.
  *
- * Which tabs exist depends on the user's role, matching what the backend will
- * authorize. A pharmacist never reaches this screen because they cannot read
- * the patient directory at all.
+ * Everything about one patient lives here as a section of their chart,
+ * including their appointments, rather than in a separate area that would
+ * need the patient selected all over again.
+ *
+ * Which sections exist depends on the user's role, matching what the backend
+ * will authorize.
  */
 export function PatientChart({ client, patient, user, onClear }: {
   client: ApiClient; patient: PatientSummary; user?: CurrentUser; onClear: () => void;
@@ -33,11 +40,11 @@ export function PatientChart({ client, patient, user, onClear }: {
   const canChart = can(user, 'chart');
   const canOrders = can(user, 'orders');
   const canMedications = can(user, 'medications');
-  const canPrescribe = can(user, 'prescribe');
-  const canDispense = can(user, 'dispense');
+  const canScheduling = can(user, 'scheduling');
 
   const tabs: TabDefinition<ChartTab>[] = [
     { id: 'snapshot', label: t('chart.snapshot') },
+    ...(canScheduling ? [{ id: 'appointments' as const, label: t('chart.appointments') }] : []),
     ...(canChart ? [
       { id: 'encounters' as const, label: t('chart.encounters') },
       { id: 'problems' as const, label: t('chart.problems') },
@@ -45,29 +52,39 @@ export function PatientChart({ client, patient, user, onClear }: {
     ] : []),
     ...(canMedications ? [{ id: 'medications' as const, label: t('chart.medications') }] : []),
     ...(canChart ? [{ id: 'vitals' as const, label: t('chart.vitals') }] : []),
-    ...(canOrders ? [{ id: 'orders' as const, label: t('chart.orders') }] : []),
+    ...(canOrders ? [
+      { id: 'orders' as const, label: t('chart.orders') },
+      { id: 'results' as const, label: t('chart.results') },
+    ] : []),
     ...(canChart ? [{ id: 'notes' as const, label: t('chart.notes') }] : []),
   ];
+
+  // A role change can remove the selected section; fall back to the snapshot.
+  const active = tabs.some(definition => definition.id === tab) ? tab : 'snapshot';
 
   return (
     <ClinicalContextProvider>
       <div className="chart-layout">
         <Storyboard client={client} patient={patient} onClear={onClear}
-          canSeeChart={canChart} canSeeScheduling={can(user, 'scheduling')} />
+          canSeeChart={canChart} canSeeScheduling={canScheduling} />
         <div>
           {canChart ? <ClinicalContextBar client={client} patientId={patient.id} /> : null}
-          <Tabs label={t('chart.tablist')} tabs={tabs} active={tab} onChange={setTab}>
-            {tab === 'snapshot' ? <Snapshot client={client} patient={patient} canPrescribe={canMedications} /> : null}
-            {tab === 'encounters' ? <EncountersPanel client={client} patientId={patient.id} /> : null}
-            {tab === 'problems' ? <ProblemsPanel client={client} patientId={patient.id} /> : null}
-            {tab === 'allergies' ? <AllergiesPanel client={client} patientId={patient.id} /> : null}
-            {tab === 'medications' ? (
-              <MedicationsPanel client={client} patientId={patient.id}
-                canPrescribe={canPrescribe} canDispense={canDispense} />
+          <Tabs label={t('chart.tablist')} tabs={tabs} active={active} onChange={setTab}>
+            {active === 'snapshot' ? <Snapshot client={client} patient={patient} canPrescribe={canMedications} /> : null}
+            {active === 'appointments' ? (
+              <AppointmentDesk client={client} patient={patient} canManageSchedules={can(user, 'manageSchedules')} />
             ) : null}
-            {tab === 'vitals' ? <VitalsPanel client={client} patientId={patient.id} /> : null}
-            {tab === 'orders' ? <OrdersPanel client={client} patientId={patient.id} /> : null}
-            {tab === 'notes' ? <NotesPanel client={client} patientId={patient.id} /> : null}
+            {active === 'encounters' ? <EncountersPanel client={client} patientId={patient.id} /> : null}
+            {active === 'problems' ? <ProblemsPanel client={client} patientId={patient.id} /> : null}
+            {active === 'allergies' ? <AllergiesPanel client={client} patientId={patient.id} /> : null}
+            {active === 'medications' ? (
+              <MedicationsPanel client={client} patientId={patient.id}
+                canPrescribe={can(user, 'prescribe')} canDispense={can(user, 'dispense')} />
+            ) : null}
+            {active === 'vitals' ? <VitalsPanel client={client} patientId={patient.id} /> : null}
+            {active === 'orders' ? <OrdersPanel client={client} patientId={patient.id} /> : null}
+            {active === 'results' ? <ResultsPanel client={client} patientId={patient.id} /> : null}
+            {active === 'notes' ? <NotesPanel client={client} patientId={patient.id} /> : null}
           </Tabs>
         </div>
       </div>
