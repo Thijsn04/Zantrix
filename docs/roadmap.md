@@ -22,7 +22,7 @@ The following is present in this repository:
 - The React workspace exposes the delivered clinical paths with patient context, role-aware navigation, internationalized copy, responsive themes, explicit error states, and browser-tested OIDC login and patient registration.
 - CI builds and tests the backend, verifies Modulith boundaries, runs real PostgreSQL and HAPI integration tests, lints/tests/builds the frontend, runs the complete Compose browser flow, audits production npm dependencies, reviews pull-request dependencies, and enforces house style.
 
-The frontend delivery sequence, from the current workspace to the full module vision, is planned in the [frontend delivery plan](architecture/frontend-plan.md). That document is design and sequencing only. This roadmap remains the source of truth for what is actually delivered.
+The frontend delivery sequence is planned in the [frontend delivery plan](architecture/frontend-plan.md), and the [implementation plan](implementation-plan.md) breaks the remaining capabilities into executable work packages. Both are design and sequencing only. This roadmap remains the source of truth for what is actually delivered.
 
 ## Milestones
 

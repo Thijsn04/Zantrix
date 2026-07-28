@@ -17,7 +17,7 @@ It is a plan. Nothing here should be read as delivered. The [roadmap](../roadmap
 | Results reach the patient after clinician review by default, configurable per deployment | [ADR 0017](decisions/0017-results-release-policy.md) |
 | A portal user may act for another person under a provider established relationship | [ADR 0018](decisions/0018-proxy-access.md) |
 
-The complete inventory of screens both surfaces will contain is in [frontend screens](frontend-screens.md).
+The complete inventory of screens both surfaces will contain is in [frontend screens](frontend-screens.md). How those screens and the backend capability under them are actually broken into work is in the [implementation plan](../implementation-plan.md).
 
 Earlier decisions that continue to bind this plan are [ADR 0004](decisions/0004-frontend-application-shell.md) on the application shell and [ADR 0005](decisions/0005-english-first-with-i18n.md) on English first internationalization.
 
