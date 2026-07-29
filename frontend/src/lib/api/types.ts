@@ -202,6 +202,21 @@ export interface ImmunizationSummary {
   statusReason: string | null;
 }
 
+export interface CoverageSummary {
+  id: string;
+  patientId: string;
+  status: string | null;
+  typeCode: string;
+  type: string;
+  payor: string | null;
+  payorOrganizationId: string | null;
+  relationship: string | null;
+  subscriberId: string | null;
+  groupNumber: string | null;
+  start: string | null;
+  end: string | null;
+}
+
 export interface TaskSummary {
   id: string;
   patientId: string;

@@ -78,7 +78,7 @@ const resources = {
       chart: {
         snapshot: 'Snapshot', appointments: 'Appointments', encounters: 'Encounters', problems: 'Problems', allergies: 'Allergies',
         medications: 'Medications', vitals: 'Vitals', orders: 'Orders', results: 'Results', notes: 'Notes',
-        immunizations: 'Immunizations', consent: 'Consent', identity: 'Identity',
+        immunizations: 'Immunizations', coverage: 'Coverage', consent: 'Consent', identity: 'Identity',
         empty: 'No records found.', tablist: 'Patient chart sections',
         showResolved: 'Show resolved', hideResolved: 'Hide resolved',
       },
@@ -156,6 +156,18 @@ const resources = {
         permanentNote: 'A recorded vaccination is never deleted. A mistake is corrected by marking it entered in error.',
         markError: 'Entered in error', correctionPrompt: 'Why is this vaccination being marked entered in error?',
         showCorrected: 'Show corrected', hideCorrected: 'Hide corrected',
+      },
+      coverage: {
+        none: 'No coverage recorded.', payor: 'Payer', payorId: 'Payer organization ID',
+        payorIdHint: 'The Organization record for the payer, from the administration directory.',
+        kind: 'Coverage type', policy: 'Policy number', group: 'Group number', relationship: 'Relationship',
+        from: 'From', until: 'Until', untilHint: 'Leave empty for coverage without an end date.',
+        openEnded: 'No end date', add: 'Record coverage', cancel: 'End coverage',
+        addTitle: 'Record coverage', addSubtitle: 'What the patient holds, as told to the clinic.',
+        showCancelled: 'Show ended', hideCancelled: 'Hide ended',
+        notEligibility: 'This is what the patient reports holding. It is not an eligibility check and does not confirm that treatment will be paid for.',
+        type: { health: 'Health insurance', public: 'Public healthcare', subsidised: 'Subsidised', selfPay: 'Self pay' },
+        relation: { self: 'Self', spouse: 'Spouse', child: 'Child', parent: 'Parent', common: 'Common law partner', other: 'Other' },
       },
       consent: {
         title: 'Consent', subtitle: 'Consent is enforced at the data boundary, so this changes what clinicians can read.',

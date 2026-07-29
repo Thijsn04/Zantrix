@@ -32,6 +32,8 @@ export const CAPABILITIES = {
   manageSchedules: ['ADMIN'],
   // WorkflowController: PHYSICIAN, NURSE, PHARMACIST, ADMIN, PRIVACY_OFFICER
   tasks: ['PHYSICIAN', 'NURSE', 'PHARMACIST', 'ADMIN', 'PRIVACY_OFFICER'],
+  // CoverageController: PHYSICIAN, NURSE, ADMIN
+  coverage: ['PHYSICIAN', 'NURSE', 'ADMIN'],
   // ConsentController: PHYSICIAN, PRIVACY_OFFICER
   consents: ['PHYSICIAN', 'PRIVACY_OFFICER'],
   // AuditController and EmergencyAccessReviewController: PRIVACY_OFFICER

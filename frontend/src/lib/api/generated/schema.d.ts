@@ -91,9 +91,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_10"];
+        get: operations["list_11"];
         put?: never;
-        post: operations["add_1"];
+        post: operations["add_2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -123,7 +123,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_9"];
+        get: operations["list_10"];
         put?: never;
         post: operations["book"];
         delete?: never;
@@ -205,7 +205,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["cancel_1"];
+        post: operations["cancel_2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -267,7 +267,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_8"];
+        get: operations["list_9"];
         put?: never;
         post: operations["create_3"];
         delete?: never;
@@ -286,6 +286,38 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["revoke"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/coverage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_8"];
+        put?: never;
+        post: operations["add_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/coverage/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["cancel_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1148,6 +1180,36 @@ export interface components {
             status?: string;
             type?: string;
         };
+        CoverageRequest: {
+            /** Format: date */
+            end?: string;
+            groupNumber?: string;
+            patientId: string;
+            payorDisplay: string;
+            payorOrganizationId: string;
+            relationship: string;
+            /** Format: date */
+            start: string;
+            subscriberId: string;
+            typeCode: string;
+            typeDisplay: string;
+        };
+        CoverageSummary: {
+            /** Format: date */
+            end?: string;
+            groupNumber?: string;
+            id?: string;
+            patientId?: string;
+            payor?: string;
+            payorOrganizationId?: string;
+            relationship?: string;
+            /** Format: date */
+            start?: string;
+            status?: string;
+            subscriberId?: string;
+            type?: string;
+            typeCode?: string;
+        };
         CurrentUser: {
             displayName?: string;
             roles?: string[];
@@ -1813,7 +1875,7 @@ export interface operations {
             };
         };
     };
-    list_10: {
+    list_11: {
         parameters: {
             query: {
                 patientId: string;
@@ -1836,7 +1898,7 @@ export interface operations {
             };
         };
     };
-    add_1: {
+    add_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -1885,7 +1947,7 @@ export interface operations {
             };
         };
     };
-    list_9: {
+    list_10: {
         parameters: {
             query: {
                 patientId: string;
@@ -2028,7 +2090,7 @@ export interface operations {
             };
         };
     };
-    cancel_1: {
+    cancel_2: {
         parameters: {
             query: {
                 patientId: string;
@@ -2125,7 +2187,7 @@ export interface operations {
             };
         };
     };
-    list_8: {
+    list_9: {
         parameters: {
             query: {
                 patientId: string;
@@ -2191,6 +2253,77 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ConsentSummary"];
+                };
+            };
+        };
+    };
+    list_8: {
+        parameters: {
+            query: {
+                patientId: string;
+                includeCancelled?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CoverageSummary"][];
+                };
+            };
+        };
+    };
+    add_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CoverageRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CoverageSummary"];
+                };
+            };
+        };
+    };
+    cancel_1: {
+        parameters: {
+            query: {
+                patientId: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CoverageSummary"];
                 };
             };
         };

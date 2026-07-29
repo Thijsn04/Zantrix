@@ -277,6 +277,87 @@
         },
         "type" : "object"
       },
+      "CoverageRequest" : {
+        "properties" : {
+          "end" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "groupNumber" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "payorDisplay" : {
+            "type" : "string"
+          },
+          "payorOrganizationId" : {
+            "type" : "string"
+          },
+          "relationship" : {
+            "type" : "string"
+          },
+          "start" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "subscriberId" : {
+            "type" : "string"
+          },
+          "typeCode" : {
+            "type" : "string"
+          },
+          "typeDisplay" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "patientId", "payorDisplay", "payorOrganizationId", "relationship", "start", "subscriberId", "typeCode", "typeDisplay" ],
+        "type" : "object"
+      },
+      "CoverageSummary" : {
+        "properties" : {
+          "end" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "groupNumber" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "payor" : {
+            "type" : "string"
+          },
+          "payorOrganizationId" : {
+            "type" : "string"
+          },
+          "relationship" : {
+            "type" : "string"
+          },
+          "start" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "subscriberId" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "typeCode" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "CurrentUser" : {
         "properties" : {
           "displayName" : {
@@ -1850,7 +1931,7 @@
     },
     "/api/v1/allergies" : {
       "get" : {
-        "operationId" : "list_10",
+        "operationId" : "list_11",
         "parameters" : [ {
           "in" : "query",
           "name" : "patientId",
@@ -1885,7 +1966,7 @@
         "tags" : [ "allergy-controller" ]
       },
       "post" : {
-        "operationId" : "add_1",
+        "operationId" : "add_2",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -1954,7 +2035,7 @@
     },
     "/api/v1/appointments" : {
       "get" : {
-        "operationId" : "list_9",
+        "operationId" : "list_10",
         "parameters" : [ {
           "in" : "query",
           "name" : "patientId",
@@ -2170,7 +2251,7 @@
     },
     "/api/v1/appointments/{id}/cancel" : {
       "post" : {
-        "operationId" : "cancel_1",
+        "operationId" : "cancel_2",
         "parameters" : [ {
           "in" : "path",
           "name" : "id",
@@ -2335,7 +2416,7 @@
     },
     "/api/v1/consents" : {
       "get" : {
-        "operationId" : "list_8",
+        "operationId" : "list_9",
         "parameters" : [ {
           "in" : "query",
           "name" : "patientId",
@@ -2419,6 +2500,102 @@
           }
         },
         "tags" : [ "consent-controller" ]
+      }
+    },
+    "/api/v1/coverage" : {
+      "get" : {
+        "operationId" : "list_8",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeCancelled",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/CoverageSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "coverage-controller" ]
+      },
+      "post" : {
+        "operationId" : "add_1",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CoverageRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CoverageSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "coverage-controller" ]
+      }
+    },
+    "/api/v1/coverage/{id}/cancel" : {
+      "post" : {
+        "operationId" : "cancel_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CoverageSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "coverage-controller" ]
       }
     },
     "/api/v1/encounters" : {

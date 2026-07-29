@@ -132,7 +132,7 @@ Who the patient is, where they are, and when they are seen.
 - **Purpose.** Insurance and coverage records and eligibility checks. Eligibility calls to national payers are provided by regional adapter packs.
 - **Primary FHIR resources.** Coverage, CoverageEligibilityRequest, CoverageEligibilityResponse.
 - **Depends on.** Patient and MPI, Interoperability and Localization.
-- **Status.** `Planned`.
+- **Status.** `Beta` for the coverage record only. Recording, listing and ending a policy are implemented. Eligibility checking is not: no payer is contacted, and the interface states that what it shows is not a confirmation of payment.
 
 ---
 
