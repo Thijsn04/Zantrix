@@ -35,14 +35,14 @@ The authorization model is genuinely enforced, and it is genuinely too coarse fo
 
 | Missing | Consequence |
 |---|---|
-| Treatment relationship check | Any authenticated physician can open any patient's record. Roles and SMART scopes are checked; the relationship between this clinician and this patient is not |
-| Organization and location scoping | There is no notion of a clinician belonging to a unit whose patients they may see. One deployment is one undivided population |
+| ~~Treatment relationship check~~ | **Implemented.** `zantrix.access.relationship-mode` requires the clinician to work for the patient's managing organization, and optionally to have care evidence. It ships `off` for upgrade safety and warns at startup, so a deployment must still turn it on |
+| Location and unit scoping | Organization scoping now exists. Finer scoping to a ward or clinic within an organization does not |
 | Multi-tenancy | Several organizations cannot share an installation with separated data |
 | Purpose of use | Access for treatment, billing, research and quality improvement are indistinguishable in policy and in the audit trail |
 | Sensitive category policy | No separate handling for psychiatric, sexual health, genetic or VIP records. Break the glass exists; category based restriction does not |
 | Production identity policy | No MFA, no session or password policy, no federation. The realm in the repository is development only |
 
-The first two are what make the difference between a demonstrable system and a deployable one. [Security and privacy](architecture/security-and-privacy.md) already names them as required before broader use.
+Relationship enforcement is now built, and turning it on is a deployment decision that also requires the practitioner and patient directory data to be populated. Multi-tenancy, purpose of use and sensitive categories remain absent. [Security and privacy](architecture/security-and-privacy.md) describes the model.
 
 ## 3. Blocking: the record cannot leave the system
 

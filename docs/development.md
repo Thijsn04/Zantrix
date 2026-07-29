@@ -110,7 +110,7 @@ It signs in through the real Keycloak realm, registers a patient through the rea
 
 ## Runtime configuration
 
-Backend configuration is environment driven. The main overrides are `ZANTRIX_FHIR_BASE_URL`, `ZANTRIX_TERMINOLOGY_BASE_URL`, `ZANTRIX_RXNORM_BASE_URL`, `ZANTRIX_OIDC_ISSUER_URI`, `ZANTRIX_OIDC_JWK_SET_URI`, `ZANTRIX_CORS_ALLOWED_ORIGINS`, and `ZANTRIX_CONSENT_MODE`. The issuer must equal the `iss` claim seen by clients; the JWK URL may use a private network address.
+Backend configuration is environment driven. The main overrides are `ZANTRIX_FHIR_BASE_URL`, `ZANTRIX_TERMINOLOGY_BASE_URL`, `ZANTRIX_RXNORM_BASE_URL`, `ZANTRIX_OIDC_ISSUER_URI`, `ZANTRIX_OIDC_JWK_SET_URI`, `ZANTRIX_CORS_ALLOWED_ORIGINS`, `ZANTRIX_CONSENT_MODE`, and `ZANTRIX_RELATIONSHIP_MODE`. The issuer must equal the `iss` claim seen by clients; the JWK URL may use a private network address.
 
 ## Coding standards
 

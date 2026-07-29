@@ -51,6 +51,12 @@ zantrix:
     # Snowstorm FHIR R4 terminology endpoint. Licensed content is imported by
     # each deployment and is not distributed with Zantrix.
     base-url: ${ZANTRIX_TERMINOLOGY_BASE_URL:http://localhost:8082/fhir}
+  access:
+    # off, organization, or care-relationship. `off` lets any authenticated
+    # clinician open any patient record and is not acceptable for real clinical
+    # use; the application warns at startup when it is left there.
+    relationship-mode: ${ZANTRIX_RELATIONSHIP_MODE:off}
+
   privacy:
     # deny-on-explicit is jurisdiction-neutral. Deployments that require a
     # positive consent before every access can select require-active.

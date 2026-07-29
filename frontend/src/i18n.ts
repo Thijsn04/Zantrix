@@ -65,6 +65,8 @@ const resources = {
         gender: 'Administrative gender', unknown: 'Unknown', female: 'Female', male: 'Male', other: 'Other',
         email: 'Email', phone: 'Phone', identifier: 'Local medical record number',
         identifierHint: 'Optional. Recorded as a local MRN identifier.',
+        managingOrganization: 'Managing organization',
+        managingOrganizationHint: 'Which organization holds this record. Access control uses it, so a record without one is unreachable once relationship enforcement is on.',
         checkDuplicates: 'Check for duplicates', register: 'Register patient',
         registerAnyway: 'Not a duplicate, register',
         duplicateWarning: 'Found {{count}} possible existing record(s). Review before registering.',

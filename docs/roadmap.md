@@ -99,6 +99,7 @@ This table is the single source of truth for status and is updated as work lands
 | Immunizations, vaccination history slice | 2 | Beta |
 | Coverage record, without eligibility checking | 2 | Beta |
 | Care team and goals, without CarePlan | 2 | Beta |
+| Treatment relationship enforcement | 1 | Beta, off by default |
 | Everything else | 2+ | Planned |
 
 A complete account of what still stands between this system and real clinical use, including the parts that are not software, is in [production readiness](production-readiness.md).

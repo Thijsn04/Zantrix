@@ -45,6 +45,6 @@ class DuplicateScorerTest {
 
     private static PatientRegistration candidate(String identifier) {
         return new PatientRegistration("Anne-Marie", "Diaz Smith", LocalDate.of(2000, 2, 3),
-                "female", "anne@example.org", null, identifier == null ? null : "urn:mrn", identifier, false);
+                "female", "anne@example.org", null, identifier == null ? null : "urn:mrn", identifier, null, false);
     }
 }

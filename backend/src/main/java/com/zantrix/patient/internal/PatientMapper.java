@@ -35,6 +35,12 @@ final class PatientMapper {
             patient.addIdentifier(new Identifier().setSystem(request.identifierSystem())
                     .setValue(request.identifierValue()));
         }
+        if (request.managingOrganizationId() != null && !request.managingOrganizationId().isBlank()) {
+            // Recorded at registration because the treatment relationship policy
+            // resolves access from it, and it cannot be inferred afterwards.
+            patient.setManagingOrganization(
+                    new org.hl7.fhir.r4.model.Reference("Organization/" + request.managingOrganizationId()));
+        }
         return patient;
     }
 

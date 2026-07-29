@@ -59,6 +59,9 @@ export function PatientRegistry({ client, onSelect }: { client: ApiClient; onSel
       phone: String(form.get('phone') ?? '').trim() || null,
       identifierSystem: identifierValue ? IDENTIFIER_SYSTEM : null,
       identifierValue: identifierValue || null,
+      // Recorded here because the treatment relationship policy resolves access
+      // from it, and it cannot be inferred once the record exists.
+      managingOrganizationId: String(form.get('managingOrganizationId') ?? '').trim() || null,
       confirmedUnique: false,
     };
     setDraft(registration);
@@ -116,6 +119,10 @@ export function PatientRegistry({ client, onSelect }: { client: ApiClient; onSel
             <Field label={t('patients.phone')}>{id => <input id={id} name="phone" defaultValue={draft?.phone ?? ''} />}</Field>
             <Field label={t('patients.identifier')} hint={t('patients.identifierHint')}>
               {(id, describedBy) => <input id={id} name="identifierValue" aria-describedby={describedBy} defaultValue={draft?.identifierValue ?? ''} />}
+            </Field>
+            <Field label={t('patients.managingOrganization')} hint={t('patients.managingOrganizationHint')}>
+              {(id, describedBy) => <input id={id} name="managingOrganizationId" aria-describedby={describedBy}
+                defaultValue={draft?.managingOrganizationId ?? ''} />}
             </Field>
           </div>
           <div className="form-actions">

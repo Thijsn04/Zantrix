@@ -30,16 +30,18 @@ class FhirAccessGatewayImpl implements FhirAccessGateway {
     private final FhirTransport transport;
     private final FhirAccessPolicy accessPolicy;
     private final FhirConsentPolicy consentPolicy;
+    private final FhirRelationshipPolicy relationshipPolicy;
     private final AuditRecorder auditRecorder;
     private final FhirMutationJournal mutationJournal;
     private final EmergencyAccessReviewRecorder emergencyReviews;
 
     FhirAccessGatewayImpl(FhirTransport transport, FhirAccessPolicy accessPolicy, FhirConsentPolicy consentPolicy,
-                          AuditRecorder auditRecorder, FhirMutationJournal mutationJournal,
-                          EmergencyAccessReviewRecorder emergencyReviews) {
+                          FhirRelationshipPolicy relationshipPolicy, AuditRecorder auditRecorder,
+                          FhirMutationJournal mutationJournal, EmergencyAccessReviewRecorder emergencyReviews) {
         this.transport = transport;
         this.accessPolicy = accessPolicy;
         this.consentPolicy = consentPolicy;
+        this.relationshipPolicy = relationshipPolicy;
         this.auditRecorder = auditRecorder;
         this.mutationJournal = mutationJournal;
         this.emergencyReviews = emergencyReviews;
@@ -101,6 +103,7 @@ class FhirAccessGatewayImpl implements FhirAccessGateway {
                 default -> throw new IllegalArgumentException("Unsupported transaction method: " + method);
             };
             accessPolicy.authorize(operation, type, id, patientId);
+            relationshipPolicy.authorize(type, patientId);
             consentPolicy.authorize(type, patientId);
             resourceTypes.add(type);
         }
@@ -142,6 +145,7 @@ class FhirAccessGatewayImpl implements FhirAccessGateway {
         T result;
         try {
             accessPolicy.authorize(operation, resourceType, resourceId, patientId);
+            relationshipPolicy.authorize(resourceType, patientId);
             consentPolicy.authorize(resourceType, patientId);
             emergencyReviews.record(resourceType, resourceId, patientId);
             result = request.get();
@@ -158,6 +162,7 @@ class FhirAccessGatewayImpl implements FhirAccessGateway {
                                   Supplier<T> request, Function<T, String> auditedId) {
         try {
             accessPolicy.authorize(operation, resourceType, resourceId, patientId);
+            relationshipPolicy.authorize(resourceType, patientId);
             consentPolicy.authorize(resourceType, patientId);
             emergencyReviews.record(resourceType, resourceId, patientId);
         } catch (RuntimeException failure) {

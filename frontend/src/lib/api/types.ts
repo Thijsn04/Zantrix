@@ -40,6 +40,7 @@ export interface PatientRegistration {
   phone: string | null;
   identifierSystem: string | null;
   identifierValue: string | null;
+  managingOrganizationId: string | null;
   confirmedUnique: boolean;
 }
 

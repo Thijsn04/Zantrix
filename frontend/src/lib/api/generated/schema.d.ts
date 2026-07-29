@@ -1578,6 +1578,7 @@ export interface components {
             givenName: string;
             identifierSystem?: string;
             identifierValue?: string;
+            managingOrganizationId?: string;
             phone?: string;
         };
         PatientSummary: {

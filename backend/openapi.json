@@ -1208,6 +1208,11 @@
             "minLength" : 0,
             "type" : "string"
           },
+          "managingOrganizationId" : {
+            "maxLength" : 64,
+            "minLength" : 0,
+            "type" : "string"
+          },
           "phone" : {
             "maxLength" : 64,
             "minLength" : 0,
