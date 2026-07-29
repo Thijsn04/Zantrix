@@ -9,6 +9,7 @@ import com.zantrix.administration.internal.AdministrationService;
 import com.zantrix.allergies.internal.AllergyService;
 import com.zantrix.audit.AuditQuery;
 import com.zantrix.audit.AuditTrailVerifier;
+import com.zantrix.care.internal.CareCoordinationService;
 import com.zantrix.coverage.internal.CoverageService;
 import com.zantrix.documentation.internal.DocumentationService;
 import com.zantrix.encounter.internal.EncounterService;
@@ -88,6 +89,7 @@ class OpenApiContractTest {
     @MockBean private AuditQuery auditQuery;
     @MockBean private AuditTrailVerifier auditVerifier;
     @MockBean private ConsentService consents;
+    @MockBean private CareCoordinationService care;
     @MockBean private CoverageService coverage;
     @MockBean private DocumentationService documentation;
     @MockBean private EmergencyAccessReviewRecorder emergencyReviews;

@@ -217,6 +217,31 @@ export interface CoverageSummary {
   end: string | null;
 }
 
+export interface CareTeamMember {
+  practitionerId: string;
+  roleCode: string | null;
+  roleDisplay: string | null;
+}
+
+export interface CareTeamSummary {
+  id: string;
+  patientId: string;
+  name: string;
+  status: string | null;
+  members: CareTeamMember[];
+}
+
+export interface GoalSummary {
+  id: string;
+  patientId: string;
+  description: string;
+  lifecycleStatus: string | null;
+  achievementStatus: string | null;
+  priority: string | null;
+  targetDate: string | null;
+  addressesConditionId: string | null;
+}
+
 export interface TaskSummary {
   id: string;
   patientId: string;

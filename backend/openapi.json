@@ -203,6 +203,47 @@
         },
         "type" : "object"
       },
+      "CareTeamRequest" : {
+        "properties" : {
+          "members" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Member"
+            },
+            "type" : "array"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "members", "name", "patientId" ],
+        "type" : "object"
+      },
+      "CareTeamSummary" : {
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "members" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Member"
+            },
+            "type" : "array"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "CodeValidation" : {
         "properties" : {
           "display" : {
@@ -519,6 +560,61 @@
         },
         "type" : "object"
       },
+      "GoalRequest" : {
+        "properties" : {
+          "addressesConditionId" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "priority" : {
+            "type" : "string"
+          },
+          "targetDate" : {
+            "format" : "date",
+            "type" : "string"
+          }
+        },
+        "required" : [ "description", "patientId" ],
+        "type" : "object"
+      },
+      "GoalSummary" : {
+        "properties" : {
+          "achievementStatus" : {
+            "type" : "string"
+          },
+          "addressesConditionId" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "lifecycleStatus" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "priority" : {
+            "type" : "string"
+          },
+          "targetDate" : {
+            "format" : "date",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "ImmunizationRequest" : {
         "properties" : {
           "doseNumber" : {
@@ -766,6 +862,21 @@
           }
         },
         "required" : [ "medicationDisplay", "patientId", "performerId", "rxNormIngredientCode", "status" ],
+        "type" : "object"
+      },
+      "Member" : {
+        "properties" : {
+          "practitionerId" : {
+            "type" : "string"
+          },
+          "roleCode" : {
+            "type" : "string"
+          },
+          "roleDisplay" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "practitionerId", "roleCode", "roleDisplay" ],
         "type" : "object"
       },
       "MultiValueMapStringString" : {
@@ -2412,6 +2523,197 @@
           }
         },
         "tags" : [ "audit-controller" ]
+      }
+    },
+    "/api/v1/care/goals" : {
+      "get" : {
+        "operationId" : "goals",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeClosed",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/GoalSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      },
+      "post" : {
+        "operationId" : "addGoal",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GoalRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GoalSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      }
+    },
+    "/api/v1/care/goals/{id}/close" : {
+      "post" : {
+        "operationId" : "closeGoal",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "outcome",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GoalSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      }
+    },
+    "/api/v1/care/teams" : {
+      "get" : {
+        "operationId" : "teams",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/CareTeamSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      },
+      "post" : {
+        "operationId" : "defineTeam",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CareTeamRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CareTeamSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      }
+    },
+    "/api/v1/care/teams/{id}/stand-down" : {
+      "post" : {
+        "operationId" : "standDownTeam",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CareTeamSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
       }
     },
     "/api/v1/consents" : {

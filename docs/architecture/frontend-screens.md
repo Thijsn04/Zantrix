@@ -95,6 +95,7 @@ Route shape is `/patients/:patientId/:section`. The storyboard, carrying identit
 | Notes | Draft, sign and addendum, with version history | C5 |
 | Immunizations | Vaccination history, recording a dose, and correcting an entry without removing it | C9 |
 | Coverage | Recording, listing and ending the insurance a patient holds | A5 |
+| Care plan | Goals with recorded outcomes, and the care team | C8 |
 | Consent | Recording, listing and revoking this patient's consents | P3 |
 | Identity | Merge history, merging a duplicate, and reversing a merge | A1 |
 
@@ -105,8 +106,8 @@ Route shape is `/patients/:patientId/:section`. The storyboard, carrying identit
 | Documents | Scanned and received documents, external correspondence | C5, P7 | F2 |
 | Imaging | Studies for this patient and the diagnostic viewer | D5 | F2 |
 | Flowsheets | Full flowsheet grid, intake and output, early warning scores | C6 | F4 |
-| Care plan and goals | Longitudinal plan, goals and progress | C8 | F5 |
-| Care team | Who is involved in this patient's care, and in what role | C8, P2 | F5 |
+| Care plan | Longitudinal plan over the delivered goals | C8 | F5 |
+| Care team and goals | Who is involved, and what the care works towards | C8 | Delivered |
 | Immunizations | Vaccination history, with corrections kept visible rather than deleted | C9 | Delivered |
 | Coverage | Insurance the patient holds. Not an eligibility check | A5 | Delivered |
 | Consent and privacy | This patient's consents, restrictions and sensitivity flags | P3 | Delivered |

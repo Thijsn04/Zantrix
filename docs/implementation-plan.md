@@ -64,6 +64,38 @@ Acceptance: a backend contract change fails the frontend build; every existing p
 
 The contract half of this is in place. A renamed or removed field now fails the frontend build, which was verified by reintroducing one of the three transcription errors that motivated [ADR 0011](architecture/decisions/0011-generated-api-contract.md). The remaining work is nullability on the backend records, without which the generated types cannot replace the hand written ones outright.
 
+## Capabilities that need no external system
+
+Most of the inventory waits on a subsystem that does not exist: an analyzer, a PACS, a payer, a video provider, a message broker. A meaningful part does not. These sit directly on the FHIR gateway that is already running, so they can be built now, in the vertical slice form above, without waiting for anything.
+
+This is the working queue. It is ordered by clinical value per unit of work.
+
+| Capability | What it needs | Status |
+|---|---|---|
+| Immunizations (C9) | FHIR Immunization | **Delivered** |
+| Coverage record (A5, without eligibility) | FHIR Coverage | **Delivered** |
+| Care team and goals (C8) | FHIR CareTeam, Goal | **Delivered** |
+| Care plans (C8) | FHIR CarePlan over the above | Next |
+| Record history | The gateway already exposes `_history` | Queued |
+| Clinical documentation depth (C5) | Templates, order sets, co-signing, all relational | Queued |
+| In application messaging (P8, without email or push) | FHIR Communication | Queued |
+| Questionnaires and responses (E3, staff facing) | FHIR Questionnaire, QuestionnaireResponse | Queued |
+| Inpatient admission, transfer and discharge (A2) | FHIR Encounter and Location. No external system, only workflow | Queued |
+| Bed and ward state (O1) | FHIR Location plus Encounter | Queued |
+| Flowsheets and early warning scores (C6) | FHIR Observation plus calculation | Queued, see caution |
+| Provenance for clinical authorship (P4) | FHIR Provenance | Queued |
+| Specimen and result workflow (D1, without an analyzer) | FHIR Specimen, ServiceRequest, Observation | Queued |
+| Radiology ordering and reporting (D4, without PACS) | FHIR ServiceRequest, DiagnosticReport | Queued |
+| Patient access log | The audit chain already records this | Blocked on a policy decision |
+
+Three entries carry a caveat that is not about effort:
+
+- **Early warning scores** are a published clinical algorithm. Implementing one means the software computes a number a clinician may act on, so it needs the score named, versioned and attributed in the interface, and it needs clinical sign off before it is switched on. It is engineering plus governance, like the medication safety floor in [ADR 0009](architecture/decisions/0009-transparent-medication-safety-floor.md).
+- **Laboratory and radiology without their subsystem** deliver the ordering and reporting workflow, not the department. That boundary has to be stated wherever it appears, or a deployment will assume an integration exists.
+- **The patient access log** needs no new capability, only a decision about which roles may see who accessed a record. That is a privacy policy question, not an engineering one, and it is the reason this entry is blocked rather than queued.
+
+Everything else in the inventory waits on a subsystem, an identity model, or licensed content, and is covered by the packages below.
+
 ## Capability packages
 
 Packages are grouped by the phase they belong to in the [frontend delivery plan](architecture/frontend-plan.md). Each names the backend capability it must build, because that is the part that does not exist.

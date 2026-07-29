@@ -78,7 +78,7 @@ const resources = {
       chart: {
         snapshot: 'Snapshot', appointments: 'Appointments', encounters: 'Encounters', problems: 'Problems', allergies: 'Allergies',
         medications: 'Medications', vitals: 'Vitals', orders: 'Orders', results: 'Results', notes: 'Notes',
-        immunizations: 'Immunizations', coverage: 'Coverage', consent: 'Consent', identity: 'Identity',
+        immunizations: 'Immunizations', care: 'Care plan', coverage: 'Coverage', consent: 'Consent', identity: 'Identity',
         empty: 'No records found.', tablist: 'Patient chart sections',
         showResolved: 'Show resolved', hideResolved: 'Hide resolved',
       },
@@ -156,6 +156,19 @@ const resources = {
         permanentNote: 'A recorded vaccination is never deleted. A mistake is corrected by marking it entered in error.',
         markError: 'Entered in error', correctionPrompt: 'Why is this vaccination being marked entered in error?',
         showCorrected: 'Show corrected', hideCorrected: 'Hide corrected',
+      },
+      care: {
+        goalsTitle: 'Goals', noGoals: 'No goals recorded.', goal: 'Goal', target: 'Target date',
+        targetHint: 'Optional. Cannot be in the past.', outcome: 'Outcome',
+        addresses: 'Addresses problem', addressesHint: 'Optional Condition ID this goal works on.',
+        addGoalTitle: 'Add a goal', addGoal: 'Add goal', close: 'Close goal',
+        closeTitle: 'Close: {{goal}}', closeHint: 'Record what became of this goal. It stays in the record either way.',
+        showClosed: 'Show closed', hideClosed: 'Hide closed',
+        teamTitle: 'Care team', teamSubtitle: 'Who is involved in this patient\u2019s care, and in what role.',
+        noTeams: 'No care team defined.', teamName: 'Team name', members: 'Members',
+        roleCode: 'Role code', roleDisplay: 'Role', defineTeam: 'Define team', standDown: 'Stand down',
+        priority: { 'high-priority': 'High', 'medium-priority': 'Medium', 'low-priority': 'Low' },
+        outcomeValue: { achieved: 'Achieved', 'not-achieved': 'Not achieved', 'no-longer-desired': 'No longer wanted' },
       },
       coverage: {
         none: 'No coverage recorded.', payor: 'Payer', payorId: 'Payer organization ID',

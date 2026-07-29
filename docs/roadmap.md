@@ -63,7 +63,7 @@ Goal: extend the core outward where it adds the most value.
 
 Candidates: Laboratory, Radiology and imaging, the Patient Portal, Questionnaires and PROMs, and Coverage and Eligibility with the first regional adapter pack.
 
-Immunizations and the coverage record have landed ahead of that sequence, because neither needed an external system and both sit directly on the existing FHIR gateway. Vaccination forecasting and payer eligibility checking are not included.
+Immunizations, the coverage record, and care team and goals have landed ahead of that sequence, because none needed an external system and all sit directly on the existing FHIR gateway. Vaccination forecasting, payer eligibility checking, and CarePlan itself are not included. The [implementation plan](implementation-plan.md) lists which further capabilities need no external system and can be built the same way.
 
 ### Milestone 3 and beyond: breadth
 
@@ -98,6 +98,7 @@ This table is the single source of truth for status and is updated as work lands
 | Clinical Decision Support, allergy/high-priority DDI slice | 1 | Beta |
 | Immunizations, vaccination history slice | 2 | Beta |
 | Coverage record, without eligibility checking | 2 | Beta |
+| Care team and goals, without CarePlan | 2 | Beta |
 | Everything else | 2+ | Planned |
 
 No M0/M1 capability is marked `Stable`. Reaching that status requires production deployment guidance, jurisdictional profiles and policy, performance and disaster-recovery evidence, accessibility assessment, security review, terminology edition governance, clinical safety governance, and certification where applicable.

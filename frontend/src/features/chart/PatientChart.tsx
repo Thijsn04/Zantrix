@@ -17,13 +17,14 @@ import { OrdersPanel } from './OrdersPanel';
 import { ResultsPanel } from './ResultsPanel';
 import { NotesPanel } from './NotesPanel';
 import { ImmunizationsPanel } from './ImmunizationsPanel';
+import { CarePanel } from './CarePanel';
 import { CoveragePanel } from './CoveragePanel';
 import { ConsentPanel } from './ConsentPanel';
 import { IdentityPanel } from './IdentityPanel';
 
 type ChartTab =
   | 'snapshot' | 'appointments' | 'encounters' | 'problems' | 'allergies'
-  | 'medications' | 'immunizations' | 'vitals' | 'orders' | 'results' | 'notes' | 'coverage' | 'consent' | 'identity';
+  | 'medications' | 'immunizations' | 'vitals' | 'orders' | 'results' | 'notes' | 'care' | 'coverage' | 'consent' | 'identity';
 
 /**
  * The patient chart: a persistent storyboard beside the patient's sections.
@@ -68,7 +69,10 @@ export function PatientChart({ client, patient, user, onClear }: {
       { id: 'orders' as const, label: t('chart.orders') },
       { id: 'results' as const, label: t('chart.results') },
     ] : []),
-    ...(canChart ? [{ id: 'notes' as const, label: t('chart.notes') }] : []),
+    ...(canChart ? [
+      { id: 'notes' as const, label: t('chart.notes') },
+      { id: 'care' as const, label: t('chart.care') },
+    ] : []),
     ...(canCoverage ? [{ id: 'coverage' as const, label: t('chart.coverage') }] : []),
     ...(canConsent ? [{ id: 'consent' as const, label: t('chart.consent') }] : []),
     ...(canMerge || canUnmerge ? [{ id: 'identity' as const, label: t('chart.identity') }] : []),
@@ -107,6 +111,7 @@ export function PatientChart({ client, patient, user, onClear }: {
             {active === 'orders' ? <OrdersPanel client={client} patientId={patient.id} /> : null}
             {active === 'results' ? <ResultsPanel client={client} patientId={patient.id} /> : null}
             {active === 'notes' ? <NotesPanel client={client} patientId={patient.id} /> : null}
+            {active === 'care' ? <CarePanel client={client} patientId={patient.id} /> : null}
             {active === 'coverage' ? <CoveragePanel client={client} patientId={patient.id} /> : null}
             {active === 'consent' ? <ConsentPanel client={client} patientId={patient.id} /> : null}
             {active === 'identity' ? (

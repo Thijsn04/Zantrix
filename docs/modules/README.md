@@ -186,7 +186,7 @@ The heart of the record. These capabilities are the narrow core that Zantrix mak
 - **Purpose.** Longitudinal care plans, goals, and care team coordination.
 - **Primary FHIR resources.** CarePlan, Goal, CareTeam.
 - **Depends on.** Patient and MPI, Workflow.
-- **Status.** `Planned`.
+- **Status.** `Beta` for goals and the care team. A goal is closed by recording its outcome rather than by deletion, and a team is stood down rather than removed. CarePlan itself, which would group these into a plan with activities, remains planned.
 
 ### C9. Immunizations
 - **Purpose.** Vaccination history and forecasting.

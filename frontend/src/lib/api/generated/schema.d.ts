@@ -260,6 +260,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/care/goals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["goals"];
+        put?: never;
+        post: operations["addGoal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/care/goals/{id}/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["closeGoal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/care/teams": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["teams"];
+        put?: never;
+        post: operations["defineTeam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/care/teams/{id}/stand-down": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["standDownTeam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/consents": {
         parameters: {
             query?: never;
@@ -1154,6 +1218,18 @@ export interface components {
             checkedCount?: number;
             intact?: boolean;
         };
+        CareTeamRequest: {
+            members: components["schemas"]["Member"][];
+            name: string;
+            patientId: string;
+        };
+        CareTeamSummary: {
+            id?: string;
+            members?: components["schemas"]["Member"][];
+            name?: string;
+            patientId?: string;
+            status?: string;
+        };
         CodeValidation: {
             display?: string;
             message?: string;
@@ -1268,6 +1344,26 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
+        GoalRequest: {
+            addressesConditionId?: string;
+            description: string;
+            note?: string;
+            patientId: string;
+            priority?: string;
+            /** Format: date */
+            targetDate?: string;
+        };
+        GoalSummary: {
+            achievementStatus?: string;
+            addressesConditionId?: string;
+            description?: string;
+            id?: string;
+            lifecycleStatus?: string;
+            patientId?: string;
+            priority?: string;
+            /** Format: date */
+            targetDate?: string;
+        };
         ImmunizationRequest: {
             /** Format: int32 */
             doseNumber?: number;
@@ -1358,6 +1454,11 @@ export interface components {
             performerId: string;
             rxNormIngredientCode: string;
             status: string;
+        };
+        Member: {
+            practitionerId: string;
+            roleCode: string;
+            roleDisplay: string;
         };
         MultiValueMapStringString: {
             all?: {
@@ -2183,6 +2284,148 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["AuditVerificationResult"];
+                };
+            };
+        };
+    };
+    goals: {
+        parameters: {
+            query: {
+                patientId: string;
+                includeClosed?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GoalSummary"][];
+                };
+            };
+        };
+    };
+    addGoal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GoalRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GoalSummary"];
+                };
+            };
+        };
+    };
+    closeGoal: {
+        parameters: {
+            query: {
+                patientId: string;
+                outcome: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GoalSummary"];
+                };
+            };
+        };
+    };
+    teams: {
+        parameters: {
+            query: {
+                patientId: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CareTeamSummary"][];
+                };
+            };
+        };
+    };
+    defineTeam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CareTeamRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CareTeamSummary"];
+                };
+            };
+        };
+    };
+    standDownTeam: {
+        parameters: {
+            query: {
+                patientId: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CareTeamSummary"];
                 };
             };
         };
