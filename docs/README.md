@@ -11,6 +11,7 @@ Milestones 0 and 1 are implemented at beta quality. Architecture and module docu
 - [Module vision](modules/README.md). How Zantrix is divided into capabilities and how they fit together.
 - [Roadmap](roadmap.md). What is being built now and in what order.
 - [Implementation plan](implementation-plan.md). How the remaining capabilities and screens get built.
+- [Production readiness](production-readiness.md). What still stands between this and real clinical use.
 
 ## Architecture
 

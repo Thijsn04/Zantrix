@@ -101,6 +101,8 @@ This table is the single source of truth for status and is updated as work lands
 | Care team and goals, without CarePlan | 2 | Beta |
 | Everything else | 2+ | Planned |
 
+A complete account of what still stands between this system and real clinical use, including the parts that are not software, is in [production readiness](production-readiness.md).
+
 No M0/M1 capability is marked `Stable`. Reaching that status requires production deployment guidance, jurisdictional profiles and policy, performance and disaster-recovery evidence, accessibility assessment, security review, terminology edition governance, clinical safety governance, and certification where applicable.
 
 ## How status is kept honest

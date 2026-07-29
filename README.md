@@ -21,7 +21,7 @@ Zantrix is a modern, transparent alternative to closed EHR platforms. It is buil
 
 Milestones 0 and 1 are feature complete at beta quality. The repository now provides a one-command local stack, a secured FHIR R4 facade, patient and outpatient encounter workflows, scheduling, problems, allergies, medications, orders and results, clinical notes, vitals, task worklists, consent, emergency access review, terminology integration, administration, and a usable clinical workspace. These paths are audited and covered by unit, architecture, real-infrastructure integration, and browser tests.
 
-Zantrix is not yet production ready, medically certified, or certified against NEN 7510, ISO 27001, or a national EHR program. A production deployment still needs jurisdiction-specific profiles and policy, infrastructure hardening, operational validation, and licensed terminology content. See the [roadmap](docs/roadmap.md) for the exact boundary.
+Zantrix is not yet production ready, medically certified, or certified against NEN 7510, ISO 27001, or a national EHR program. A production deployment still needs jurisdiction-specific profiles and policy, infrastructure hardening, operational validation, and licensed terminology content. See the [roadmap](docs/roadmap.md) for the exact boundary, and [production readiness](docs/production-readiness.md) for the complete list of what is missing before real clinical use.
 
 The [roadmap](docs/roadmap.md) is the source of truth for what is built and what comes next.
 
