@@ -22,7 +22,25 @@ Authorization combines:
 4. **Consent** for patient-defined narrowing of otherwise valid access.
 5. **Emergency context** for a narrow, justified, reviewable consent override.
 
-Organization membership, practitioner-patient relationship, purpose-of-use, and sensitive-category policy are the next contextual layers. They are not implied by the current role model and must be added before broader production use.
+6. **Treatment relationship** for whether this clinician has any business in this patient's record.
+
+Purpose-of-use and sensitive-category policy remain the next contextual layers. They are not implied by the current role model and must be added before broader production use.
+
+## Treatment relationship
+
+A role check answers what kind of thing a user may do. It does not answer whether they have anything to do with a given patient, so on its own it grants every clinician access to the whole population. `TreatmentRelationshipGuard` closes that at the same boundary as consent, which means no application module can go around it.
+
+`zantrix.access.relationship-mode` selects the rule:
+
+- `organization`: the patient must be managed by an organization the clinician works for, resolved from active PractitionerRole records. Suitable for a single clinic.
+- `care-relationship`: additionally accepts evidence of care, membership of the patient's care team or an encounter with them.
+- `off`: no requirement. This is the historical behaviour, it is **not acceptable for real clinical use**, and the application logs a warning at startup when it is left there.
+
+Patient, Practitioner, PractitionerRole, Organization, Location, Schedule, Slot and Consent are exempt, because they are how a clinician finds the record they then need a relationship for. Everything patient-identifiable is checked.
+
+The check fails closed: a patient with no managing organization is unreachable in `organization` mode. Registration records that organization for exactly this reason.
+
+Emergency access bypasses the relationship check exactly as it bypasses consent. It is already justified, prominently audited, and creates a mandatory review.
 
 ## Consent and emergency access
 

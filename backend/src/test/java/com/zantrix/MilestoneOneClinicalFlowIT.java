@@ -91,7 +91,7 @@ class MilestoneOneClinicalFlowIT extends IntegrationTestBase {
     void completesTheOutpatientCoreWithoutFabricatedData() {
         String patientId = patients.register(new PatientRegistration("Avery", "Morgan",
                 LocalDate.of(1991, 4, 12), "female", "avery@example.test", null,
-                "urn:zantrix:test:mrn", "M1-001", false)).id();
+                "urn:zantrix:test:mrn", "M1-001", null, false)).id();
         String practitionerId = "m1-practitioner";
         Practitioner practitioner = new Practitioner();
         practitioner.setId(practitionerId);

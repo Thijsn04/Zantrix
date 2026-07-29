@@ -4,9 +4,9 @@ The backend is a modular monolith built with Java 21 and Spring Boot 3, using Sp
 
 ## Current implementation
 
-The backend contains platform modules for FHIR, IAM/security, audit, terminology, consent/privacy, workflow, and administration; patient-administration modules for the MPI, encounters, and scheduling; and clinical modules for problems, allergies, medications/CDS, orders/results, documentation, and vitals. Spring Modulith verification enforces their boundaries across 168 production classes.
+The backend contains platform modules for FHIR, IAM/security, audit, terminology, consent/privacy, workflow, and administration; patient-administration modules for the MPI, encounters, scheduling, and coverage; and clinical modules for problems, allergies, medications/CDS, orders/results, documentation, vitals, immunizations, and care coordination. Spring Modulith verification enforces their boundaries across 168 production classes.
 
-Application endpoints live under `/api/v1`. A secured R4 facade under `/fhir/R4` publishes metadata plus supported-resource CRUD, search, history, and transaction behavior. A generated OpenAPI document is not yet published.
+Application endpoints live under `/api/v1`. A secured R4 facade under `/fhir/R4` publishes metadata plus supported-resource CRUD, search, history, and transaction behavior. An OpenAPI document is generated from the controllers, committed as `backend/openapi.json`, and served from `/v3/api-docs` to authenticated callers. A test regenerates it and fails on any difference, so the published contract cannot drift from the code. See [ADR 0011](decisions/0011-generated-api-contract.md).
 
 ## Why a modular monolith
 
@@ -45,7 +45,7 @@ The target backend exposes two kinds of HTTP API:
 - The **FHIR REST API**, for standards based access and for external clients and SMART apps.
 - A small set of **application endpoints** for the frontend, where a task oriented, aggregated call is clearer than a series of raw FHIR calls. These endpoints are thin. They compose FHIR operations and module interfaces, and they never become a parallel data model.
 
-The Zantrix gateway publishes its own CapabilityStatement at `/fhir/R4/metadata`; it does not expose the internal HAPI metadata as its contract. An application OpenAPI description remains planned.
+The Zantrix gateway publishes its own CapabilityStatement at `/fhir/R4/metadata`; it does not expose the internal HAPI metadata as its contract. The application API is described by the generated OpenAPI document.
 
 ## Cross cutting infrastructure
 

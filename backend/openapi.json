@@ -1,0 +1,4895 @@
+{
+  "components" : {
+    "schemas" : {
+      "AllergyRequest" : {
+        "properties" : {
+          "category" : {
+            "type" : "string"
+          },
+          "criticality" : {
+            "type" : "string"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "manifestationCode" : {
+            "type" : "string"
+          },
+          "manifestationDisplay" : {
+            "type" : "string"
+          },
+          "manifestationSystem" : {
+            "type" : "string"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "reactionSeverity" : {
+            "type" : "string"
+          },
+          "substanceCode" : {
+            "type" : "string"
+          },
+          "substanceDisplay" : {
+            "type" : "string"
+          },
+          "substanceSystem" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "category", "criticality", "patientId", "substanceCode", "substanceDisplay", "substanceSystem" ],
+        "type" : "object"
+      },
+      "AllergySummary" : {
+        "properties" : {
+          "category" : {
+            "type" : "string"
+          },
+          "clinicalStatus" : {
+            "type" : "string"
+          },
+          "criticality" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "reaction" : {
+            "type" : "string"
+          },
+          "severity" : {
+            "type" : "string"
+          },
+          "substance" : {
+            "type" : "string"
+          },
+          "substanceCode" : {
+            "type" : "string"
+          },
+          "verificationStatus" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "AppointmentRequest" : {
+        "properties" : {
+          "comment" : {
+            "type" : "string"
+          },
+          "end" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "locationId" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "practitionerId" : {
+            "type" : "string"
+          },
+          "serviceCode" : {
+            "type" : "string"
+          },
+          "serviceDisplay" : {
+            "type" : "string"
+          },
+          "slotId" : {
+            "type" : "string"
+          },
+          "start" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "end", "patientId", "practitionerId", "serviceCode", "serviceDisplay", "start" ],
+        "type" : "object"
+      },
+      "AppointmentSummary" : {
+        "properties" : {
+          "end" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "locationId" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "practitionerId" : {
+            "type" : "string"
+          },
+          "service" : {
+            "type" : "string"
+          },
+          "start" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "AuditRecord" : {
+        "properties" : {
+          "action" : {
+            "type" : "string"
+          },
+          "actor" : {
+            "type" : "string"
+          },
+          "breakTheGlass" : {
+            "type" : "boolean"
+          },
+          "entityId" : {
+            "type" : "string"
+          },
+          "entityType" : {
+            "type" : "string"
+          },
+          "exportStatus" : {
+            "type" : "string"
+          },
+          "fhirAuditEventId" : {
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "outcome" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "recordedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "sourceIp" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "AuditVerificationResult" : {
+        "properties" : {
+          "brokenAtId" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "checkedCount" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "intact" : {
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "CareTeamRequest" : {
+        "properties" : {
+          "members" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Member"
+            },
+            "type" : "array"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "members", "name", "patientId" ],
+        "type" : "object"
+      },
+      "CareTeamSummary" : {
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "members" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Member"
+            },
+            "type" : "array"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "CodeValidation" : {
+        "properties" : {
+          "display" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "valid" : {
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "ConsentRequest" : {
+        "properties" : {
+          "end" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "policyUri" : {
+            "type" : "string"
+          },
+          "resourceTypes" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "start" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "patientId", "resourceTypes", "start", "type" ],
+        "type" : "object"
+      },
+      "ConsentSummary" : {
+        "properties" : {
+          "end" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "resourceTypes" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "start" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "CoverageRequest" : {
+        "properties" : {
+          "end" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "groupNumber" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "payorDisplay" : {
+            "type" : "string"
+          },
+          "payorOrganizationId" : {
+            "type" : "string"
+          },
+          "relationship" : {
+            "type" : "string"
+          },
+          "start" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "subscriberId" : {
+            "type" : "string"
+          },
+          "typeCode" : {
+            "type" : "string"
+          },
+          "typeDisplay" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "patientId", "payorDisplay", "payorOrganizationId", "relationship", "start", "subscriberId", "typeCode", "typeDisplay" ],
+        "type" : "object"
+      },
+      "CoverageSummary" : {
+        "properties" : {
+          "end" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "groupNumber" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "payor" : {
+            "type" : "string"
+          },
+          "payorOrganizationId" : {
+            "type" : "string"
+          },
+          "relationship" : {
+            "type" : "string"
+          },
+          "start" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "subscriberId" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "typeCode" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "CurrentUser" : {
+        "properties" : {
+          "displayName" : {
+            "type" : "string"
+          },
+          "roles" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "scopes" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "subject" : {
+            "type" : "string"
+          },
+          "username" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "DirectorySummary" : {
+        "properties" : {
+          "active" : {
+            "type" : "boolean"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "managingOrganizationId" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "resourceType" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "EmergencyAccessReview" : {
+        "properties" : {
+          "actor" : {
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "occurredAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "outcomeCode" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "reasonCode" : {
+            "type" : "string"
+          },
+          "resourceId" : {
+            "type" : "string"
+          },
+          "resourceType" : {
+            "type" : "string"
+          },
+          "reviewedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "reviewedBy" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "taskId" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "EncounterRequest" : {
+        "properties" : {
+          "appointmentId" : {
+            "type" : "string"
+          },
+          "organizationId" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "plannedStart" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "practitionerId" : {
+            "type" : "string"
+          },
+          "reasonCode" : {
+            "type" : "string"
+          },
+          "reasonDisplay" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "patientId", "practitionerId", "reasonCode", "reasonDisplay" ],
+        "type" : "object"
+      },
+      "EncounterSummary" : {
+        "properties" : {
+          "end" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "practitionerId" : {
+            "type" : "string"
+          },
+          "reason" : {
+            "type" : "string"
+          },
+          "start" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "FeatureFlagView" : {
+        "properties" : {
+          "enabled" : {
+            "type" : "boolean"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "updatedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "GoalRequest" : {
+        "properties" : {
+          "addressesConditionId" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "priority" : {
+            "type" : "string"
+          },
+          "targetDate" : {
+            "format" : "date",
+            "type" : "string"
+          }
+        },
+        "required" : [ "description", "patientId" ],
+        "type" : "object"
+      },
+      "GoalSummary" : {
+        "properties" : {
+          "achievementStatus" : {
+            "type" : "string"
+          },
+          "addressesConditionId" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "lifecycleStatus" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "priority" : {
+            "type" : "string"
+          },
+          "targetDate" : {
+            "format" : "date",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ImmunizationRequest" : {
+        "properties" : {
+          "doseNumber" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "lotNumber" : {
+            "type" : "string"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "occurrenceDate" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "performerId" : {
+            "type" : "string"
+          },
+          "route" : {
+            "type" : "string"
+          },
+          "site" : {
+            "type" : "string"
+          },
+          "vaccineCode" : {
+            "type" : "string"
+          },
+          "vaccineDisplay" : {
+            "type" : "string"
+          },
+          "vaccineSystem" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "occurrenceDate", "patientId", "performerId", "vaccineCode", "vaccineDisplay", "vaccineSystem" ],
+        "type" : "object"
+      },
+      "ImmunizationSummary" : {
+        "properties" : {
+          "doseNumber" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "lotNumber" : {
+            "type" : "string"
+          },
+          "occurrenceDate" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "site" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "statusReason" : {
+            "type" : "string"
+          },
+          "vaccine" : {
+            "type" : "string"
+          },
+          "vaccineCode" : {
+            "type" : "string"
+          },
+          "vaccineSystem" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Jwt" : {
+        "properties" : {
+          "audience" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "claims" : {
+            "additionalProperties" : {
+              "type" : "object"
+            },
+            "type" : "object"
+          },
+          "expiresAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "headers" : {
+            "additionalProperties" : {
+              "type" : "object"
+            },
+            "type" : "object"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "issuedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "issuer" : {
+            "format" : "url",
+            "type" : "string"
+          },
+          "notBefore" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "subject" : {
+            "type" : "string"
+          },
+          "tokenValue" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "LocationRequest" : {
+        "properties" : {
+          "addressLine" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "country" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "organizationId" : {
+            "type" : "string"
+          },
+          "postalCode" : {
+            "type" : "string"
+          },
+          "typeCode" : {
+            "type" : "string"
+          },
+          "typeDisplay" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "name", "organizationId", "typeCode", "typeDisplay" ],
+        "type" : "object"
+      },
+      "MedicationEventRequest" : {
+        "properties" : {
+          "encounterId" : {
+            "type" : "string"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "occurredAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "performerId" : {
+            "type" : "string"
+          },
+          "prescriptionId" : {
+            "type" : "string"
+          },
+          "quantity" : {
+            "exclusiveMinimum" : true,
+            "minimum" : 0,
+            "type" : "number"
+          },
+          "unit" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "occurredAt", "patientId", "performerId", "prescriptionId", "quantity", "unit" ],
+        "type" : "object"
+      },
+      "MedicationEventSummary" : {
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "occurredAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "prescriptionId" : {
+            "type" : "string"
+          },
+          "resourceType" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "MedicationReconciliationRequest" : {
+        "properties" : {
+          "dosageText" : {
+            "type" : "string"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "informationSource" : {
+            "type" : "string"
+          },
+          "medicationDisplay" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "performerId" : {
+            "type" : "string"
+          },
+          "rxNormIngredientCode" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "medicationDisplay", "patientId", "performerId", "rxNormIngredientCode", "status" ],
+        "type" : "object"
+      },
+      "Member" : {
+        "properties" : {
+          "practitionerId" : {
+            "type" : "string"
+          },
+          "roleCode" : {
+            "type" : "string"
+          },
+          "roleDisplay" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "practitionerId", "roleCode", "roleDisplay" ],
+        "type" : "object"
+      },
+      "MultiValueMapStringString" : {
+        "additionalProperties" : {
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "properties" : {
+          "all" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object",
+            "writeOnly" : true
+          },
+          "empty" : {
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "NoteRequest" : {
+        "properties" : {
+          "authorId" : {
+            "type" : "string"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "sections" : {
+            "items" : {
+              "$ref" : "#/components/schemas/NoteSection"
+            },
+            "type" : "array"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "typeCode" : {
+            "type" : "string"
+          },
+          "typeDisplay" : {
+            "type" : "string"
+          },
+          "typeSystem" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "authorId", "encounterId", "patientId", "sections", "title", "typeCode", "typeDisplay", "typeSystem" ],
+        "type" : "object"
+      },
+      "NoteSection" : {
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "codeSystem" : {
+            "type" : "string"
+          },
+          "display" : {
+            "type" : "string"
+          },
+          "text" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "code", "codeSystem", "display", "text" ],
+        "type" : "object"
+      },
+      "NoteSummary" : {
+        "properties" : {
+          "authorId" : {
+            "type" : "string"
+          },
+          "date" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "version" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "OrderRequest" : {
+        "properties" : {
+          "category" : {
+            "type" : "string"
+          },
+          "clinicalNote" : {
+            "type" : "string"
+          },
+          "code" : {
+            "type" : "string"
+          },
+          "codeSystem" : {
+            "type" : "string"
+          },
+          "display" : {
+            "type" : "string"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "priority" : {
+            "type" : "string"
+          },
+          "requesterId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "category", "code", "codeSystem", "display", "encounterId", "patientId", "priority", "requesterId" ],
+        "type" : "object"
+      },
+      "OrderSummary" : {
+        "properties" : {
+          "authoredOn" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "category" : {
+            "type" : "string"
+          },
+          "code" : {
+            "type" : "string"
+          },
+          "display" : {
+            "type" : "string"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "priority" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "taskId" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "OrganizationRequest" : {
+        "properties" : {
+          "identifierSystem" : {
+            "type" : "string"
+          },
+          "identifierValue" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "name" ],
+        "type" : "object"
+      },
+      "PageAuditRecord" : {
+        "properties" : {
+          "content" : {
+            "items" : {
+              "$ref" : "#/components/schemas/AuditRecord"
+            },
+            "type" : "array"
+          },
+          "empty" : {
+            "type" : "boolean"
+          },
+          "first" : {
+            "type" : "boolean"
+          },
+          "last" : {
+            "type" : "boolean"
+          },
+          "number" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "numberOfElements" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "pageable" : {
+            "$ref" : "#/components/schemas/Pageable"
+          },
+          "size" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/Sort"
+          },
+          "totalElements" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "totalPages" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "Pageable" : {
+        "properties" : {
+          "offset" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "pageNumber" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "pageSize" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "paged" : {
+            "type" : "boolean"
+          },
+          "sort" : {
+            "$ref" : "#/components/schemas/Sort"
+          },
+          "unpaged" : {
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "PatientMergeSummary" : {
+        "properties" : {
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "mergedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "resourcesRepointed" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "sourcePatientId" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "targetPatientId" : {
+            "type" : "string"
+          },
+          "unmergedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "PatientRegistration" : {
+        "properties" : {
+          "administrativeGender" : {
+            "type" : "string"
+          },
+          "birthDate" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "confirmedUnique" : {
+            "type" : "boolean"
+          },
+          "email" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "familyName" : {
+            "maxLength" : 100,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "givenName" : {
+            "maxLength" : 100,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "identifierSystem" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "identifierValue" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "managingOrganizationId" : {
+            "maxLength" : 64,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "phone" : {
+            "maxLength" : 64,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "required" : [ "administrativeGender", "birthDate", "familyName", "givenName" ],
+        "type" : "object"
+      },
+      "PatientSummary" : {
+        "properties" : {
+          "active" : {
+            "type" : "boolean"
+          },
+          "administrativeGender" : {
+            "type" : "string"
+          },
+          "birthDate" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "displayName" : {
+            "type" : "string"
+          },
+          "duplicateScore" : {
+            "format" : "double",
+            "type" : "number"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "identifier" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "PractitionerRequest" : {
+        "properties" : {
+          "familyName" : {
+            "type" : "string"
+          },
+          "givenName" : {
+            "type" : "string"
+          },
+          "identitySubject" : {
+            "type" : "string"
+          },
+          "locationId" : {
+            "type" : "string"
+          },
+          "organizationId" : {
+            "type" : "string"
+          },
+          "roleCode" : {
+            "type" : "string"
+          },
+          "roleDisplay" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "familyName", "identitySubject", "organizationId", "roleCode" ],
+        "type" : "object"
+      },
+      "PractitionerSummary" : {
+        "properties" : {
+          "active" : {
+            "type" : "boolean"
+          },
+          "displayName" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "identitySubject" : {
+            "type" : "string"
+          },
+          "locationId" : {
+            "type" : "string"
+          },
+          "organizationId" : {
+            "type" : "string"
+          },
+          "roleCode" : {
+            "type" : "string"
+          },
+          "roleDisplay" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "PrescriptionRequest" : {
+        "properties" : {
+          "dispenseQuantity" : {
+            "exclusiveMinimum" : true,
+            "minimum" : 0,
+            "type" : "number"
+          },
+          "dosageText" : {
+            "type" : "string"
+          },
+          "doseUnit" : {
+            "type" : "string"
+          },
+          "doseValue" : {
+            "exclusiveMinimum" : true,
+            "minimum" : 0,
+            "type" : "number"
+          },
+          "durationDays" : {
+            "format" : "int32",
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "frequencyPerDay" : {
+            "format" : "int32",
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "medicationDisplay" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "reason" : {
+            "type" : "string"
+          },
+          "repeats" : {
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "requesterId" : {
+            "type" : "string"
+          },
+          "routeCode" : {
+            "type" : "string"
+          },
+          "routeDisplay" : {
+            "type" : "string"
+          },
+          "routeSystem" : {
+            "type" : "string"
+          },
+          "rxNormIngredientCode" : {
+            "type" : "string"
+          },
+          "safetyOverrideReason" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "dispenseQuantity", "dosageText", "doseUnit", "doseValue", "encounterId", "medicationDisplay", "patientId", "requesterId", "rxNormIngredientCode" ],
+        "type" : "object"
+      },
+      "PrescriptionSummary" : {
+        "properties" : {
+          "dosage" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "medication" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "rxNormIngredientCode" : {
+            "type" : "string"
+          },
+          "safety" : {
+            "$ref" : "#/components/schemas/SafetyAssessment"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ProblemRequest" : {
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "codeSystem" : {
+            "type" : "string"
+          },
+          "display" : {
+            "type" : "string"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "onsetDate" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "code", "codeSystem", "display", "patientId" ],
+        "type" : "object"
+      },
+      "ProblemSummary" : {
+        "properties" : {
+          "clinicalStatus" : {
+            "type" : "string"
+          },
+          "code" : {
+            "type" : "string"
+          },
+          "codeSystem" : {
+            "type" : "string"
+          },
+          "display" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "onsetDate" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "resolvedDate" : {
+            "format" : "date",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ResultMeasurement" : {
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "codeSystem" : {
+            "type" : "string"
+          },
+          "display" : {
+            "type" : "string"
+          },
+          "interpretationCode" : {
+            "type" : "string"
+          },
+          "numericValue" : {
+            "type" : "number"
+          },
+          "referenceHigh" : {
+            "type" : "number"
+          },
+          "referenceLow" : {
+            "type" : "number"
+          },
+          "textValue" : {
+            "type" : "string"
+          },
+          "unit" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "code", "codeSystem", "display" ],
+        "type" : "object"
+      },
+      "ResultRequest" : {
+        "properties" : {
+          "conclusion" : {
+            "type" : "string"
+          },
+          "issuedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "measurements" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ResultMeasurement"
+            },
+            "type" : "array"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "performerId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "issuedAt", "measurements", "patientId", "performerId" ],
+        "type" : "object"
+      },
+      "ResultSummary" : {
+        "properties" : {
+          "conclusion" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "issuedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "observationIds" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "orderId" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "SafetyAssessment" : {
+        "properties" : {
+          "comprehensive" : {
+            "type" : "boolean"
+          },
+          "coverage" : {
+            "type" : "string"
+          },
+          "issues" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SafetyIssue"
+            },
+            "type" : "array"
+          },
+          "knowledgeBase" : {
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "SafetyIssue" : {
+        "properties" : {
+          "existingMedicationId" : {
+            "type" : "string"
+          },
+          "ruleId" : {
+            "type" : "string"
+          },
+          "severity" : {
+            "type" : "string"
+          },
+          "source" : {
+            "type" : "string"
+          },
+          "summary" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ScheduleRequest" : {
+        "properties" : {
+          "locationId" : {
+            "type" : "string"
+          },
+          "practitionerId" : {
+            "type" : "string"
+          },
+          "serviceCode" : {
+            "type" : "string"
+          },
+          "serviceDisplay" : {
+            "type" : "string"
+          },
+          "slots" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SlotInterval"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "practitionerId", "serviceCode", "serviceDisplay", "slots" ],
+        "type" : "object"
+      },
+      "SlotInterval" : {
+        "properties" : {
+          "end" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "start" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "required" : [ "end", "start" ],
+        "type" : "object"
+      },
+      "SlotSummary" : {
+        "properties" : {
+          "end" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "locationId" : {
+            "type" : "string"
+          },
+          "practitionerId" : {
+            "type" : "string"
+          },
+          "scheduleId" : {
+            "type" : "string"
+          },
+          "serviceDisplay" : {
+            "type" : "string"
+          },
+          "start" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Sort" : {
+        "properties" : {
+          "empty" : {
+            "type" : "boolean"
+          },
+          "sorted" : {
+            "type" : "boolean"
+          },
+          "unsorted" : {
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "TaskRequest" : {
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "dueAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "encounterId" : {
+            "type" : "string"
+          },
+          "focusReference" : {
+            "type" : "string"
+          },
+          "ownerReference" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "priority" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "description", "patientId" ],
+        "type" : "object"
+      },
+      "TaskSummary" : {
+        "properties" : {
+          "authoredOn" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "dueAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "focusReference" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "ownerReference" : {
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "priority" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TermConcept" : {
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "display" : {
+            "type" : "string"
+          },
+          "inactive" : {
+            "type" : "boolean"
+          },
+          "system" : {
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "VitalMeasurement" : {
+        "properties" : {
+          "loincCode" : {
+            "type" : "string"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "unit" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "number"
+          }
+        },
+        "required" : [ "loincCode", "unit", "value" ],
+        "type" : "object"
+      },
+      "VitalSummary" : {
+        "properties" : {
+          "display" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "loincCode" : {
+            "type" : "string"
+          },
+          "observedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "unit" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "number"
+          }
+        },
+        "type" : "object"
+      },
+      "VitalsRequest" : {
+        "properties" : {
+          "encounterId" : {
+            "type" : "string"
+          },
+          "measurements" : {
+            "items" : {
+              "$ref" : "#/components/schemas/VitalMeasurement"
+            },
+            "type" : "array"
+          },
+          "observedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "patientId" : {
+            "type" : "string"
+          },
+          "performerId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "encounterId", "measurements", "observedAt", "patientId", "performerId" ],
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : {
+      "bearer-jwt" : {
+        "bearerFormat" : "JWT",
+        "description" : "Keycloak issued access token carrying realm roles and SMART scopes.",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  },
+  "info" : {
+    "description" : "Task oriented endpoints for the Zantrix clinical workspace and patient portal. Clinical state is FHIR R4 and is reached through the guarded gateway; these endpoints compose it and never form a parallel data model. The conformant FHIR surface is published separately at /fhir/R4.",
+    "license" : {
+      "name" : "GNU Affero General Public License v3.0",
+      "url" : "https://www.gnu.org/licenses/agpl-3.0.txt"
+    },
+    "title" : "Zantrix Application API",
+    "version" : "v1"
+  },
+  "openapi" : "3.0.1",
+  "paths" : {
+    "/api/v1/admin/features" : {
+      "get" : {
+        "operationId" : "flags",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/FeatureFlagView"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "administration-controller" ]
+      }
+    },
+    "/api/v1/admin/features/{name}" : {
+      "put" : {
+        "operationId" : "flag",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "enabled",
+          "required" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FeatureFlagView"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "administration-controller" ]
+      }
+    },
+    "/api/v1/admin/locations" : {
+      "get" : {
+        "operationId" : "locations",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "organizationId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/DirectorySummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "administration-controller" ]
+      },
+      "post" : {
+        "operationId" : "location",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LocationRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DirectorySummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "administration-controller" ]
+      }
+    },
+    "/api/v1/admin/organizations" : {
+      "get" : {
+        "operationId" : "organizations",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/DirectorySummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "administration-controller" ]
+      },
+      "post" : {
+        "operationId" : "organization",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OrganizationRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DirectorySummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "administration-controller" ]
+      }
+    },
+    "/api/v1/admin/practitioners" : {
+      "get" : {
+        "operationId" : "practitioners",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/PractitionerSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "administration-controller" ]
+      },
+      "post" : {
+        "operationId" : "practitioner",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PractitionerRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PractitionerSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "administration-controller" ]
+      }
+    },
+    "/api/v1/allergies" : {
+      "get" : {
+        "operationId" : "list_11",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeInactive",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/AllergySummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "allergy-controller" ]
+      },
+      "post" : {
+        "operationId" : "add_2",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AllergyRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AllergySummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "allergy-controller" ]
+      }
+    },
+    "/api/v1/allergies/{id}/inactivate" : {
+      "post" : {
+        "operationId" : "inactivate",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "enteredInError",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AllergySummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "allergy-controller" ]
+      }
+    },
+    "/api/v1/appointments" : {
+      "get" : {
+        "operationId" : "list_10",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/AppointmentSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "scheduling-controller" ]
+      },
+      "post" : {
+        "operationId" : "book",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AppointmentRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AppointmentSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "scheduling-controller" ]
+      }
+    },
+    "/api/v1/appointments/availability" : {
+      "get" : {
+        "operationId" : "availability",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "practitionerId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "start",
+          "required" : true,
+          "schema" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "end",
+          "required" : true,
+          "schema" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/SlotSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "scheduling-controller" ]
+      }
+    },
+    "/api/v1/appointments/day" : {
+      "get" : {
+        "operationId" : "day",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "from",
+          "required" : true,
+          "schema" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "to",
+          "required" : true,
+          "schema" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "practitionerId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "locationId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/AppointmentSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "scheduling-controller" ]
+      }
+    },
+    "/api/v1/appointments/schedules" : {
+      "post" : {
+        "operationId" : "schedule",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ScheduleRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/SlotSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "scheduling-controller" ]
+      }
+    },
+    "/api/v1/appointments/{id}/arrive" : {
+      "post" : {
+        "operationId" : "arrive",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AppointmentSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "scheduling-controller" ]
+      }
+    },
+    "/api/v1/appointments/{id}/cancel" : {
+      "post" : {
+        "operationId" : "cancel_2",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AppointmentSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "scheduling-controller" ]
+      }
+    },
+    "/api/v1/appointments/{id}/fulfill" : {
+      "post" : {
+        "operationId" : "fulfill",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AppointmentSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "scheduling-controller" ]
+      }
+    },
+    "/api/v1/audit/events" : {
+      "get" : {
+        "operationId" : "events",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "actor",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "outcome",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "breakTheGlass",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "in" : "query",
+          "name" : "from",
+          "required" : false,
+          "schema" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "to",
+          "required" : false,
+          "schema" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 100,
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PageAuditRecord"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "audit-controller" ]
+      }
+    },
+    "/api/v1/audit/integrity" : {
+      "get" : {
+        "operationId" : "verify",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AuditVerificationResult"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "audit-controller" ]
+      }
+    },
+    "/api/v1/care/goals" : {
+      "get" : {
+        "operationId" : "goals",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeClosed",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/GoalSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      },
+      "post" : {
+        "operationId" : "addGoal",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GoalRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GoalSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      }
+    },
+    "/api/v1/care/goals/{id}/close" : {
+      "post" : {
+        "operationId" : "closeGoal",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "outcome",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GoalSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      }
+    },
+    "/api/v1/care/teams" : {
+      "get" : {
+        "operationId" : "teams",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/CareTeamSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      },
+      "post" : {
+        "operationId" : "defineTeam",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CareTeamRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CareTeamSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      }
+    },
+    "/api/v1/care/teams/{id}/stand-down" : {
+      "post" : {
+        "operationId" : "standDownTeam",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CareTeamSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "care-coordination-controller" ]
+      }
+    },
+    "/api/v1/consents" : {
+      "get" : {
+        "operationId" : "list_9",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/ConsentSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "consent-controller" ]
+      },
+      "post" : {
+        "operationId" : "create_3",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ConsentRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ConsentSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "consent-controller" ]
+      }
+    },
+    "/api/v1/consents/{id}/revoke" : {
+      "post" : {
+        "operationId" : "revoke",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ConsentSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "consent-controller" ]
+      }
+    },
+    "/api/v1/coverage" : {
+      "get" : {
+        "operationId" : "list_8",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeCancelled",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/CoverageSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "coverage-controller" ]
+      },
+      "post" : {
+        "operationId" : "add_1",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CoverageRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CoverageSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "coverage-controller" ]
+      }
+    },
+    "/api/v1/coverage/{id}/cancel" : {
+      "post" : {
+        "operationId" : "cancel_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CoverageSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "coverage-controller" ]
+      }
+    },
+    "/api/v1/encounters" : {
+      "get" : {
+        "operationId" : "list_7",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/EncounterSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "encounter-controller" ]
+      },
+      "post" : {
+        "operationId" : "create_2",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/EncounterRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EncounterSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "encounter-controller" ]
+      }
+    },
+    "/api/v1/encounters/{id}" : {
+      "get" : {
+        "operationId" : "get_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EncounterSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "encounter-controller" ]
+      }
+    },
+    "/api/v1/encounters/{id}/cancel" : {
+      "post" : {
+        "operationId" : "cancel",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EncounterSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "encounter-controller" ]
+      }
+    },
+    "/api/v1/encounters/{id}/finish" : {
+      "post" : {
+        "operationId" : "finish",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EncounterSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "encounter-controller" ]
+      }
+    },
+    "/api/v1/encounters/{id}/start" : {
+      "post" : {
+        "operationId" : "start_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EncounterSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "encounter-controller" ]
+      }
+    },
+    "/api/v1/fhir/status" : {
+      "get" : {
+        "operationId" : "status_1",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "additionalProperties" : {
+                    "type" : "object"
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-server-controller" ]
+      }
+    },
+    "/api/v1/iam/me" : {
+      "get" : {
+        "operationId" : "me",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "jwt",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Jwt"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CurrentUser"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "iam-controller" ]
+      }
+    },
+    "/api/v1/immunizations" : {
+      "get" : {
+        "operationId" : "list_6",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeEnteredInError",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/ImmunizationSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "immunization-controller" ]
+      },
+      "post" : {
+        "operationId" : "record_1",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ImmunizationRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ImmunizationSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "immunization-controller" ]
+      }
+    },
+    "/api/v1/immunizations/{id}/entered-in-error" : {
+      "post" : {
+        "operationId" : "markEnteredInError",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "reason",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ImmunizationSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "immunization-controller" ]
+      }
+    },
+    "/api/v1/medications" : {
+      "get" : {
+        "operationId" : "list_5",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeStopped",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/PrescriptionSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "medication-controller" ]
+      },
+      "post" : {
+        "operationId" : "prescribe",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PrescriptionRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PrescriptionSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "medication-controller" ]
+      }
+    },
+    "/api/v1/medications/administrations" : {
+      "post" : {
+        "operationId" : "administer",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MedicationEventRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MedicationEventSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "medication-controller" ]
+      }
+    },
+    "/api/v1/medications/dispenses" : {
+      "post" : {
+        "operationId" : "dispense",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MedicationEventRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MedicationEventSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "medication-controller" ]
+      }
+    },
+    "/api/v1/medications/reconciliation" : {
+      "post" : {
+        "operationId" : "reconcile",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MedicationReconciliationRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MedicationEventSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "medication-controller" ]
+      }
+    },
+    "/api/v1/medications/safety-check" : {
+      "get" : {
+        "operationId" : "check",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "rxNormIngredientCode",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "display",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SafetyAssessment"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "medication-controller" ]
+      }
+    },
+    "/api/v1/medications/{id}/stop" : {
+      "post" : {
+        "operationId" : "stop",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "reason",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PrescriptionSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "medication-controller" ]
+      }
+    },
+    "/api/v1/notes" : {
+      "get" : {
+        "operationId" : "list_4",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/NoteSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "documentation-controller" ]
+      },
+      "post" : {
+        "operationId" : "draft",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NoteRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NoteSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "documentation-controller" ]
+      }
+    },
+    "/api/v1/notes/{id}" : {
+      "put" : {
+        "operationId" : "update_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NoteRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NoteSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "documentation-controller" ]
+      }
+    },
+    "/api/v1/notes/{id}/addendum" : {
+      "post" : {
+        "operationId" : "addendum",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "authorId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NoteSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "documentation-controller" ]
+      }
+    },
+    "/api/v1/notes/{id}/sign" : {
+      "post" : {
+        "operationId" : "sign",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "signerId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NoteSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "documentation-controller" ]
+      }
+    },
+    "/api/v1/orders" : {
+      "get" : {
+        "operationId" : "list_3",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeCompleted",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/OrderSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "order-controller" ]
+      },
+      "post" : {
+        "operationId" : "place",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OrderRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OrderSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "order-controller" ]
+      }
+    },
+    "/api/v1/orders/results" : {
+      "get" : {
+        "operationId" : "results",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/ResultSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "order-controller" ]
+      }
+    },
+    "/api/v1/orders/{orderId}/results" : {
+      "post" : {
+        "operationId" : "result",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "orderId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ResultRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResultSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "order-controller" ]
+      }
+    },
+    "/api/v1/patients" : {
+      "get" : {
+        "operationId" : "search_1",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "birthDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "identifier",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/PatientSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "patient-controller" ]
+      },
+      "post" : {
+        "operationId" : "register",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PatientRegistration"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PatientSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "patient-controller" ]
+      }
+    },
+    "/api/v1/patients/duplicates" : {
+      "post" : {
+        "operationId" : "duplicates",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PatientRegistration"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/PatientSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "patient-controller" ]
+      }
+    },
+    "/api/v1/patients/merges/{mergeId}/unmerge" : {
+      "post" : {
+        "operationId" : "unmerge",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "mergeId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PatientMergeSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "patient-controller" ]
+      }
+    },
+    "/api/v1/patients/{id}" : {
+      "get" : {
+        "operationId" : "get",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PatientSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "patient-controller" ]
+      }
+    },
+    "/api/v1/patients/{patientId}/merges" : {
+      "get" : {
+        "operationId" : "mergeHistory",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/PatientMergeSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "patient-controller" ]
+      }
+    },
+    "/api/v1/patients/{sourceId}/merge/{targetId}" : {
+      "post" : {
+        "operationId" : "merge",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "sourceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "targetId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PatientMergeSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "patient-controller" ]
+      }
+    },
+    "/api/v1/privacy/emergency-reviews" : {
+      "get" : {
+        "operationId" : "open",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/EmergencyAccessReview"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "emergency-access-review-controller" ]
+      }
+    },
+    "/api/v1/privacy/emergency-reviews/{id}/review" : {
+      "post" : {
+        "operationId" : "review",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "outcome",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EmergencyAccessReview"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "emergency-access-review-controller" ]
+      }
+    },
+    "/api/v1/problems" : {
+      "get" : {
+        "operationId" : "list_2",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeResolved",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/ProblemSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "problem-controller" ]
+      },
+      "post" : {
+        "operationId" : "add",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ProblemRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "problem-controller" ]
+      }
+    },
+    "/api/v1/problems/{id}/resolve" : {
+      "post" : {
+        "operationId" : "resolve",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "resolvedDate",
+          "required" : false,
+          "schema" : {
+            "format" : "date",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProblemSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "problem-controller" ]
+      }
+    },
+    "/api/v1/system/info" : {
+      "get" : {
+        "operationId" : "info",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "additionalProperties" : {
+                    "type" : "string"
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "system-controller" ]
+      }
+    },
+    "/api/v1/tasks" : {
+      "get" : {
+        "operationId" : "list_1",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "owner",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "includeCompleted",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/TaskSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "workflow-controller" ]
+      },
+      "post" : {
+        "operationId" : "create_1",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TaskRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TaskSummary"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "workflow-controller" ]
+      }
+    },
+    "/api/v1/tasks/{id}/claim" : {
+      "post" : {
+        "operationId" : "claim",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "ownerReference",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TaskSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "workflow-controller" ]
+      }
+    },
+    "/api/v1/tasks/{id}/complete" : {
+      "post" : {
+        "operationId" : "complete",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "outcome",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TaskSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "workflow-controller" ]
+      }
+    },
+    "/api/v1/tasks/{id}/start" : {
+      "post" : {
+        "operationId" : "start",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TaskSummary"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "workflow-controller" ]
+      }
+    },
+    "/api/v1/terminology/expand" : {
+      "get" : {
+        "operationId" : "expand",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "url",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "filter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "count",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "language",
+          "required" : false,
+          "schema" : {
+            "default" : "en",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/TermConcept"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "terminology-controller" ]
+      }
+    },
+    "/api/v1/terminology/snomed" : {
+      "get" : {
+        "operationId" : "searchSnomed",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "domain",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "filter",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "count",
+          "required" : false,
+          "schema" : {
+            "default" : 20,
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "language",
+          "required" : false,
+          "schema" : {
+            "default" : "en",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/TermConcept"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "terminology-controller" ]
+      }
+    },
+    "/api/v1/terminology/status" : {
+      "get" : {
+        "operationId" : "status",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "additionalProperties" : {
+                    "type" : "object"
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "terminology-controller" ]
+      }
+    },
+    "/api/v1/terminology/validate-code" : {
+      "get" : {
+        "operationId" : "validate",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "system",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "code",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "display",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CodeValidation"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "terminology-controller" ]
+      }
+    },
+    "/api/v1/vitals" : {
+      "get" : {
+        "operationId" : "list",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "patientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "count",
+          "required" : false,
+          "schema" : {
+            "default" : 100,
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/VitalSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "vitals-controller" ]
+      },
+      "post" : {
+        "operationId" : "record",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/VitalsRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/VitalSummary"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "vitals-controller" ]
+      }
+    },
+    "/fhir/R4" : {
+      "post" : {
+        "operationId" : "transaction",
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/fhir+json" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      }
+    },
+    "/fhir/R4/metadata" : {
+      "get" : {
+        "operationId" : "metadata",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      }
+    },
+    "/fhir/R4/{type}" : {
+      "get" : {
+        "operationId" : "search",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "parameters",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/MultiValueMapStringString"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      },
+      "post" : {
+        "operationId" : "create",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/fhir+json" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      }
+    },
+    "/fhir/R4/{type}/{id}" : {
+      "delete" : {
+        "operationId" : "delete",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      },
+      "get" : {
+        "operationId" : "read",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      },
+      "put" : {
+        "operationId" : "update",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/fhir+json" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      }
+    },
+    "/fhir/R4/{type}/{id}/_history" : {
+      "get" : {
+        "operationId" : "history",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "type",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "X-Patient-Context",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/fhir+json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "fhir-facade-controller" ]
+      }
+    }
+  },
+  "security" : [ {
+    "bearer-jwt" : [ ]
+  } ],
+  "servers" : [ {
+    "description" : "Generated server url",
+    "url" : "http://localhost"
+  } ]
+}

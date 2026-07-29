@@ -22,6 +22,8 @@ The following is present in this repository:
 - The React workspace exposes the delivered clinical paths with patient context, role-aware navigation, internationalized copy, responsive themes, explicit error states, and browser-tested OIDC login and patient registration.
 - CI builds and tests the backend, verifies Modulith boundaries, runs real PostgreSQL and HAPI integration tests, lints/tests/builds the frontend, runs the complete Compose browser flow, audits production npm dependencies, reviews pull-request dependencies, and enforces house style.
 
+The frontend delivery sequence is planned in the [frontend delivery plan](architecture/frontend-plan.md), and the [implementation plan](implementation-plan.md) breaks the remaining capabilities into executable work packages. Both are design and sequencing only. This roadmap remains the source of truth for what is actually delivered.
+
 ## Milestones
 
 The sequence is deliberate. Each milestone must be genuinely production grade, tested, and documented before the next begins. Feature count is not the goal. Quality is.
@@ -61,6 +63,8 @@ Goal: extend the core outward where it adds the most value.
 
 Candidates: Laboratory, Radiology and imaging, the Patient Portal, Questionnaires and PROMs, and Coverage and Eligibility with the first regional adapter pack.
 
+Immunizations, the coverage record, and care team and goals have landed ahead of that sequence, because none needed an external system and all sit directly on the existing FHIR gateway. Vaccination forecasting, payer eligibility checking, and CarePlan itself are not included. The [implementation plan](implementation-plan.md) lists which further capabilities need no external system and can be built the same way.
+
 ### Milestone 3 and beyond: breadth
 
 Goal: grow into the wider module vision, one capability at a time, each to the same standard. Specialty clinical modules, revenue cycle, operations and supply chain, and data and intelligence follow as demand and contribution allow.
@@ -92,7 +96,13 @@ This table is the single source of truth for status and is updated as work lands
 | Clinical Documentation | 1 | Beta |
 | Vitals and Flowsheets, outpatient vital-set slice | 1 | Beta |
 | Clinical Decision Support, allergy/high-priority DDI slice | 1 | Beta |
+| Immunizations, vaccination history slice | 2 | Beta |
+| Coverage record, without eligibility checking | 2 | Beta |
+| Care team and goals, without CarePlan | 2 | Beta |
+| Treatment relationship enforcement | 1 | Beta, off by default |
 | Everything else | 2+ | Planned |
+
+A complete account of what still stands between this system and real clinical use, including the parts that are not software, is in [production readiness](production-readiness.md).
 
 No M0/M1 capability is marked `Stable`. Reaching that status requires production deployment guidance, jurisdictional profiles and policy, performance and disaster-recovery evidence, accessibility assessment, security review, terminology edition governance, clinical safety governance, and certification where applicable.
 

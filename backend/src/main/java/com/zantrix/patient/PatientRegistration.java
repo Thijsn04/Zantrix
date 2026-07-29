@@ -16,5 +16,6 @@ public record PatientRegistration(
         @Size(max = 64) String phone,
         @Size(max = 255) String identifierSystem,
         @Size(max = 255) String identifierValue,
+        @Size(max = 64) String managingOrganizationId,
         boolean confirmedUnique) {
 }

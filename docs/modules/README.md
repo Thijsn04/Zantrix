@@ -132,7 +132,7 @@ Who the patient is, where they are, and when they are seen.
 - **Purpose.** Insurance and coverage records and eligibility checks. Eligibility calls to national payers are provided by regional adapter packs.
 - **Primary FHIR resources.** Coverage, CoverageEligibilityRequest, CoverageEligibilityResponse.
 - **Depends on.** Patient and MPI, Interoperability and Localization.
-- **Status.** `Planned`.
+- **Status.** `Beta` for the coverage record only. Recording, listing and ending a policy are implemented. Eligibility checking is not: no payer is contacted, and the interface states that what it shows is not a confirmation of payment.
 
 ---
 
@@ -186,13 +186,13 @@ The heart of the record. These capabilities are the narrow core that Zantrix mak
 - **Purpose.** Longitudinal care plans, goals, and care team coordination.
 - **Primary FHIR resources.** CarePlan, Goal, CareTeam.
 - **Depends on.** Patient and MPI, Workflow.
-- **Status.** `Planned`.
+- **Status.** `Beta` for goals and the care team. A goal is closed by recording its outcome rather than by deletion, and a team is stood down rather than removed. CarePlan itself, which would group these into a plan with activities, remains planned.
 
 ### C9. Immunizations
 - **Purpose.** Vaccination history and forecasting.
 - **Primary FHIR resources.** Immunization, ImmunizationRecommendation.
 - **Depends on.** Patient and MPI, Terminology.
-- **Status.** `Planned`.
+- **Status.** `Beta`. Recording a dose, the vaccination history, and correcting a mistaken entry without removing it are implemented. Forecasting and ImmunizationRecommendation remain planned.
 
 ### C10. Results Review and Clinician Inbox
 - **Purpose.** The clinician facing worklist and inbox that unifies results, tasks, messages, and items needing sign off.

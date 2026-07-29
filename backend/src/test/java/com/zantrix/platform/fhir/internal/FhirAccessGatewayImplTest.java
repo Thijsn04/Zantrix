@@ -23,7 +23,7 @@ class FhirAccessGatewayImplTest {
     private final FhirAccessGatewayImpl gateway = new FhirAccessGatewayImpl(
             transport,
             policy,
-            (resourceType, patientId) -> { },
+            (resourceType, patientId) -> { }, (resourceType, patientId) -> { },
             audit,
             new FakeMutationJournal(),
             new FakeEmergencyReviews());
