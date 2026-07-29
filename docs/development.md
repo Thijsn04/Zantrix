@@ -27,6 +27,8 @@ Zantrix
 docker compose up --build -d
 ```
 
+On Windows, use Docker Desktop with the WSL 2 backend and run the same command from PowerShell. The stack runs Elasticsearch with a 2 GB heap by default, so give Docker Desktop at least 8 GB of memory or Elasticsearch and Snowstorm will be killed during startup. A smaller heap can be selected with `ZANTRIX_ES_JAVA_OPTS`. Everywhere this guide shows `./mvnw`, use `.\mvnw.cmd` instead.
+
 | Service | Local port | Purpose |
 |---|---:|---|
 | Frontend | 5173 | Clinical workspace |
@@ -44,7 +46,13 @@ The credentials and test users in the repository are development-only values. Th
 
 Snowstorm deliberately starts with no SNOMED CT edition. Obtain an RF2 release through your organization or national release center, confirm that the deployment is covered by the applicable license, and import it using Snowstorm's RF2 import process. Never commit RF2 packages or extracted terminology data.
 
-Until an edition is loaded, SNOMED search and validation fail closed and SNOMED-coded clinical entry is unavailable; the rest of the stack remains usable. The `zantrix_terminology_data` volume retains the imported edition across normal restarts. `docker compose down --volumes` deletes it and should only be used when all local data is disposable.
+Until an edition is loaded, SNOMED search and validation fail closed. This is deliberate, and it is worth knowing exactly what it means before evaluating the system, because it is more than a missing picker.
+
+**Unavailable without a SNOMED edition:** encounters, problems, allergies, immunizations, and appointments. All of them validate their code before writing.
+
+**Available:** sign-in, patient search and registration, coverage, goals and care team, medications (which validate against the NLM RxNorm API and need outbound internet instead), vitals and orders and notes (which use LOINC), task worklists, administration, and the privacy and audit views.
+
+Encounters are the practical catch. Vitals, orders and notes need an encounter as their clinical context, so although those modules do not need SNOMED themselves, you cannot reach them until an encounter exists. To evaluate the clinical core end to end, load an edition first. The `zantrix_terminology_data` volume retains the imported edition across normal restarts. `docker compose down --volumes` deletes it and should only be used when all local data is disposable.
 
 ## 2. Run the backend outside Compose
 
