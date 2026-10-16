@@ -1,0 +1,2 @@
+# Preserve the original handover bytes across platform line-ending settings.
+docs/reference/2026-10-15-owner-handover.txt -text

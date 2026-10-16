@@ -1,0 +1,34 @@
+{
+  "approval_date": "2026-10-16",
+  "approval": "Explicit owner approval in conversation",
+  "decision_ids": [
+    "R155",
+    "R156"
+  ],
+  "reference": "2026-10-16-approved-teal-reference.html",
+  "reference_sha256": "4aa50f5f06331e04827ca25b06bbf24205c2ac7445b1bdf6bb9af6d58f763369",
+  "approved_source_fragment_sha256": "0e217635be267fe4daa767a5abcb0f7ede6f060bfbd67c47e29ed9584a374b0d",
+  "core_colors": {
+    "brand": "#0F766E",
+    "selection": "#ECF8F5",
+    "canvas": "#F4F6F8"
+  },
+  "font": {
+    "family": "Inter",
+    "version": "4.1",
+    "file": "InterVariable.woff2",
+    "url": "https://cdn.jsdelivr.net/gh/rsms/inter@v4.1/docs/font-files/InterVariable.woff2",
+    "verified_sha256": "693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3",
+    "enabled_features": {
+      "cv05": 1,
+      "cv08": 1,
+      "zero": 1,
+      "tnum": 1
+    },
+    "ss02": "Available but not substituted for the targeted features"
+  },
+  "scope": "Synthetic visual and ergonomic design reference; no backend or real patient data",
+  "product_implementation": false,
+  "clinical_or_accessibility_certification": false,
+  "font_network_dependency": "The design snapshot loads the pinned external font; this does not select production font delivery."
+}

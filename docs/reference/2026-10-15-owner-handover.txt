@@ -1,0 +1,1650 @@
+Document 1 — New-chat handover and working instructions
+Suggested path: HANDOVER.md
+Purpose
+This handover reconstructs the Zantrix design discussion and the work performed through 15 October 2026.
+It contains:
+- The project owner's objectives and accepted requirements.
+- Architectural choices and the distinction between agreed and unresolved matters.
+- Clinical workflow, identity, authorization, interoperability and continuity requirements.
+- Repository changes previously performed.
+- The cloud-environment failure and the status of uncommitted work.
+- Instructions for continuing the project without losing decisions or falsely claiming persistence.
+This handover is not proof that the current GitHub repository contains these documents.
+Project identity
+- Project: Zantrix.
+- Repository: Thijsn04/Zantrix.
+- Originally selected branch: master.
+- Previous local checkout: /workspace/Zantrix.
+- Project owner communicates in Dutch.
+- All repository documentation, code, identifiers, code comments and inline documentation must be in English.
+- Product interfaces must support localization.
+Immediate instruction for a new assistant
+Continue as an architecture and product-design collaborator.
+The owner wants to rebuild Zantrix as a mature, open-source, modular EHR that can eventually be used in real clinical care.
+Do not start implementing the application merely because this handover contains extensive requirements. Requirements discovery and detailed architecture design are still ongoing.
+The owner has explicitly requested:
+1. A full rebuild rather than continuing to patch the old application.
+2. Preservation of all design decisions.
+3. Continued questions to thoroughly understand the product.
+4. Documentation updates in batches of approximately ten answered questions, rather than filesystem work after every answer.
+5. All accumulated work to be written to the repository.
+6. Commit and push of that work once repository access is available.
+The permission to commit and push is already present. Do not request that same permission again merely because the session changed.
+Before writing or pushing:
+- Inspect the actual repository, branch, remote state and local changes.
+- Preserve recovered work.
+- Read any current AGENTS.md.
+- Determine whether the previous documentation rebuild survived.
+- Merge recovered files and this handover carefully.
+- Do not reset, overwrite or delete unknown local changes.
+- Do not assume master still points to the previously observed commit.
+- Do not force-push.
+- Respect any branch protections.
+- Verify the actual pushed commit and report its SHA and branch.
+Status vocabulary
+Use these distinctions consistently:
+- Agreed: an explicitly accepted requirement or architectural direction.
+- Provisional: an expressed preference that still needs confirmation or validation.
+- Proposed: an assistant recommendation that has not been fully accepted.
+- Open: a decision still required.
+- Implemented: supported by current code and verification.
+- Superseded: replaced by a later decision.
+Most material in this handover is design, not implemented functionality.
+Do not equate:
+- Documentation with implementation.
+- A passing build with a clinically usable product.
+- Automated tests with certification.
+- Local file writes with a GitHub push.
+- A saved environment draft with publication or filesystem recovery.
+Interaction style
+The owner wants a collaborative discussion with many useful questions over time.
+Prefer:
+- One substantive main question at a time.
+- Concrete alternatives and a recommendation.
+- Explanations when the owner asks why a decision matters.
+- Explicit separation of technical mechanisms from product requirements.
+- Periodic summaries and documentation checkpoints.
+Avoid:
+- Repeatedly asking already answered questions.
+- Treating every assistant proposal as accepted.
+- Prematurely selecting technologies or implementation details that remain open.
+- Excessive tool work after each short answer.
+- Building a generic framework before proving representative clinical workflows.
+Existing design process
+The discussion used an architectural brainstorming approach:
+1. Understand the intended clinical product.
+2. Establish scope and constraints.
+3. Compare approaches.
+4. Review architectural sections.
+5. Consolidate a written design.
+6. Review that written design.
+7. Produce scoped implementation plans.
+8. Implement and verify incrementally.
+The owner accepted a first Core–Bridge module-contract outline. Detailed API design, implementation plans and product implementation have not been completed.
+The documentation-only repository reset was explicitly authorized.
+Document 2 — Product vision, scope and boundaries
+Suggested path: docs/product.md
+Vision
+Zantrix is intended to become:
+- A fully open-source modular electronic health record.
+- Clinically usable after the necessary validation, operational work and applicable regulatory obligations.
+- Suitable over time for different countries and care settings.
+- A strong example of meaningful interoperability between medical systems.
+- Maintainable by an open-source community rather than dependent on undocumented knowledge.
+The owner does not want a superficial demonstration with many nominal features that do not form coherent clinical workflows.
+Initial care setting
+The first care setting is general practice.
+The first country is the Netherlands.
+The first deployable Dutch GP version is intended to fully replace an existing huisartsinformatiesysteem, or HIS.
+It is not intended merely as a supplementary tool beside an existing HIS.
+However, the first engineering milestone is smaller than a full replacement release.
+First engineering milestone
+Build one complete GP consultation workflow:
+1. Find and select the patient.
+2. Open the relevant appointment or care contact.
+3. Review relevant existing information.
+4. Record findings.
+5. Determine and document the plan.
+6. Complete or finalize the consultation appropriately.
+This milestone must exercise the architecture, not just demonstrate isolated forms.
+It should include the relevant foundations for:
+- Correct patient context.
+- Draft preservation.
+- Finalization and corrections.
+- Authorization.
+- Safe editing.
+- Shared UI.
+- Synthetic scenarios.
+A complete consultation milestone does not establish:
+- Full HIS replacement.
+- Production readiness.
+- Clinical deployment approval.
+- Completion of all required integrations.
+Full HIS replacement
+The eventual deployable scope must account for the actual practice's complete work.
+Potentially necessary areas include:
+- Clinical record workflows.
+- Medication workflows and prescribing.
+- Diagnostics and results.
+- Correspondence and referrals.
+- Scheduling.
+- Practice administration.
+- Required national integrations.
+- Patient access.
+- Migration from the previous HIS.
+- Operational continuity.
+- Security, privacy and clinical assurance.
+The exact inventory must be established with the first practice. These examples are not a completed functional specification.
+POH and POH-GGZ
+Support for practice nurses, chronic-care workflows and POH-GGZ is an eventual goal.
+Whether these are required in the first deployable release is unresolved.
+The first practice's actual workflows determine whether the absence of those capabilities would prevent replacement.
+International foundation
+Do not embed Dutch requirements in the universal Core.
+The architecture must distinguish:
+- Shared technical foundations.
+- Shared clinical capabilities.
+- Care-setting workflows.
+- Country-specific requirements.
+- Language and localization.
+National identifiers, exchange profiles, terminology requirements, connectors and applicable rules belong in appropriate country modules or adapters.
+Care-setting modules
+General practice must be a separate care-setting module.
+Other future examples include:
+- Hospital care.
+- Mental-health care.
+- Other specialist or institutional settings.
+Care-setting modules compose shared capabilities into suitable workflows and workspaces.
+They must not duplicate the underlying patient identity or create competing authoritative records merely because they provide another interface.
+Multiple locations and care settings
+One organization must be able to have:
+- Multiple locations.
+- Staff working across locations.
+- Multiple care settings in the same installation.
+Location-specific permissions and workflows are required.
+The accepted patient-record direction is:
+- One organization-wide patient identity.
+- One coherent patient record across locations.
+- Access governed by role, organization and care context.
+Independent organizations and tenancy
+A proposal was made to begin with one independent organization per installation.
+The owner questioned the value of sharing an installation between independent organizations, since excellent interoperability should allow them to cooperate without sharing a system.
+The benefits and costs of shared tenancy were explained.
+However, the one-organization-per-installation proposal was not explicitly finalized as a complete tenancy design.
+Treat this as an unresolved architectural confirmation, not permission to implement arbitrary multi-tenancy.
+Hosting models
+Support both:
+Zantrix-managed hosting
+Zantrix can provide hosting and technical management.
+The owner expects the possibility of charging per enabled module for hosting/services.
+Exact support commitments, service levels and operational responsibilities are not specified yet.
+Self-hosting
+Institutions can host and manage Zantrix themselves or through their own provider.
+There is no direct support entitlement from Zantrix for self-hosted installations.
+Self-hosters may still report bugs in official Zantrix modules.
+Installation, updating, backup and restoration must be documented sufficiently for independent operation.
+A mandatory dependency on a Zantrix-operated cloud control service has not been agreed.
+Patient portal
+An official patient portal should be developed as a separate module.
+It is:
+- Not inherently part of the Netherlands country module.
+- Not required for the first engineering milestone.
+- Not committed as an immediate first-version deliverable.
+External patient portals must also be able to integrate through documented and authorized interfaces.
+Portal features, patient identity, proxy access, guardianship and national sign-in mechanisms remain to be designed.
+Public website
+A separate public Zantrix website is required for:
+- Product information.
+- Promotion and project information.
+- Documentation.
+- Developer information.
+- Possibly a future module catalog or marketplace.
+Documentation should be applicable to specific releases.
+No website technology, domain, hosting provider, visual design or publishing process has been selected.
+Migration
+Migration tools may be developed later, but the foundation must be ready for migration.
+The design must support preservation of:
+- Source-system identifiers.
+- Provenance.
+- Original authors and timestamps where available.
+- Documents.
+- Terminology.
+- Clinical history and corrections.
+Import validation, identity matching, duplicate assessment and reconciliation require explicit design.
+A validated migration path is a prerequisite before an existing practice can actually replace its HIS.
+Document 3 — Architecture and technology
+Suggested path: docs/architecture.md
+Chosen direction
+The owner accepted the following technological direction:
+- Java with Spring Boot for the backend.
+- React with TypeScript for the frontend.
+- PostgreSQL as the primary database.
+- One repository for official project components.
+- A modular monolith rather than separate services for every module.
+- A uniform supported backend/frontend stack for external modules as well.
+Exact versions and detailed libraries remain open.
+Why Java rather than switching to C#/.NET
+The owner has more experience with Java and TypeScript but explicitly asked for a serious comparison rather than choosing familiarity alone.
+The comparison concluded:
+- Java/Spring and C#/ASP.NET Core are both credible platforms.
+- Both support mature transactions, security facilities, Linux hosting and PostgreSQL.
+- Both have FHIR tooling.
+- Neither language intrinsically makes an EHR clinically safe.
+- Java experience reduces the initial maintainer's learning and code-review burden.
+- Java has relevant architecture-verification tooling and healthcare ecosystem examples.
+- No decisive requirement was identified that justified switching to .NET.
+This was not based on a representative performance benchmark.
+External projects examined
+Public repositories and documentation were examined:
+- OpenMRS: Java/Spring and an extension-module model.
+- OpenMRS frontend: React/TypeScript ecosystem.
+- OpenEMR: PHP-based EHR.
+- EHRbase: Java/PostgreSQL openEHR data platform.
+- HAPI FHIR: Java FHIR tooling.
+- Firely SDK: .NET FHIR tooling.
+- Spring Modulith and ArchUnit: module/architecture verification.
+- .NET support policy.
+References:
+- https://github.com/openmrs/openmrs-core
+- https://github.com/openmrs/openmrs-esm-core
+- https://github.com/openemr/openemr
+- https://github.com/ehrbase/ehrbase
+- https://github.com/hapifhir/hapi-fhir
+- https://github.com/FirelyTeam/firely-net-sdk
+- https://github.com/spring-projects/spring-modulith
+- https://github.com/TNG/ArchUnit
+- https://github.com/dotnet/core/blob/main/release-policies.md
+Some external websites were blocked by network policy.
+The complete internal architectures of Epic and HiX were not verified. Do not invent claims about them.
+Core, Bridge and Connect
+These names are explicitly important.
+Core
+Core is the technical foundation.
+Its proposed responsibilities include:
+- Technical identity integration.
+- Organizations and locations.
+- Shared security facilities.
+- Module lifecycle.
+- Compatibility and configuration foundations.
+Clinical capabilities should not automatically be put in Core.
+Patient registration is a separate module.
+Bridge
+Bridge is the mandatory internal interaction component.
+It connects Core and the different modules through standardized contracts.
+It is not the external integration component.
+It must not become:
+- A duplicate store of every clinical record.
+- A container for all clinical business logic.
+- An untyped universal action dispatcher.
+Connect
+Connect handles external interoperability.
+It provides or coordinates:
+- Adapters.
+- External communication.
+- Standards mapping.
+- Delivery state and failure handling.
+- Country-specific connector implementations where applicable.
+The initial terminology was different earlier in the discussion. The owner's correction supersedes that terminology:
+Bridge = internal. Connect = external.
+
+Module categories
+The conceptual categories are:
+1. Technical platform components.
+2. Shared clinical modules.
+3. Care-setting modules.
+4. Country modules.
+5. Shared user-interface platform.
+6. External interoperability adapters.
+7. Internal testing and synthetic-data facilities.
+The final package boundaries are not selected.
+One installation
+Modules should initially run within one Zantrix installation.
+The owner accepted one installation rather than designing every module as a separately deployed service.
+This does not mean that:
+- PostgreSQL must run in the same process.
+- Every supporting service must be embedded.
+- The emergency reader depends on the primary application.
+- All interactions must become network calls.
+Monorepo
+Core, Bridge, Connect and official modules should be developed in one repository.
+Benefits include:
+- Coordinated cross-module changes.
+- Shared tests.
+- Consistent documentation.
+- Easier development for one initial maintainer.
+Modules still need explicit versions, interfaces and dependencies.
+External developers can maintain their modules in separate repositories.
+Versioning and installation
+Separate module versioning is required.
+However:
+- Independently versioned modules are not necessarily independently hot-updatable.
+- Supported combinations must be explicit.
+- Incompatible combinations must be blocked.
+- Required dependencies cannot be removed silently.
+- Database migrations require controlled procedures.
+Planned maintenance is acceptable.
+Loading modules at controlled startup and restarting after updates was proposed. Hot replacement of clinical code was not required.
+Data ownership
+The accepted starting point is module-owned domain models.
+For each authoritative datum:
+- Assign one owner.
+- Expose explicit contracts.
+- Avoid direct writes to another module's tables.
+- Avoid independently editable duplicate truth.
+Copies may still be needed for:
+- Backups.
+- Emergency access.
+- Derived views.
+- Historical snapshots.
+- External messages.
+Such copies need explicit source, purpose, freshness and write-authority rules.
+Clinical standards
+The previous requirement that all internal clinical data must be stored as FHIR is superseded.
+Nevertheless, existing clinical standards must be examined before inventing equivalents.
+Relevant areas include:
+- FHIR.
+- openEHR.
+- Identifiers.
+- Terminology.
+- Units.
+- Provenance.
+- Clinical versioning and correction semantics.
+Connect cannot reconstruct meaning that the internal model did not retain.
+Complexity limits
+No current requirement mandates:
+- Kubernetes.
+- Microservices.
+- Full event sourcing.
+- A universal message broker.
+- A custom network transport protocol.
+- Dynamic hot replacement of clinical modules.
+Introduce these only for a demonstrated need.
+Trust boundary
+Modules in one process are not security-isolated from each other.
+Module boundaries, review and Bridge checks do not provide a sandbox against hostile installed code.
+This limitation must be reflected in module governance and deployment policy.
+Document 4 — Core–Bridge module contract
+Suggested path: docs/module-contract.md
+Status
+The owner approved the contract outline below.
+Exact classes, interfaces, schemas, package names and SDK signatures remain open.
+Module manifest
+Each module declares:
+- Unique module identity.
+- Module version.
+- Supported platform-contract versions.
+- Required dependencies.
+- Optional dependencies.
+- Supported dependency versions.
+- Offered and consumed interfaces.
+- Commands, queries and events.
+- Required permissions.
+- Configuration.
+- Owned data.
+- Data migrations.
+- User-interface extension points.
+- Localization contributions.
+- Supporting services where required.
+Core checks compatibility before installation and during startup.
+Administrators should understand the consequences before enabling, updating, disabling or removing a module.
+Queries
+Queries request information without modifying clinical state.
+Examples:
+- Retrieve a patient's active medication list.
+- Retrieve appointment information.
+A query can still create an access-audit record.
+Commands
+Commands request an explicit state change.
+Examples:
+- Finalize a consultation note.
+- Create a task.
+- Request a diagnostic procedure.
+Commands need defined:
+- Preconditions.
+- Permissions.
+- Clinical invariants.
+- Transaction boundaries.
+- Concurrency behavior.
+- Error outcomes.
+- Repeat-request behavior.
+Events
+Events report facts that have already occurred.
+Examples:
+- A consultation note was finalized.
+- A result was received.
+- A task was completed.
+An event is not an instruction to pretend an uncommitted change happened.
+Typed contracts
+Use explicit, typed and versioned contracts.
+Do not make the public module API one generic function accepting arbitrary JSON and an action string.
+Modules must be understandable and testable without reading each other's internals.
+Synchronous and asynchronous work
+Not every interaction should become asynchronous.
+Use direct interactions when the caller needs an immediate authoritative result.
+Use durable asynchronous processing when follow-up may occur later.
+For asynchronous follow-up, a transactional outbox was proposed.
+Detailed decisions remain open for:
+- Delivery guarantees.
+- Ordering.
+- Retries.
+- Deduplication.
+- Dead-letter handling.
+- Reconciliation.
+Do not promise exactly-once delivery across independent external systems.
+Transactions
+Shared PostgreSQL does not automatically make cross-module operations safe.
+Each operation must define what needs to succeed together.
+Cross-module transaction participation requires explicit contracts.
+Do not bypass ownership merely to obtain a convenient database transaction.
+Request context
+Interactions must carry and validate appropriate context, including:
+- Authenticated human or service identity.
+- Organization.
+- Relevant patient.
+- Relevant care context.
+- Correlation and traceability.
+Do not blindly trust actor names or patient IDs supplied by callers.
+Authorization
+Core supplies shared security facilities.
+Bridge enforces relevant technical contract rules.
+The owning module must still enforce:
+- Domain permissions.
+- Valid state transitions.
+- Patient/context restrictions.
+- Clinical invariants.
+Background jobs, imports and external messages must not bypass these rules.
+UI extension contract
+Modules contribute screens, sections, tasks and actions through approved extension points.
+They must use:
+- Shared navigation.
+- Shared patient workspace.
+- Shared components.
+- Shared validation and error conventions.
+- Shared accessibility rules.
+- Shared save-state behavior.
+The frontend does not independently establish that an operation belongs to a particular patient. The server checks context.
+Connect and incoming information
+Separate:
+1. Information received from another system.
+2. Information assessed or adopted into the local clinical workflow.
+Preserve source and meaning.
+An incoming medication list must not silently overwrite the local active list.
+Define handling for:
+- Conflicts.
+- Repeated delivery.
+- Corrections.
+- Retractions.
+- Identity uncertainty.
+- Operator review.
+Standards may include FHIR, HL7 v2, DICOM and national profiles where concrete use cases require them. Supporting every standard is not an initial milestone commitment.
+Document 5 — Clinical record, workspace and editing safety
+Suggested path: docs/clinical-safety.md
+Organization-wide record
+A patient has one organizational identity and coherent record across locations.
+Do not create separate competing records simply because the patient is seen at different sites or in different care settings.
+Identity management
+Design for:
+- Duplicate detection.
+- Identity matching.
+- External identifiers.
+- Merge.
+- Recovery from an incorrect merge.
+- Source-system provenance.
+A matching identifier or demographic field must not automatically establish that two records belong to the same person.
+Contacts, episodes and registrations
+For GP care, combine:
+- A timeline.
+- Care contacts.
+- Episodes or longitudinal problems.
+- Individual clinical registrations.
+One contact can address multiple problems.
+An episode can span multiple contacts.
+These are relationships and views over clinical facts, not instructions to duplicate the same note in multiple places.
+Information must be able to await classification rather than requiring a fabricated diagnosis or episode.
+Do not impose this exact GP workflow on every future institution.
+SOEP
+Support SOEP for appropriate GP documentation.
+Do not put SOEP in universal Core.
+Other countries and care settings must be able to use different documentation structures.
+SOEP is not exclusively a Dutch concept; distinguish actual national requirements from broader clinical patterns.
+One coherent user experience
+The owner considers this extremely important.
+Every module must feel native to Zantrix.
+A shared visual style alone is insufficient.
+Standardize:
+- Navigation.
+- Workspaces.
+- Patient context.
+- Forms.
+- Validation.
+- Messages.
+- Errors.
+- Accessibility.
+- Terminology.
+- Save behavior.
+- Interaction patterns.
+External modules must follow the same rules.
+Epic was mentioned as a reference for multiple patient workspaces, not as a specification to copy wholesale.
+Multiple patient workspaces
+Support multiple simultaneously open patient records.
+There must be a limit.
+The exact number is not decided.
+Requirements:
+- Active patient clearly visible.
+- Patient identity clear in dialogs.
+- Workspace-specific care context.
+- Isolated drafts.
+- Pending requests bound to their original patient.
+- No silent loss when closing a workspace.
+- No unintentional context transfer when switching patients.
+Drafts
+Automatically save input as drafts.
+Display truthful states such as:
+- Saving.
+- Saved.
+- Save failed.
+Autosave does not finalize or sign.
+Restore drafts safely after refresh, interruption or session expiration.
+Preserve:
+- Patient.
+- Author.
+- Care context.
+- Version.
+Require appropriate authentication before accessing restored drafts.
+Do not clear input merely because a request was started.
+Finalization and corrections
+Drafts may be editable.
+Finalized clinical content must retain historical versions.
+Use identifiable corrections or additions with:
+- Author.
+- Time.
+- Reason.
+- Relation to the previous content.
+Other domains need their own lifecycle, such as stopping or replacing medication.
+Concurrent work
+Multiple users may view the same record.
+Concurrent editing is allowed only where it is demonstrably safe.
+The owner explicitly rejected uncontrolled editing of the same component.
+Use:
+- One editor per protected registration or workflow scope.
+- A broader protected scope when independence cannot be established.
+- Whole-record editing exclusion if necessary.
+Example: medication-list changes may require broader protection than independent notes.
+Lock takeover
+Taking over editing requires an additional permission.
+It is not a standard right for every clinician.
+Requirements:
+- Explicit reason.
+- Audit.
+- Preserve the existing draft.
+- Reject stale writes from the original session.
+- Provide safe handling of unsynchronized input.
+Exact lease, heartbeat and expiry behavior remain open.
+Duplicate prevention
+Editing locks alone do not prevent duplicate data.
+Also address:
+- Double clicks.
+- Retried requests.
+- Repeated external messages.
+- Sequential duplicate entry.
+- Similar but clinically distinct facts.
+Do not automatically merge superficially similar records.
+Patient-level confidentiality
+The owner selected initial restriction at patient level.
+Separate confidentiality boundaries for individual notes or dossier components are not an initial requirement.
+Roles still govern permitted actions.
+Validate whether this model is sufficient for the intended first deployment and applicable obligations.
+Clinical assurance
+The owner has hospital domain knowledge.
+GP-specific workflows still need review with actual GP users.
+Keep assumptions separate from validated requirements.
+Clinical deployment needs evidence concerning:
+- Hazards.
+- Mitigations.
+- Usability.
+- Data integrity.
+- Security.
+- Privacy.
+- Operations.
+- Applicable regulatory responsibilities.
+Document 6 — Authentication, badges and roaming sessions
+Suggested path: docs/identity-access.md
+Account models
+Support:
+- Zantrix-managed staff accounts.
+- Federation with an institution's identity provider through standard protocols.
+Microsoft Entra ID was an example, not a mandatory selected product.
+Do not interpret Zantrix-managed accounts as a decision to invent a custom password-security implementation.
+Exact provider and protocols remain open.
+Local and remote access
+The owner's preference is:
+Trusted on-site workstations
+Allow:
+- Username and password.
+- A suitable employee badge.
+Do not require MFA at every ordinary on-site sign-in.
+Remote access
+Require MFA, including working from home.
+Trust classification
+Still to design:
+- What constitutes a trusted workstation.
+- What constitutes on-site access.
+- How VPN access is classified.
+- Device trust.
+- Network trust.
+- Institutional identity assurance.
+An IP address or VPN connection alone must not silently establish physical presence.
+Badge technology
+No badge type or reader has been selected.
+A publicly readable badge number is not sufficient authentication assurance.
+Assess:
+- Verification mechanism.
+- Copy resistance.
+- Reader security.
+- Lost-badge revocation.
+- Recovery.
+- Audit.
+Daily and occasional verification
+Accepted preference:
+- First badge sign-in of the day also requires the user's password.
+- Later badge sign-ins and unlocks may use the badge alone.
+- Occasionally ask for the password again during the day.
+- Do not make such checks too frequent.
+Open details:
+- Meaning of a day.
+- Night shifts.
+- Maximum time since verification.
+- Frequency and bounds of occasional checks.
+- Identity-provider compatibility.
+- Recovery when a password is unavailable.
+Random checks are not a substitute for a properly bounded authentication policy.
+Switching users
+On shared workstations:
+- A staff member can switch to their own session using a badge.
+- The previous user's session locks.
+- Previous drafts remain associated with that user.
+- Their patient information must not remain visible.
+Roaming workspace
+The owner wants it to feel as though the employee takes their computer with them.
+Interpret this as a roaming Zantrix application workspace containing:
+- Open patient records.
+- Drafts.
+- Clinical context.
+- Relevant application state.
+This is not a decision to implement a full remote desktop.
+One active workspace
+The owner explicitly requires:
+A person must never be active in two places simultaneously.
+
+For the primary application:
+- One active staff workspace per user.
+- Moving to another workstation locks the old one.
+- Multiple patient workspaces inside that active session are allowed.
+- The server rejects stale-session operations.
+- Reconnection must not allow old writes to overwrite newer work.
+The interaction with disconnected emergency readers remains open. A global guarantee cannot simply be assumed during network partitions.
+Deliberate locking
+Presenting the badge can immediately lock the workstation.
+Do not depend on detecting that a contactless badge has left the area.
+Inactivity behavior
+Accepted timings:
+Inactivity	Behavior
+Before five minutes	Normal session unless otherwise locked
+At five minutes	Hide all patient information behind a screen with a two-minute countdown
+During countdown	A click returns to the session without authentication
+At seven minutes total	Actually lock the session
+
+
+After actual locking, authentication is required under the applicable sign-in policy.
+The first screen is a privacy screen, not an authenticated lock.
+Its protection is limited because another person could dismiss it.
+Review the policy against the threat model and applicable deployment requirements before implementation.
+Sensitive administration
+Require reauthentication for high-impact administrative operations, including:
+- Granting permissions.
+- Installing modules.
+Do not add these prompts indiscriminately to normal clinical work.
+Open details include:
+- Which actions are protected.
+- Authentication strength.
+- Verification freshness.
+- MFA requirements for particular operations.
+- Audit.
+The owner's preference does not waive legally or clinically required checks.
+Document 7 — Authorization, support and audit
+Suggested path: docs/authorization.md
+Basic model
+Use function profiles as the baseline.
+Allow:
+- Standard Zantrix profiles.
+- Institution-defined profiles.
+- Multiple profiles per person.
+- Location-scoped assignments.
+- Individual additional permissions.
+Examples such as GP, assistant and practice administrator are illustrative, not a finalized role catalog.
+Individual additions
+Individual extra rights are:
+- Temporary by default.
+- Automatically expired.
+- Audited.
+Permanent additions are possible with:
+- An explicit choice.
+- A recorded reason.
+Effective permissions must be understandable to administrators:
+- What is granted.
+- Where it came from.
+- Where it applies.
+- When it expires.
+- Who granted it.
+Custom profiles
+Institutions must be able to create profiles reflecting their own organization.
+Modules expose supported permissions.
+Custom profiles cannot disable fundamental platform protections.
+Multiple profiles and location scope
+One person can have multiple profiles.
+Different assignments can apply at different locations.
+An extra profile does not automatically remove a patient-specific restriction.
+Explicit restrictions
+An explicit restriction takes precedence over an allowance.
+Only specifically designated restrictions can be overridden through the authorized emergency procedure.
+The exact policy evaluation model remains to be designed.
+Four-eyes principle
+Dual approval for sensitive changes is:
+- Optional.
+- Configurable.
+- Disabled by default.
+When it is disabled, the normal requirements still apply:
+- Appropriate permissions.
+- Reauthentication where required.
+- Audit.
+Temporary staff
+Temporary staff and locums have:
+- Access start date.
+- Access end date.
+After expiry:
+- Access ends automatically.
+- Active access/sessions must be terminated appropriately.
+- Historical clinical authorship remains.
+Authorized staff can explicitly extend the period.
+Revocation
+Support immediate online revocation of:
+- Access.
+- Active sessions.
+Distinguish:
+- Blocking a badge.
+- Disabling the complete account.
+- Removing particular permissions.
+Immediate revocation across an unreachable emergency reader cannot be guaranteed without a dedicated design.
+Least privilege
+Access is based on actual work need.
+Technical administration does not automatically authorize patient-record access.
+This also applies to Zantrix hosting and support personnel.
+Do not grant access merely because someone manages servers or modules.
+Support access
+The institution may grant Zantrix support temporary patient-record access.
+Requirements:
+- Explicit institutional consent.
+- Named support person.
+- Defined purpose.
+- Limited scope.
+- End time.
+- Revocation.
+- Audit.
+No consent means no application-level dossier access.
+Infrastructure access to databases and backups requires separate safeguards.
+Audit oversight
+Provide an audit overview for specifically authorized personnel.
+Include relevant information about:
+- Actor.
+- Time.
+- Patient record.
+- Action.
+- Available care context.
+- Explicit reason where required.
+- Support access.
+- Break-glass use.
+Ordinary administrators do not automatically get this overview.
+Audit-overview access is itself logged.
+Break-glass
+Allow justified emergency access within a defined scope.
+Do not make every legitimate operational exception an emergency.
+Regular access must accommodate:
+- Triage.
+- Assistants.
+- Cover.
+- Consultation.
+- Other genuine care involvement not established by a scheduled appointment.
+Provisional preference: break-glass use produces a notification and retrospective review task without delaying necessary access.
+The owner's answer to automated review was tentative.
+Still open:
+- Review owner.
+- Deadline.
+- Alerts.
+- Allowed scope.
+- Restrictions that cannot be overridden.
+- Escalation.
+Document 8 — Tasks, worklists and administrative configuration
+Suggested path: docs/tasks-and-configuration.md
+Worklist types
+Support both:
+- Personal worklists.
+- Shared worklists.
+Shared worklists can apply to:
+- Teams.
+- Locations.
+- Other configured organizational scopes.
+Responsibility and handover must be understandable.
+Assignment
+Assignment is optional.
+Staff may:
+- Execute a task directly from a shared list.
+- Assign it to themselves beforehand.
+- Assign or transfer it according to permissions.
+Do not require personal assignment before every action.
+Execution safety
+Direct execution still needs protection against duplicate processing.
+Distinguish:
+- Personal assignment.
+- Temporary execution ownership or locking.
+- Completion.
+Exact mechanisms remain open.
+The owner did not authorize silently allowing concurrent execution of the same task.
+Urgency and timing
+Support configurable:
+- Urgency.
+- Due time.
+- Reminders.
+- Escalation.
+Not every worklist needs these features.
+Configuration should be possible per task type or worklist.
+Modules may supply sensible defaults and applicable safety constraints.
+Task creation
+Support:
+- Manual tasks.
+- Automatically generated tasks.
+Examples:
+- A received result awaiting review.
+- A document awaiting signature.
+The exact event contracts and task categories are not designed.
+General configurability
+The owner emphasized that configurability is a general requirement, not limited to worklists.
+Administrators should be able to configure supported behavior, including:
+- Creating worklists.
+- Associating teams.
+- Automatic-task rules.
+- Workflow rules.
+- Urgency.
+- Deadlines.
+- Reminders.
+- Escalation.
+Modules should expose capabilities and defaults.
+Avoid ad hoc custom application forks per institution.
+Configuration safety
+Configuration must respect:
+- Permissions.
+- Valid dependencies.
+- Valid contracts.
+- Data integrity.
+- Defined clinical safety constraints.
+Not every safety mechanism may be freely disabled.
+Precise limits require further design.
+Separate test environment
+The owner requested a separate test Zantrix environment:
+- Used by the Zantrix team.
+- Available to institutions for testing.
+- Suitable for workflows and configuration.
+The owner explicitly deferred the exact implementation.
+Do not prematurely assume:
+- A single shared public instance.
+- A dedicated clone per institution.
+- Copies of production patient data.
+- A specific hosting topology.
+- Automatic configuration promotion.
+- A particular synchronization mechanism.
+Use synthetic data and protect against messages reaching real care endpoints.
+Relate this environment to the synthetic-data module and developer conformance facility.
+Document 9 — Availability, emergency access and maintenance
+Suggested path: docs/continuity.md
+Foundational requirements
+Availability, privacy and security are crucial.
+The owner explicitly accepted the need to keep usable local capabilities available during internet failure where the infrastructure remains reachable.
+Differentiate:
+- Internet failure.
+- Application failure.
+- Database failure.
+- Identity-provider failure.
+- Local-network failure.
+- Power failure.
+External transactions
+For external communication:
+- Preserve pending work durably where appropriate.
+- Show accurate delivery state.
+- Retry safely.
+- Prevent duplicate processing.
+Queued is not the same as delivered.
+Local emergency provision
+The owner requested a local emergency server/workstation concept inspired by hospital BCA/downtime computers.
+This also applies to sites using central Zantrix hosting.
+Read-only
+The emergency provision is read-only.
+It must not:
+- Change clinical records.
+- Prescribe.
+- Create clinical orders.
+Care delivered during an outage requires a separate downtime documentation and reconciliation procedure.
+Dataset
+The owner prefers access to everything in the patient record.
+The intended goal includes:
+- Clinical content.
+- Documents.
+- History.
+Precise handling remains open for:
+- Medical images.
+- Externally hosted documents.
+- Referenced data.
+- Full resource history.
+- Patient selection per site.
+Do not claim completeness without a defined and monitored dataset.
+Freshness target
+Continuously synchronize.
+The owner accepted:
+At most five minutes behind the primary system under healthy connectivity.
+
+This is a design target, not a measured SLA.
+During outage the copy naturally gets older.
+Display:
+- Emergency mode.
+- Last successful synchronization.
+- Data age.
+- Completeness.
+- Missing or failed content.
+Offline security
+The emergency provision requires:
+- Encryption.
+- Protected keys.
+- Authentication without the failed primary service.
+- Appropriate offline authorization.
+- Local audit.
+- Controlled reconciliation after recovery.
+The detailed implementation is open.
+Independence
+The emergency reader must not require live access to:
+- Primary Core.
+- Primary Bridge.
+- Primary database.
+- Unavailable external identity provider.
+It may reuse code, not live dependencies.
+Planned maintenance
+The owner accepts scheduled downtime.
+Before maintenance:
+- Check compatibility.
+- Check backups and restoration readiness.
+- Check the emergency provision.
+- Check freshness and completeness.
+- Communicate appropriately.
+After maintenance:
+- Verify migrations.
+- Verify representative functionality.
+- Release access deliberately.
+Downgrading the application binary is not automatically a safe rollback after a database migration.
+Open operational targets
+Still to determine:
+- Recovery time objective.
+- Recovery point objective.
+- Backup retention.
+- Restoration tests.
+- Hardware requirements.
+- Power/network resilience.
+- Alerts.
+- Responsibility.
+- Service commitments.
+The five-minute replica target does not replace backups.
+Document 10 — Module ecosystem, testing and open-source governance
+Suggested path: docs/governance.md
+Development capacity
+The owner is currently the only developer.
+More contributors may join later.
+The project has no fixed delivery deadline and will be worked on when time and motivation permit.
+The project should nevertheless be exemplary in:
+- Structure.
+- Documentation.
+- Versioning.
+- Contribution guidance.
+- Maintainability.
+Security maintenance for deployed systems cannot be treated as optional hobby-time work.
+External modules
+External developers should be able to build modules without modifying Core.
+A marketplace may be added later.
+Official review
+Externally developed modules offered through an official reviewed channel require strict review.
+Review should cover:
+- Security.
+- Privacy.
+- Clinical risk.
+- Permissions.
+- Dependency integrity.
+- Compatibility.
+- Migrations.
+- Reliability.
+- Failure behavior.
+- UI consistency.
+- Accessibility.
+- Tests.
+- Documentation.
+- Maintenance ownership.
+Specific standards, review bodies and evidence requirements remain open.
+Approval must be version-specific and combination-specific.
+Do not claim that review guarantees absolute safety.
+Local extensions
+Institutions may install local modules outside Zantrix review.
+The interface must make the unreviewed state explicit.
+Zantrix cannot claim those combinations are part of its reviewed configuration.
+Warnings do not replace technical safeguards or determine all legal responsibility.
+Installation authority
+Technical administrators install and update modules.
+Functional administrators configure capabilities within the allowed configuration.
+Dependencies and compatibility must be visible before changes.
+Synthetic-data module
+Build a separate module intended for internal development/testing that generates fictitious patients and coherent clinical data.
+It should support reproducible scenarios rather than random unrelated fields.
+Possible scenarios include:
+- Consultations.
+- Medication.
+- Allergies.
+- Results.
+- Duplicate identities.
+- Conflicting external information.
+Use synthetic data only.
+Block production use and prevent test messages from reaching real care systems.
+Exact enforcement remains open.
+Developer conformance facility
+Provide external module developers with:
+- A development kit.
+- Examples.
+- Synthetic scenarios.
+- Automated conformance checks.
+Possible checks include:
+- Manifest correctness.
+- Missing dependencies.
+- Incompatible versions.
+- Contract adherence.
+- Permission/context behavior.
+- Migrations.
+- Failures and retries.
+- Shared UI integration.
+Passing tests is not final approval or clinical certification.
+Licensing
+The owner's intended baseline is:
+- Official Zantrix software is open source.
+- Managed hosting may charge per enabled module.
+External closed-source modules and marketplace commissions remain unresolved.
+The owner explicitly deferred that decision.
+The old repository's existing AGPL v3 license was preserved unchanged during cleanup.
+No alternative license was selected.
+Before publishing module SDK/distribution terms, assess compatibility between the existing license and external-module policy.
+Updates and release policy
+Requirements:
+- Explicit module versions.
+- Supported combinations.
+- Release notes.
+- Migration instructions.
+- Deprecation policy.
+- Security maintenance.
+- Version-aware documentation.
+Semantic versioning was proposed, but its exact use and release-support policy remain open.
+Shared interface review
+A module must feel native to Zantrix.
+Review must cover more than appearance:
+- Context.
+- Navigation.
+- Actions.
+- Errors.
+- Draft behavior.
+- Clinical consistency.
+- Accessibility.
+Document 11 — Documentation standards and repository guidance
+Suggested paths:
+- docs/documentation-standards.md
+- AGENTS.md
+- CONTRIBUTING.md
+- SECURITY.md
+Documentation standards
+Use English for:
+- Source.
+- Identifiers.
+- Comments.
+- Inline API documentation.
+- Technical documents.
+- Developer guidance.
+Localize product interfaces.
+Do not assume language and country are the same thing.
+Country modules should add relevant translations, but external modules also need a mechanism to supply their own translations.
+Documentation structure
+Maintain:
+- A concise and truthful root README.
+- A documentation index.
+- Stable decision identifiers.
+- Scoped design documents.
+- Open questions.
+- Implementation plans after relevant design review.
+- Operator instructions once executable software exists.
+Describe:
+- Why.
+- Responsibilities.
+- Contracts.
+- Permissions.
+- Data ownership.
+- Dependencies.
+- Migration.
+- Failure behavior.
+- Verification.
+- Limits.
+Decision capture
+Batch documentation updates after approximately ten answered questions.
+Persist earlier when:
+- The owner explicitly asks.
+- A handoff is needed.
+- Implementation depends on the decision.
+Do not treat unresolved preferences as final decisions.
+Record superseded decisions explicitly.
+Clinical and security claims
+Never claim:
+- Certification.
+- Clinical readiness.
+- Standards compliance.
+- Security assurance.
+- Test success.
+unless actual evidence supports that claim.
+Regulatory obligations depend on intended use and jurisdiction.
+Do not repeat the old documentation's assumption that all legal or clinical responsibility necessarily belongs to the deploying institution.
+Sensitive data
+Do not place patient data or credentials in:
+- Issues.
+- Documentation.
+- Examples.
+- Test fixtures.
+- Screenshots.
+- Logs.
+Use synthetic data.
+Separate public bug reporting from confidential security reporting.
+Security reporting
+No confidential security contact was established in the discussion.
+Do not invent an address or claim private reporting is enabled.
+Establish a real confidential reporting channel before security-sensitive deployment or marketplace operation.
+Repository state warning
+The rebuild was documentation-only.
+Do not use old Git history to silently restore:
+- Old architecture.
+- Old dependencies.
+- Old startup commands.
+- Old maturity claims.
+- Old country assumptions.
+Agent guidance
+Use the existing checkout.
+The environment is already isolated.
+Do not create worktrees unless explicitly requested in the applicable workflow.
+Preserve:
+- Existing changes.
+- License.
+- History.
+- Untracked user work.
+Separate:
+- User decisions.
+- Assistant recommendations.
+- Implemented functionality.
+Do not introduce product code merely to make the repository appear complete.
+Document 12 — Roadmap and unresolved decisions
+Suggested paths:
+- docs/roadmap.md
+- docs/open-questions.md
+Roadmap
+Stage 0: recover and preserve the written baseline
+- Recover or reconstruct the documentation.
+- Merge all pending answers.
+- Verify links and consistency.
+- Commit and push as authorized.
+- Report the actual remote commit.
+Stage 1: review detailed foundation choices
+Resolve:
+- Module packaging.
+- Core/Bridge contracts.
+- Data ownership.
+- Identity integration.
+- Persistence boundaries.
+- Shared frontend boundaries.
+- Version compatibility.
+Stage 2: platform skeleton
+Prove:
+- A module can integrate without modifying Core.
+- Invalid dependencies fail clearly.
+- Security/context rules are enforced.
+- UI contributions are coherent.
+- A module has clear data ownership.
+Stage 3: complete GP consultation
+Implement and test:
+- Patient registration.
+- Contact context.
+- Documentation.
+- SOEP through suitable modules.
+- Drafts.
+- Finalization/correction.
+- Safe concurrency.
+- Patient switching.
+- Authorization.
+- Synthetic scenarios.
+Stage 4: extensibility and interoperability proof
+Exercise:
+- Another care-setting scenario.
+- Another national format or rule.
+- A sample external module.
+- A concrete Connect integration.
+- Conflicting data.
+- Retractions/corrections.
+- Retries and failures.
+Stage 5: continuity and operation
+Implement and verify:
+- Local emergency reader.
+- Synchronization.
+- Offline identity.
+- Backup/restore.
+- Maintenance.
+- Setup.
+- Administration.
+- Managed and self-hosted operation.
+Architectural risks in this stage may need earlier focused investigations.
+Stage 6: full Dutch GP deployment scope
+Validate:
+- All critical practice workflows.
+- National interfaces.
+- Medication.
+- Diagnostics.
+- Correspondence.
+- Administration.
+- Migration.
+- Patient access route.
+- Clinical assurance.
+- Security/privacy.
+- Recovery.
+- Applicable legal/regulatory obligations.
+Later expansion
+- Own patient portal.
+- Additional care settings.
+- Additional countries.
+- Broader integrations.
+- Reviewed module catalog/marketplace.
+Open architecture questions
+1. Confirm the independent-organization tenancy model.
+2. Exact supported platform versions.
+3. JDK distribution.
+4. Build tools and package managers.
+5. Module discovery and packaging.
+6. Core/Bridge concrete contracts.
+7. Shared frontend package boundaries.
+8. Compatibility algorithm.
+9. Persistence libraries.
+10. Schema isolation/enforcement.
+11. Cross-module transactions.
+12. Event/outbox mechanics.
+13. Ordering, retries and deduplication.
+14. Clinical modeling standards.
+15. Terminology and profiles.
+16. Identity-provider choice and protocols.
+17. Account provisioning and linking.
+18. Trusted-device/location classification.
+19. Badge/reader security.
+20. Daily and occasional reauthentication bounds.
+21. Session-transfer mechanics.
+22. Offline enforcement of access revocation.
+23. Lock granularity and expiry.
+24. Patient-workspace numerical limit.
+25. Draft storage and recovery.
+26. Emergency-copy dataset and site scope.
+27. Emergency-reader identity and keys.
+28. Recovery and backup targets.
+29. First-practice complete workflow inventory.
+30. Clinical validation participants and process.
+31. Applicable regulatory responsibilities.
+32. Import/export/migration.
+33. Translation packaging.
+34. External-module licensing.
+35. Release/support lifecycle.
+36. Security reporting channel.
+37. Portal features and representation.
+38. Website stack and publishing.
+39. Synthetic-data environment enforcement.
+40. Configuration and worklist rule mechanisms.
+41. Test-environment topology and management.
+42. Configuration promotion from test to production.
+43. Break-glass review details.
+44. Task execution guards and handover behavior.
+These are open decisions, not missing implementation details to invent silently.
+Document 13 — Work actually performed and recovery status
+Suggested path: docs/project-history-and-recovery.md
+Original repository inspection
+The original application used:
+- Java 21.
+- Spring Boot.
+- React/TypeScript.
+- Vite.
+- PostgreSQL.
+- Keycloak.
+- HAPI FHIR.
+- Snowstorm.
+- Elasticsearch.
+- Docker Compose.
+The old code and documentation described an M1 outpatient system, but the owner considered it confusing, incomplete and poorly functioning.
+Onboarding work performed
+The assistant:
+- Inspected repository instructions, manifests and CI.
+- Installed frontend dependencies using the lockfile.
+- Configured writable Maven caches.
+- Configured Maven proxy access.
+- Installed a JDK 21 after discovering the available Java installation did not contain the expected compiler.
+- Verified the downloaded JDK against its official SHA-256 checksum.
+- Used the system Java truststore for the environment's supported TLS trust.
+- Corrected local file permissions needed by database/realm bind mounts.
+- Started PostgreSQL, Keycloak and HAPI FHIR.
+- Started the native backend and Vite frontend.
+Old-application verification results
+At that time:
+- Frontend lint passed.
+- Frontend tests: 70 passed.
+- Frontend build passed.
+- Generated frontend API types matched the backend contract.
+- Backend unit tests: 50 passed.
+- Backend integration tests: 7 passed.
+- Backend health reported UP.
+- FHIR metadata returned an R4 CapabilityStatement.
+- Synthetic physician authentication through Keycloak worked.
+- Authenticated patient-list access returned HTTP 200.
+- Unauthenticated patient-list access returned HTTP 401.
+- The reusable installation script was exercised again successfully.
+These results apply only to the removed old application.
+They do not validate the rebuild.
+Old-application limitations observed
+- Full terminology stack startup was blocked by access to docker.elastic.co.
+- Playwright Chromium download was blocked by access to cdn.playwright.dev.
+- Browser E2E was not validated.
+- Production dependency audit reported React Router findings: one high and one moderate vulnerability.
+- The old dependency declarations and lockfile were not modified during onboarding.
+Initial technical assessment
+A sample review identified:
+- Existing infrastructure choices were not inherently unsuitable.
+- Tests did not prove clinical usability.
+- The old consultation-note UI cleared its form when starting the save request, before confirming success.
+- FHIR-only internal storage deserved reconsideration.
+- Separate HAPI and application audit stores introduced consistency/failure-boundary concerns.
+- Several real-world clinical and external workflows were missing.
+The owner subsequently selected a rebuild.
+Last observed Git identity
+Before cleanup, the local branch was reported as work.
+The observed HEAD and remote master reference were:
+1f09c73b1e781b522a45c3a99d79e172518a1462
+Do not assume this is still the current remote state.
+Cleanup authorization
+The owner explicitly allowed removal of the existing application and documentation, stating that the old documents were no longer authoritative.
+The owner later explicitly requested:
+- Empty/clean the repository.
+- Document all decisions.
+- Continue asking questions afterward.
+- Eventually commit and push everything.
+Preservation before cleanup
+Before removing content:
+- The checkout was inspected and reported clean.
+- No additional project AGENTS instructions were found in the inspected paths.
+- Legacy services started during onboarding were stopped.
+- Docker data volumes were retained.
+- A complete checkout archive was created outside the repository.
+- An independent Git history bundle was created.
+- The Git bundle was verified.
+- The archive was compared with the checkout.
+- SHA-256 checks were recorded and verified.
+Recovery directory:
+/workspace/.zantrix-recovery/2026-10-15-before-rebuild
+Recorded contents included:
+- checkout.tar
+- history.bundle
+- SHA256SUMS
+- reset-record.json
+- Copies of old local onboarding helper scripts.
+The backup was local, not a published remote artifact.
+Cleanup executed
+The assistant removed the old working-tree content while preserving:
+- .git
+- Existing LICENSE, unchanged.
+This removed:
+- Old backend.
+- Old frontend.
+- Old Docker setup.
+- Old workflows.
+- Old documentation.
+- Generated runtime/build content inside the checkout.
+Git history was not rewritten.
+New files written
+The reconstructed documentation baseline included:
+- README.md
+- .gitignore
+- AGENTS.md
+- CONTRIBUTING.md
+- SECURITY.md
+- docs/README.md
+- docs/decisions.md
+- docs/product.md
+- docs/architecture.md
+- docs/module-contract.md
+- docs/clinical-safety.md
+- docs/continuity.md
+- docs/governance.md
+- docs/documentation-standards.md
+- docs/roadmap.md
+- docs/open-questions.md
+- docs/identity-access.md
+- docs/superpowers/specs/2026-10-15-zantrix-foundation-design.md
+LICENSE was preserved rather than rewritten.
+Validation of new documents
+The assistant checked:
+- Relative Markdown links.
+- Code-fence balance.
+- Basic list formatting during the initial baseline.
+- License unchanged.
+- Git metadata retained.
+- Old runtime directories removed.
+- git diff --check.
+After the authentication batch, 95 relative documentation links were reported valid.
+No new application test suite existed because the repository was documentation-only.
+Decision IDs last verified in files
+The last confirmed local decision register reached D46.
+Important later entries included:
+- D37: local and federated staff identity.
+- D38: documentation updates in batches of approximately ten answers.
+- D39–D46: local/remote authentication, badge switching, roaming workspace,
+  single active session, inactivity screen, badge verification and sensitive
+  administrative reauthentication.
+The authorization/worklist/test-environment decisions after D46 were not confirmed written to files.
+Inspect current files before allocating additional IDs.
+Commit and push status
+No commit or push was performed before the environment failed.
+The owner subsequently explicitly authorized commit and push.
+A GitHub plugin mention did not expose callable GitHub tools in that session.
+Do not infer remote persistence from the user's plugin mention.
+Cloud failure
+Environment ID:
+ccarenv_b64_Y2NhcmVudl9mNTczNTVmNGI5MDQ4MTkxYTI4OTQwMzU5MDZiNzczZg
+Reported failures included:
+- environment_startup_failed
+- connectivity: offline
+- observed_phase: failed
+- exec-server connection attempt failed
+- The snapshot outcome is unknown and the executor may already be consumed
+The failed snapshot status means:
+- The local documentation may or may not have survived.
+- The local backup may or may not have survived.
+- Their loss is not established.
+- Their persistence is not established.
+Environment configuration
+The old installation script was cleared in the editable environment draft.
+Documentation-only startup instructions were successfully saved before the later failure.
+Those instructions said not to restore/start the removed application.
+Earlier saved network additions included:
+- docker.elastic.co
+- cdn.playwright.dev
+- storage.googleapis.com
+- playwright.download.prss.microsoft.com
+- rxnav.nlm.nih.gov
+Saving draft configuration did not establish publication or runtime application.
+A later attempt to append pending decisions to the startup instructions failed with:
+draft_not_editable
+The tool indicated publication might have occurred or might still be in progress.
+No successful save of that handoff was confirmed.
+Recovery priority
+1. Inspect the existing environment/snapshot if possible.
+2. Preserve any recovered working tree and backup.
+3. Inspect current GitHub contents.
+4. Reconstruct missing documentation from this handover and the conversation.
+5. Do not claim exact recovery without verification.
+6. Commit and push the completed documentation under the user's authorization.
+7. Verify remote branch/commit and report them.
+Do not blindly delete or replace the old environment before recovery is assessed.
+Document 14 — Stable decision summary
+Suggested path: docs/decisions.md
+This condensed register can be used to reconstruct the design baseline. Existing IDs should be preserved if recovered.
+Area	Decision
+Product	Rebuild as a mature open-source modular EHR
+First setting	General practice
+First country	Netherlands
+Deployment goal	Fully replace an existing HIS
+First engineering milestone	One complete GP consultation
+International design	No Dutch workflows hardcoded in Core
+Care settings	Separate care-setting modules
+Locations	Multiple locations from the foundation
+Combined care settings	Multiple settings within one organization
+Patient identity	One coherent organizational identity/record
+Tenancy	One independent organization per installation remains a proposal
+Hosting	Managed and self-hosted
+Self-host support	No direct support; official bug reports allowed
+Official software	Open source
+Revenue	Managed services may charge per module
+External licensing	Deferred
+Repository	One monorepo
+Backend	Java/Spring Boot
+Frontend	React/TypeScript
+Database	PostgreSQL
+Module stack	Same supported stack for all modules
+Deployment architecture	Modular monolith
+Core	Technical foundation
+Bridge	Mandatory internal interaction
+Connect	External interoperability
+Patient registry	Separate clinical module
+Contracts	Typed/versioned commands, queries and events
+Dependencies	Explicit required/optional dependencies and compatibility
+Ownership	One authoritative owner per datum
+Duplicates	No independently editable duplicate clinical truth
+Standards	Reuse suitable existing semantics
+UI	One mandatory shared experience
+Module administration	Technical installation, functional configuration
+Updates	Planned maintenance acceptable
+Module ecosystem	External extensions with strict official review
+Local extensions	Possible but explicitly outside reviewed combinations
+Patient workspaces	Multiple with a limit
+Drafts	Automatic preservation with truthful status
+Finalized records	Historical correction/addition
+Concurrent editing	Only across demonstrably safe scopes
+Takeover	Extra permission, reason and audit
+Restriction scope	Patient-level initially
+Break-glass	Justified, scoped emergency exception
+Incoming information	Receipt distinct from clinical adoption
+Emergency provision	Local, read-only
+Emergency dataset	Aim for full record
+Emergency freshness	Five-minute target under healthy connectivity
+SOEP	Supported outside Core
+Portal	Separate, later module plus external integration
+POH/POH-GGZ	Eventual goal; first deployment scope unresolved
+Synthetic data	Dedicated internal module
+Developer testing	Conformance facility
+Project language	English
+Localization	Extensible; language separate from country
+Website	Required, implementation open
+Development capacity	One initial developer, no fixed deadline
+Documentation cadence	Approximately every ten answered questions
+Identity	Own accounts and institutional federation
+On-site sign-in	Password or suitable badge
+Remote sign-in	MFA
+Badge policy	First daily password plus occasional recheck
+Roaming	Personal work context follows staff
+Active session	At most one active workspace per user
+Inactivity	Privacy screen at five minutes, lock two minutes later
+Privacy-screen dismissal	Click allowed before actual lock
+Sensitive administration	Reauthentication
+Profiles	Standard and custom institution profiles
+Individual permissions	Temporary by default; permanent with reason
+Multiple profiles	Supported with scope
+Explicit deny	Overrides allow
+Dual approval	Optional, off by default
+Temporary staff	Start/end dates and automatic expiry
+Revocation	Online immediate; badge/account distinct
+Technical administration	No automatic dossier access
+Support access	Explicit consent, temporary, named, scoped, audited
+Audit	Specifically authorized oversight
+Break-glass review	Provisional automatic notification/review task
+Worklists	Personal and shared
+Assignment	Optional
+Task safety	Prevent duplicate execution
+Escalations	Configurable per workflow/list
+Automatic tasks	Supported alongside manual tasks
+Configuration	Broad administrator-configurable supported behavior
+Test environment	Separate environment for Zantrix and institutions
+Test implementation	Open
+
+
+Document 15 — Suggested reconstruction checklist
+Suggested path: docs/reconstruction-checklist.md
+Before changing anything
+- [ ] Confirm repository identity.
+- [ ] Inspect current branch and remote HEAD.
+- [ ] Inspect working-tree changes.
+- [ ] Read current repository instructions.
+- [ ] Check whether previous documentation exists.
+- [ ] Check whether the recovery archive exists.
+- [ ] Preserve any recovered local work.
+- [ ] Do not assume the snapshot succeeded.
+Reconstruct the baseline
+- [ ] Restore or recreate the documentation index.
+- [ ] Restore the project vision and scope.
+- [ ] Restore architecture and module contracts.
+- [ ] Restore clinical safety requirements.
+- [ ] Restore authentication and roaming requirements.
+- [ ] Add all pending authorization decisions.
+- [ ] Add all task/worklist/configuration decisions.
+- [ ] Add the separate test-environment requirement.
+- [ ] Preserve provisional/open status.
+- [ ] Preserve English documentation.
+- [ ] Preserve the existing license.
+- [ ] Remove obsolete application claims if still present.
+Reconcile documentation
+- [ ] Keep Core/Bridge/Connect terminology consistent.
+- [ ] Keep full HIS replacement separate from the consultation milestone.
+- [ ] Keep international requirements separate from Dutch GP behavior.
+- [ ] Keep technical administration separate from clinical access.
+- [ ] Keep task assignment separate from execution protection.
+- [ ] Keep privacy screen separate from authenticated locking.
+- [ ] Keep offline limitations explicit.
+- [ ] Keep module conformance separate from clinical approval.
+- [ ] Keep local writes separate from remote persistence.
+Verify and publish
+- [ ] Check relative links.
+- [ ] Check Markdown formatting.
+- [ ] Run git diff --check when shell access is available.
+- [ ] Review the actual diff.
+- [ ] Commit the reconstructed documentation.
+- [ ] Push without force.
+- [ ] Verify the remote commit.
+- [ ] Report branch, commit SHA and remaining gaps.
+Continue the discussion
+Resume detailed design questions.
+Do not treat this handover as:
+- A finalized clinical specification.
+- Approval for every implementation detail.
+- A finished module SDK.
+- An approved regulatory strategy.
+- Authorization to silently choose all open items.
+The latest accepted direction is a separate Zantrix test environment for both the project team and institutions, with implementation still to be determined.

@@ -1,0 +1,14 @@
+# Local editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+
+# Local scratch material; recovery backups belong outside the repository
+*.log
+*.tmp
